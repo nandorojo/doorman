@@ -1,0 +1,74 @@
+{
+	"name": "expo-phone-auth",
+	"description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
+	"version": "1.0.0",
+	"main": "lib/module/index",
+	"module": "lib/module/index",
+	"react-native": "lib/module/index",
+	"types": "lib/typescript/index",
+	"homepage": "https://github.com/nandorojo/expo-phone-auth",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nandorojo/expo-phone-auth"
+	},
+	"scripts": {
+		"type-check": "tsc --noEmit",
+		"type-check:watch": "npm run type-check -- --watch",
+		"build": "npm run build:types && npm run build:js",
+		"bundle": "babel src --out-file bundle/index.js --extensions \".ts,.tsx\" --source-maps inline",
+		"build:tsc": "npm run build:types && npm run build:test",
+		"build:redash:types": "tsc --noEmit",
+		"build:types": "tsc --emitDeclarationOnly --skipLibCheck",
+		"build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+		"build:test": "rm -R lib && babel src-og --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+		"build:babel": "rm -R lib && babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+		"build:final": "mkdir -p bundle && npm run bundle && npm run build:types",
+		"prepare": "bob build",
+		"upload": "npm run prepare && npm publish"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.2.3",
+		"@babel/core": "^7.4.0",
+		"@babel/plugin-proposal-class-properties": "^7.4.0",
+		"@babel/plugin-proposal-numeric-separator": "^7.2.0",
+		"@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+		"@babel/plugin-proposal-optional-chaining": "^7.2.0",
+		"@babel/preset-env": "^7.4.1",
+		"@babel/preset-react": "^7.0.0",
+		"@babel/preset-typescript": "^7.3.3",
+		"@expo/vector-icons": "^10.0.5",
+		"@react-native-community/bob": "^0.6.1",
+		"@types/react": "^16.9.11",
+		"@types/react-dom": "^16.8.5",
+		"@types/react-native": "^0.60.22",
+		"@types/uuid": "^3.4.5",
+		"@typescript-eslint/eslint-plugin": "^2.1.0",
+		"@typescript-eslint/parser": "^2.1.0",
+		"babel-preset-expo": "^5.2.0",
+		"eslint": "^6.3.0",
+		"eslint-config-prettier": "^6.3.0",
+		"eslint-config-rallycoding": "^3.2.0",
+		"eslint-plugin-react": "^7.14.3",
+		"eslint-plugin-react-hooks": "^1.7.0",
+		"react": "^16.11.0",
+		"react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
+		"typescript": "^3.7.5"
+	},
+	"bugs": {
+		"url": "https://github.com/nandorojo/chatjs/issues"
+	},
+	"author": "Fernando Rojo",
+	"license": "MIT",
+	"files": [
+		"lib",
+		"src"
+	],
+	"@react-native-community/bob": {
+		"source": "src",
+		"output": "lib",
+		"targets": [
+			"module",
+			"typescript"
+		]
+	}
+}
