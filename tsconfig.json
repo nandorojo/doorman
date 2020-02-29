@@ -20,8 +20,9 @@
 		"allowSyntheticDefaultImports": true,
 		"types": ["react", "react-native"],
 		"skipLibCheck": true,
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"pretty": true
 	},
-	"include": ["src/index.ts", "src/components.index.ts"],
+	"include": ["src/index.ts"],
 	"exclude": ["node_modules"]
 }

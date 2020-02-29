@@ -21,7 +21,7 @@ type Configuration =
 
 let configuration: Configuration = {
 	hasInitialized: false,
-	endpoint: 'https://expophone.com'
+	endpoint: 'https://expophone.com',
 }
 
 function configurationHasKey(config: Configuration): config is Initialized {
@@ -30,14 +30,14 @@ function configurationHasKey(config: Configuration): config is Initialized {
 
 const Constants = {
 	signIn: 'signIn',
-	verify: 'verify'
+	verify: 'verify',
 }
 
-export const initialize = (config: { key: string }) => {
+export const initialize = ({ key }: { key: string }) => {
 	configuration = {
 		...configuration,
-		key: config.key,
-		hasInitialized: true
+		key,
+		hasInitialized: true,
 	}
 }
 
@@ -45,15 +45,15 @@ export const initializeWithCustomEndpoint = (endpoint: string) => {
 	configuration = {
 		...configuration,
 		hasInitialized: true,
-		endpoint
+		endpoint,
 	}
 }
 
 const getEndpoint = (ending?: string) => {
 	if (configurationHasKey(configuration)) {
-		return `${configuration.endpoint}/${configuration.key}/${ending || ''}`
+		return `${configuration.endpoint}/${configuration.key}/${ending ?? ''}`
 	} else {
-		return `${configuration.endpoint}/${ending || ''}`
+		return `${configuration.endpoint}/${ending ?? ''}`
 	}
 }
 
@@ -64,33 +64,45 @@ export const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 				'initialize() or initializeWithCustomEndpoint() method was never called. Call one of these functions at the root of your app, usually in App.js, to use phone auth.'
 			)
 		}
-		return fetch(`${getEndpoint(Constants.signIn)}`, {
-			body: JSON.stringify({
-				phoneNumber: info.phoneNumber
-			}),
-			method: 'POST'
-		})
+		const response: { success: boolean; error: null } = await fetch(
+			`${getEndpoint(Constants.signIn)}`,
+			{
+				body: JSON.stringify({
+					phoneNumber: info.phoneNumber,
+				}),
+				method: 'POST',
+			}
+		).then(r => r.json())
+		return response
 	} catch (e) {
 		console.error('Error using signInWithPhoneNumber: ', e)
-		return { error: e }
+		return { error: e, success: false }
 	}
 }
 
-export const verifyToken = async (info: { token: string }) => {
+export const verifyCode = async ({
+	code,
+}: {
+	code: string
+}): Promise<{ token: string | null; success?: boolean }> => {
 	try {
 		if (!configuration.hasInitialized) {
 			throw new Error(
 				'initialize() or initializeWithCustomEndpoint() method was never called. Call one of these functions at the root of your app, usually in App.js, to use phone auth.'
 			)
 		}
-		return fetch(`${getEndpoint(Constants.verify)}`, {
-			body: JSON.stringify({
-				token: info.token
-			}),
-			method: 'POST'
-		})
+		const response: Promise<{ token: string }> = await fetch(
+			`${getEndpoint(Constants.verify)}`,
+			{
+				body: JSON.stringify({
+					code,
+				}),
+				method: 'POST',
+			}
+		).then(res => res.json())
+		return response
 	} catch (e) {
 		console.error('Error using verifyToken: ', e)
-		return { error: e }
+		return { token: null, success: false }
 	}
 }

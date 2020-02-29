@@ -6,26 +6,21 @@ import {
 	ActivityIndicator,
 	ScrollView,
 	Text,
-	TouchableOpacity
+	TouchableOpacity,
 } from 'react-native'
-import useConfirmPhone from '../hooks/useConfirmPhone'
 
 interface Props {
-	code?: string
-	onChangeCode?: (code: string) => void
-	onSubmitCode?: (code: string) => void
+	code: string
+	onChangeCode: (code: string) => void
+	onSubmitCode: (code: string) => void
 	loading?: boolean
 	phoneNumber: string
 	message?: string
-	onPressResendCode: (phoneNumber: string) => void
+	onPressResendCode?: (phoneNumber: string) => void
 }
 
-export default function ConfirmPhone(props: Props) {
-	const { code, setCode } = useConfirmPhone({
-		code: props.code,
-		onChange: props.onChangeCode,
-		onSubmit: props.onSubmitCode
-	})
+export function ConfirmPhone(props: Props) {
+	const { code, onChangeCode, loading } = props
 
 	const renderMessage = () => (
 		<View>
@@ -42,17 +37,17 @@ export default function ConfirmPhone(props: Props) {
 	const renderInput = () => (
 		<TextInput
 			value={code}
-			onChangeText={setCode}
-			editable={!props.loading}
+			onChangeText={onChangeCode}
+			editable={!loading}
 			maxLength={6}
 			style={styles.input}
 		/>
 	)
 
 	const renderResend = () =>
-		!props.loading ? (
+		!loading ? (
 			<TouchableOpacity
-				onPress={() => props.onPressResendCode(props.phoneNumber)}
+				onPress={() => props.onPressResendCode?.(props.phoneNumber)}
 			>
 				<Text style={[styles.message, styles.number]}>Resend Code</Text>
 			</TouchableOpacity>
@@ -60,7 +55,7 @@ export default function ConfirmPhone(props: Props) {
 
 	const renderLoader = () => (
 		<View>
-			<ActivityIndicator animating={props.loading} />
+			<ActivityIndicator animating={loading} />
 		</View>
 	)
 
@@ -78,23 +73,23 @@ export default function ConfirmPhone(props: Props) {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
 	},
 	wrapper: {
-		marginTop: 20
+		marginTop: 20,
 	},
 	message: {
 		textAlign: 'center',
 		margin: 10,
-		fontSize: 18
+		fontSize: 18,
 	},
 	input: {
 		textAlign: 'center',
 		fontSize: 20,
 		letterSpacing: 5,
-		padding: 10
+		padding: 10,
 	},
 	number: {
-		color: 'blue'
-	}
+		color: 'blue',
+	},
 })

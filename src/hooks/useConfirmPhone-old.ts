@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { verifyToken } from '../methods'
 
-interface Config {
+interface Props {
 	// code?: string
 	// onChange?: (code: string) => void
-	onSubmit?: (code: string) => void
+	// onSubmit?: (code: string) => void
+	// onUploadedCode?: (info: { token: string }) => void
 }
 
 const CodeLength = 6
 
 export default function useConfirmPhone() {
 	const [code, setCode] = useState('')
-	const [loading, setLoading] = useState(false)
+	const [uploading, setLoading] = useState(false)
 	// const handlesCodeFromProps =
 	// 	config.code !== undefined && config.onChange !== undefined
 
@@ -33,13 +34,18 @@ export default function useConfirmPhone() {
 	// const [code, setCode] = handlesCodeFromProps
 	// 	? [config.code, config.onChange]
 	// 	: [codeState, setCodeState]
+	// const onUploadedCode = useRef(props.onUploadedCode)
+	// useEffect(() => {
+	// 	onUploadedCode.current = props.onUploadedCode
+	// })
 
 	useEffect(() => {
 		const send = async () => {
 			// if (onSubmit.current) onSubmit.current(code)
 			setLoading(true)
 			try {
-				await verifyToken({ token: code })
+				const response = await verifyToken({ token: code })
+				onUploadedCode.current(response)
 				setLoading(false)
 			} catch (e) {
 				console.error('verify token failed: ', e)
@@ -54,5 +60,5 @@ export default function useConfirmPhone() {
 		}
 	}, [code])
 
-	return { code, setCode, loading }
+	return { code, onChangeCode: setCode, uploading, reset: () => setCode('') }
 }

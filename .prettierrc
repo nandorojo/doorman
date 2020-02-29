@@ -4,5 +4,6 @@
 	"bracketSpacing": true,
 	"tabWidth": 2,
 	"useTabs": true,
-	"proseWrap": "preserve"
+	"proseWrap": "preserve",
+	"trailingComma": "es5"
 }
