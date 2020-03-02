@@ -1,45 +1,140 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import {
 	View,
 	StyleSheet,
-	ActivityIndicator,
 	ScrollView,
 	Text,
 	TouchableOpacity,
 } from 'react-native'
-import { TextInput } from 'react-native-paper'
+import { TextInput, ActivityIndicator } from 'react-native-paper'
+import { ScreenStyle } from '../style/screen'
+import { TextStyle } from '../style/text'
 
 interface Props {
 	code: string
+	/**
+	 * Required prop: Function called every time the code is changed. It is recommended to use this with the `useConfirmPhone` hook.
+	 *
+	 * To have this logic fully handled for you, see the `Magic.ConfirmPhone` component. Or, for an even simpler experience, see the `Magic.PhoneStack` stack.
+	 *
+	 * @example
+	 * ```jsx
+	 * import * as React from 'react'
+	 * import { useConfirmPhone, ConfirmPhone } from 'doorman'
+	 *
+	 * export default function ConfirmScreen(props) {
+	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
+	 *
+	 * 	return (
+	 * 		<ConfirmPhone
+	 * 			{...{ code, onChangeCode, loading }}
+	 * 			phoneNumber={props.phoneNumber}
+	 * 		/>
+	 * 	)
+	 * }
+	 * ```
+	 *
+	 */
 	onChangeCode: (code: string) => void
+	/**
+	 * (Optional) Boolean to show if it's loading. If true, shows a loading indicator. It is recommended to use this with the `useConfirmPhone` hook.
+	 *
+	 * To have this logic fully handled for you, see the `Magic.ConfirmPhone` component. Or, for an even simpler experience, see the `Magic.PhoneStack` stack.
+	 *
+	 *  * @example
+	 * ```jsx
+	 * import * as React from 'react'
+	 * import { useConfirmPhone, ConfirmPhone } from 'doorman'
+	 *
+	 * export default function ConfirmScreen(props) {
+	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
+	 *
+	 * 	return (
+	 * 		<ConfirmPhone
+	 * 			{...{ code, onChangeCode, loading }}
+	 * 			phoneNumber={props.phoneNumber}
+	 * 		/>
+	 * 	)
+	 * }
+	 * ```
+	 *
+	 */
 	loading?: boolean
+	/**
+	 * **Required** `phoneNumber` that the 6-digit code was sent to. You should have this value from the previous screen, `PhoneAuth`. To have this logic between screens all handled for you, see the `Magic.PhoneStack` component.
+	 *
+	 */
 	phoneNumber: string
-	message?: string
+	/**
+	 * (Optional prop) Message that will show up above the code input. This should tell your user that they just received a code to their phone, and that it should show up below.
+	 *
+	 * Can either be a string, or a function.
+	 *
+	 * If you pass a function, it receives one argument: a dictionary with a `phoneNumber` value. The function should return a string or React Native <Text /> node.
+	 *
+	 * @default
+	 * ```es6
+	 * 	const defaultMessage = ({phoneNumber}) => `We just sent a 6-digit code to ${phoneNumber}. Enter it below to continue.`
+	 * ```
+	 *
+	 * @example
+	 * ```jsx
+	 *
+	 * export default () => {
+	 * 	return <ConfirmPhone message={({ phoneNumber }) => `Check ${phoneNumber} for a text!`} />
+	 * }
+	 * ```
+	 */
+	message?: string | ((info: { phoneNumber: string }) => ReactNode)
 	onPressResendCode?: (phoneNumber: string) => void
+	onReset?: () => void
+	tintColor?: string
+	/**
+	 * Header text that appears at the top.
+	 *
+	 * Default: Enter code
+	 */
+	title?: string
 }
 
 export function ConfirmPhone(props: Props) {
-	const { code, onChangeCode, loading, phoneNumber, message } = props
+	const {
+		code,
+		onChangeCode,
+		loading,
+		phoneNumber,
+		message,
+		tintColor,
+		title = 'Enter Code',
+	} = props
 
-	const renderMessage = () => (
-		<View>
-			{!!message ? (
-				<Text style={styles.message}>{message}</Text>
-			) : (
-				<Text style={styles.message}>
-					Enter the code we just sent to{' '}
-					<Text style={styles.number}>{phoneNumber}</Text>.
-				</Text>
-			)}
-		</View>
-	)
+	const renderMessage = () => {
+		if (message) {
+			if (typeof message === 'function') {
+				return <Text style={styles.subtitle}>{message({ phoneNumber })}</Text>
+			}
+
+			return <Text style={styles.subtitle}>{message}</Text>
+		}
+
+		return (
+			<Text style={styles.subtitle}>
+				We just sent a 6-digit code to{' '}
+				<Text style={styles.number}>{phoneNumber}</Text>. Enter it below to
+				continue.
+			</Text>
+		)
+	}
 	const renderInput = () => (
 		<TextInput
 			value={code}
 			onChangeText={onChangeCode}
 			editable={!loading}
 			maxLength={6}
-			style={styles.input}
+			mode="outlined"
+			clearButtonMode="while-editing"
+			label="6-digit code"
+			textContentType="oneTimeCode"
 		/>
 	)
 
@@ -56,18 +151,15 @@ export function ConfirmPhone(props: Props) {
 
 	const renderLoader = () =>
 		!!loading && (
-			<View>
-				<ActivityIndicator animating={loading} />
+			<View style={{ marginVertical: 8 }}>
+				<ActivityIndicator animating={loading} color={tintColor} />
 			</View>
 		)
 
 	return (
-		<ScrollView
-			keyboardShouldPersistTaps="handled"
-			style={styles.container}
-			centerContent
-		>
+		<ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
 			<View style={styles.wrapper}>
+				<Text style={TextStyle.h1}>{title}</Text>
 				{renderMessage()}
 				{renderInput()}
 				{renderLoader()}
@@ -78,22 +170,15 @@ export function ConfirmPhone(props: Props) {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	wrapper: {
-		margin: 16,
-	},
 	message: {
 		textAlign: 'center',
 		marginVertical: 10,
 		fontSize: 18,
 	},
-	input: {
-		marginVertical: 16,
-	},
 	number: {
 		fontWeight: 'bold',
 		textAlign: 'center',
 	},
+	...ScreenStyle,
+	...TextStyle,
 })

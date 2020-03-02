@@ -1,4 +1,5 @@
 import { useDoormanContext } from '../context'
+import { PackageName } from '../constants'
 
 type Props = {
 	children: (props: {
@@ -10,5 +11,15 @@ type Props = {
 export function AuthGate({ children }: Props) {
 	const authGate = useDoormanContext()
 
-	return children(authGate)
+	if (authGate) {
+		return children(authGate)
+	}
+
+	console.error(`💩 ${PackageName} error:
+
+Tried to use <AuthGate> component before initializing app without the <${PackageName}Provider /> component before it.
+
+Make sure to put the provider at the root of your app.
+	`)
+	return null
 }

@@ -4,14 +4,15 @@ import {
 	useEffect,
 	ComponentPropsWithoutRef,
 } from 'react'
-import { signInWithPhoneNumber } from '../methods'
+import { doorman } from '../methods'
 import { useControlledOrInternalState } from './use-controlled-state'
 import { PhoneAuth } from '../views/PhoneAuth'
 
 interface Props {
 	phoneNumber?: string
 	onChangePhoneNumber?: (phoneNumber: string) => void
-	onCodeSentSuccessfully(info: { phoneNumber: string }): void
+	onSmsSuccessfullySent(info: { phoneNumber: string }): void
+	onSmsError?(e: unknown): void
 }
 
 type onChangePhoneNumber = ComponentPropsWithoutRef<
@@ -29,25 +30,29 @@ export function usePhoneNumber(props: Props) {
 	const [loading, setLoading] = useState(false)
 
 	const onChangePhoneNumber: onChangePhoneNumber = info => {
+		setLoading(false)
 		setPhoneNumber(info.phoneNumber)
 	}
 
-	const { onCodeSentSuccessfully } = props
+	const { onSmsSuccessfullySent, onSmsError } = props
 
-	const signIn = useCallback(async () => {
+	const submitPhone = useCallback(async () => {
 		try {
 			setLoading(true)
 
-			const { success, error } = await signInWithPhoneNumber({ phoneNumber })
+			const { success, error } = await doorman.signInWithPhoneNumber({
+				phoneNumber,
+			})
 			if (!success) throw new Error(error)
 
-			onCodeSentSuccessfully({ phoneNumber })
+			onSmsSuccessfullySent({ phoneNumber })
 			setLoading(false)
 		} catch (e) {
 			console.error('usePhoneNumber failed', e)
+			onSmsError?.(e)
 			setLoading(false)
 		}
-	}, [onCodeSentSuccessfully, phoneNumber])
+	}, [onSmsError, onSmsSuccessfullySent, phoneNumber])
 
 	useEffect(() => {
 		setLoading(false)
@@ -56,7 +61,7 @@ export function usePhoneNumber(props: Props) {
 	return {
 		phoneNumber,
 		onChangePhoneNumber,
-		signIn,
+		submitPhone,
 		valid: phoneNumber.length > 9,
 		loading,
 	}

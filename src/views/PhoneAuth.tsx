@@ -1,19 +1,34 @@
-import React, { useCallback, ComponentPropsWithoutRef } from 'react'
-import { View, StyleSheet, ViewStyle, ScrollView } from 'react-native'
+import React, {
+	useCallback,
+	ComponentPropsWithoutRef,
+	RefObject,
+	MutableRefObject,
+	ComponentPropsWithRef,
+} from 'react'
+import { View, ViewStyle, ScrollView, Text } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
+import { TextStyle } from '../style/text'
+import { ScreenStyle } from '../style/screen'
 
 interface Props {
 	phoneNumber: string
 	onChangePhoneNumber: (info: { phoneNumber: string; valid: boolean }) => void
 	onSubmitPhone: (info: { phoneNumber: string }) => void
+	/**
+	 * Boolean to indicate if the text is sending / loading. Button shows loading indicator during this time.
+	 */
 	loading?: boolean
 	inputProps?: Omit<ComponentPropsWithoutRef<typeof TextInput>, 'style'>
 	valid?: boolean
-	containerProps?: Omit<ScrollView, 'style'>
+	containerProps?: Omit<ComponentPropsWithoutRef<typeof ScrollView>, 'style'>
 	containerStyle?: ViewStyle
 	inputStyle?: ComponentPropsWithoutRef<typeof TextInput>['style']
 	tintColor?: string
+	/**
+	 * Text to show inside the button. Defaults to send.
+	 */
+	buttonText?: string | 'Send' | 'Submit'
 }
 
 export const PhoneAuth = (props: Props) => {
@@ -27,6 +42,8 @@ export const PhoneAuth = (props: Props) => {
 		containerStyle,
 		inputStyle,
 		tintColor = '#6200ee',
+		loading = false,
+		buttonText = 'Send',
 	} = props
 	const submit = useCallback(() => onSubmitPhone({ phoneNumber }), [
 		phoneNumber,
@@ -37,28 +54,42 @@ export const PhoneAuth = (props: Props) => {
 		<ScrollView
 			{...containerProps}
 			style={[styles.container, containerStyle]}
-			centerContent
+			// centerContent
+			keyboardDismissMode="on-drag"
+			scrollEnabled={false}
+			keyboardShouldPersistTaps="handled"
 		>
 			<View style={styles.wrapper}>
+				<Text style={TextStyle.h1}>Enter your phone number</Text>
+				<Text style={TextStyle.subtitle}>
+					{`We'll send you a text with a code to confirm it's you.`}
+				</Text>
 				<View>
 					<TextInput
 						{...inputProps}
-						placeholder="Phone Number"
+						placeholder="+1 555-654-4654"
 						value={phoneNumber}
 						onChangeText={text =>
 							onChangePhoneNumber({ phoneNumber: text, valid })
 						}
+						disabled={loading}
 						style={inputStyle}
+						mode="outlined"
+						label="Phone Number"
+						underlineColor={tintColor}
+						selectionColor={tintColor}
+						onSubmitEditing={submit}
 					/>
 				</View>
 				<View style={styles.buttonWrapper}>
 					<Button
 						mode="contained"
 						style={{ backgroundColor: tintColor }}
-						onPress={submit}
-						disabled={!valid}
+						onPress={valid && !loading ? submit : undefined}
+						// disabled={!valid}
+						loading={loading}
 					>
-						Send
+						{buttonText}
 					</Button>
 				</View>
 			</View>
@@ -66,15 +97,4 @@ export const PhoneAuth = (props: Props) => {
 	)
 }
 
-const styles = StyleSheet.create({
-	container: {
-		// padding: 16,
-		flex: 1,
-	},
-	wrapper: {
-		padding: 16,
-	},
-	buttonWrapper: {
-		marginVertical: 16,
-	},
-})
+const styles = ScreenStyle
