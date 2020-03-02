@@ -82,9 +82,11 @@ export const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 
 export const verifyCode = async ({
 	code,
+	phoneNumber,
 }: {
 	code: string
-}): Promise<{ token: string | null; success?: boolean }> => {
+	phoneNumber: string
+}): Promise<{ token: string | null; success?: boolean; uid: string }> => {
 	try {
 		if (!configuration.hasInitialized) {
 			throw new Error(
@@ -96,6 +98,7 @@ export const verifyCode = async ({
 			{
 				body: JSON.stringify({
 					code,
+					phoneNumber,
 				}),
 				method: 'POST',
 			}

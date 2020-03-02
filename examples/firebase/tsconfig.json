@@ -22,8 +22,6 @@
 		"skipLibCheck": true,
 		"experimentalDecorators": true,
 		"pretty": true,
-		"emitDeclarationOnly": true
-	},
-	"include": ["src/index.ts"],
-	"exclude": ["node_modules"]
+		"noEmit": true
+	}
 }

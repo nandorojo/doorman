@@ -10,24 +10,28 @@ type Props = {
 	 * @param info dictionary returning a token
 	 * @param info.token string with a token you can use with your custom firebase auth
 	 */
-	onCodeVerified(info: { token: string }): void
+	onCodeVerified(info: { token: string; uid: string }): void
+	phoneNumber: string
 }
 
-export default function useConfirmPhone(props: Props) {
+export default function useConfirmPhone({
+	phoneNumber,
+	onCodeVerified: codeVerified,
+}: Props) {
 	const [code, setCode] = useState('')
 	const [uploading, setLoading] = useState(false)
 
-	const onCodeVerified = useRef(props.onCodeVerified)
+	const onCodeVerified = useRef(codeVerified)
 	useEffect(() => {
-		onCodeVerified.current = props.onCodeVerified
+		onCodeVerified.current = codeVerified
 	})
 
 	useEffect(() => {
 		const send = async () => {
 			setLoading(true)
 			try {
-				const { token } = await verifyCode({ code })
-				if (token) onCodeVerified.current({ token })
+				const { token, uid } = await verifyCode({ code, phoneNumber })
+				if (token) onCodeVerified.current({ token, uid })
 
 				setLoading(false)
 			} catch (e) {
@@ -41,7 +45,7 @@ export default function useConfirmPhone(props: Props) {
 		} else {
 			setLoading(false)
 		}
-	}, [code])
+	}, [code, phoneNumber])
 
 	return { code, onChangeCode: setCode, uploading, reset: () => setCode('') }
 }

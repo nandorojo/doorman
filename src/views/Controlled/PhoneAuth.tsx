@@ -9,12 +9,7 @@ type Props = {
 }
 
 export default function ControlledPhoneAuth({ onSubmitPhone }: Props) {
-	const {
-		phoneNumber,
-		onChangePhoneNumber,
-		valid,
-		signInWithPhoneNumber,
-	} = usePhoneNumber()
+	const { phoneNumber, onChangePhoneNumber, valid } = usePhoneNumber()
 
 	return (
 		<PhoneAuth

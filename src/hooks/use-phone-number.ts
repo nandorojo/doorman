@@ -22,7 +22,7 @@ export function usePhoneNumber(props: Props) {
 	const [phoneNumber, setPhoneNumber] = useControlledOrInternalState(
 		{
 			state: props.phoneNumber,
-			setState: state => props.onChangePhoneNumber?.(state),
+			setState: state => props.onChangePhoneNumber?.(state as string),
 		},
 		''
 	)

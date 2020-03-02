@@ -1,12 +1,6 @@
 import React, { useCallback, ComponentPropsWithoutRef } from 'react'
-import {
-	View,
-	TextInput,
-	Button,
-	StyleSheet,
-	ViewProps,
-	ViewStyle,
-} from 'react-native'
+import { View, StyleSheet, ViewStyle, ScrollView } from 'react-native'
+import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
 
 interface Props {
@@ -16,26 +10,23 @@ interface Props {
 	loading?: boolean
 	inputProps?: Omit<ComponentPropsWithoutRef<typeof TextInput>, 'style'>
 	valid?: boolean
-	containerProps?: Omit<ViewProps, 'style'>
+	containerProps?: Omit<ScrollView, 'style'>
 	containerStyle?: ViewStyle
 	inputStyle?: ComponentPropsWithoutRef<typeof TextInput>['style']
 	tintColor?: string
 }
 
-export const PhoneAuth = React.forwardRef<TextInput, Props>(function PhoneAuth(
-	props,
-	ref
-) {
+export const PhoneAuth = (props: Props) => {
 	const {
 		phoneNumber,
 		onChangePhoneNumber,
 		onSubmitPhone,
-		valid,
+		valid = false,
 		inputProps = empty.object,
 		containerProps = empty.object,
 		containerStyle,
 		inputStyle,
-		tintColor = '#533592',
+		tintColor = '#6200ee',
 	} = props
 	const submit = useCallback(() => onSubmitPhone({ phoneNumber }), [
 		phoneNumber,
@@ -43,36 +34,47 @@ export const PhoneAuth = React.forwardRef<TextInput, Props>(function PhoneAuth(
 	])
 
 	return (
-		<View {...containerProps} style={[styles.container, containerStyle]}>
-			<View>
-				<TextInput
-					{...inputProps}
-					placeholder="Phone Number"
-					value={phoneNumber}
-					onChangeText={text =>
-						onChangePhoneNumber({ phoneNumber: text, valid })
-					}
-					style={[styles.input, inputStyle]}
-					ref={ref}
-				/>
+		<ScrollView
+			{...containerProps}
+			style={[styles.container, containerStyle]}
+			centerContent
+		>
+			<View style={styles.wrapper}>
+				<View>
+					<TextInput
+						{...inputProps}
+						placeholder="Phone Number"
+						value={phoneNumber}
+						onChangeText={text =>
+							onChangePhoneNumber({ phoneNumber: text, valid })
+						}
+						style={inputStyle}
+					/>
+				</View>
+				<View style={styles.buttonWrapper}>
+					<Button
+						mode="contained"
+						style={{ backgroundColor: tintColor }}
+						onPress={submit}
+						disabled={!valid}
+					>
+						Send
+					</Button>
+				</View>
 			</View>
-			<View style={styles.buttonWrapper}>
-				<Button onPress={submit} title="Submit" disabled={!valid} />
-			</View>
-		</View>
+		</ScrollView>
 	)
-})
+}
 
 const styles = StyleSheet.create({
 	container: {
+		// padding: 16,
 		flex: 1,
-		justifyContent: 'center',
+	},
+	wrapper: {
+		padding: 16,
 	},
 	buttonWrapper: {
-		alignItems: 'center',
-	},
-	input: {
-		padding: 16,
-		borderRadius: 4,
+		marginVertical: 16,
 	},
 })

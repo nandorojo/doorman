@@ -5,7 +5,7 @@ type Props<T> = {
 	setState?: Dispatch<SetStateAction<T>>
 }
 
-type Returns<T> = [T, Dispatch<SetStateAction<T>> | ((state?: T) => void)]
+type Returns<T> = [T, Dispatch<SetStateAction<T>> | ((state: T) => void)]
 
 /**
  * React hooks that lets you pass an optional state and setState function. This is useful when you sometimes control state or do it internally, but don't know which beforehand.
@@ -19,13 +19,15 @@ export const useControlledOrInternalState = <T>(
 	props: Props<T>,
 	initialValue: T
 ): Returns<T> => {
-	const [state, setState] = useState<T>(initialValue)
-	let finalState = props.state ?? state
-	let setFinalState = setState
-	if (props.state !== undefined && props.setState !== undefined) {
-		finalState = props.state
-		setFinalState = props.setState
+	let [state, setState] = useState<T>(initialValue)
+	// let finalState = state
+	// let setFinalState = setState
+	if (props.state !== undefined) {
+		state = props.state
+		if (props.setState) {
+			setState = props.setState
+		}
 	}
 
-	return [finalState, setFinalState]
+	return [state, setState]
 }

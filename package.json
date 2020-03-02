@@ -1,7 +1,7 @@
 {
 	"name": "expo-phone-auth",
 	"description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-	"version": "1.0.0",
+	"version": "1.0.4",
 	"main": "lib/module/index",
 	"module": "lib/module/index",
 	"react-native": "lib/module/index",
@@ -56,6 +56,9 @@
 		]
 	},
 	"dependencies": {
-		"react-native-phone-input": "^0.2.4"
+		"firebase": "^7.9.3",
+		"react-native-paper": "^3.6.0",
+		"react-native-phone-input": "^0.2.4",
+		"react-native-text-input-mask": "^2.0.0"
 	}
 }
