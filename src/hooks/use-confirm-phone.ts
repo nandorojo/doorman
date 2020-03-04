@@ -22,7 +22,12 @@ export default function useConfirmPhone({
 }: Props) {
 	const [code, setCode] = useState('')
 	// const [uploading, setLoading] = useState(false)
-	const { loading: uploading, error, setLoading } = useNetworkReducer()
+	const {
+		loading: uploading,
+		error,
+		setLoading,
+		setError,
+	} = useNetworkReducer()
 
 	const onCodeVerified = useRef(onVerified)
 	useEffect(() => {
@@ -37,20 +42,22 @@ export default function useConfirmPhone({
 				console.log('verifyyyying code', verify)
 				const { token } = verify
 				if (token) onCodeVerified.current({ token })
+				setError(null)
 
 				// setLoading(false)
 			} catch (e) {
 				console.error('verify token failed: ', e)
+				setError(e)
 				setLoading(false)
 			}
 		}
 
-		if (code.length === CodeLength) {
+		if (code.length === CodeLength && !uploading) {
 			send()
 		} else {
 			setLoading(false)
 		}
-	}, [code, phoneNumber, setLoading])
+	}, [code, phoneNumber, setLoading, setError, uploading])
 
 	return {
 		code,

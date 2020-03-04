@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useReducer, useCallback } from 'react'
 
 type State<Error> = {
 	loading: boolean
@@ -54,12 +54,18 @@ export const useNetworkReducer = <Error>(state?: State<Error>) => {
 		reducer,
 		state ?? initialState
 	)
-	const setLoading = (loading: boolean) =>
-		dispatch({ type: loading ? 'start loading' : 'stop loading' })
-	const setError = (error: Error | null) =>
-		error
-			? dispatch({ type: 'new error', error })
-			: dispatch({ type: 'clear error' })
+	const setLoading = useCallback(
+		(loading: boolean) =>
+			dispatch({ type: loading ? 'start loading' : 'stop loading' }),
+		[dispatch]
+	)
+	const setError = useCallback(
+		(error: Error | null) =>
+			error
+				? dispatch({ type: 'new error', error })
+				: dispatch({ type: 'clear error' }),
+		[dispatch]
+	)
 
 	return {
 		loading,

@@ -5,6 +5,7 @@ import {
 	ScrollView,
 	Text,
 	TouchableOpacity,
+	TextStyle as TextStyleType,
 } from 'react-native'
 import { TextInput, ActivityIndicator } from 'react-native-paper'
 import { ScreenStyle } from '../style/screen'
@@ -95,6 +96,14 @@ interface Props {
 	 * Default: Enter code
 	 */
 	title?: string
+	/**
+	 * If there is a network error message
+	 */
+	error?: string | null
+	/**
+	 * Text style for the `error` message prop.
+	 */
+	errorStyle?: TextStyleType
 }
 
 export function ConfirmPhone(props: Props) {
@@ -106,6 +115,8 @@ export function ConfirmPhone(props: Props) {
 		message,
 		tintColor,
 		title = 'Enter Code',
+		error,
+		errorStyle,
 	} = props
 
 	const renderMessage = () => {
@@ -160,6 +171,16 @@ export function ConfirmPhone(props: Props) {
 			</View>
 		)
 
+	const renderError = () => {
+		return (
+			!!error && (
+				<Text style={[styles.error, errorStyle]}>
+					Please try again Error: {error}
+				</Text>
+			)
+		)
+	}
+
 	return (
 		<ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
 			<View style={styles.wrapper}>
@@ -167,6 +188,7 @@ export function ConfirmPhone(props: Props) {
 				{renderMessage()}
 				{renderInput()}
 				{renderLoader()}
+				{renderError()}
 				{renderResend()}
 			</View>
 		</ScrollView>
