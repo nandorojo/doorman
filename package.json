@@ -1,11 +1,11 @@
 {
 	"name": "react-native-doorman",
 	"description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"main": "lib/module/index",
 	"module": "lib/module/index",
 	"react-native": "lib/module/index",
-	"types": "lib/typescript/index",
+	"types": "lib/typescript/src/index",
 	"homepage": "https://github.com/nandorojo/expo-phone-auth",
 	"repository": {
 		"type": "git",
