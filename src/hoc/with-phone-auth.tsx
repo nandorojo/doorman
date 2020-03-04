@@ -2,7 +2,6 @@ import React, { ComponentType, ComponentPropsWithoutRef } from 'react'
 import { AuthGate } from '../components/AuthGate'
 import { Magic } from '../views/Controlled'
 import { DoormanProvider, useDoormanContext } from '../context'
-import { empty } from '../utils/empty'
 
 type Options = {
 	Loading?: ComponentType
@@ -14,11 +13,15 @@ type Options = {
 	codeScreenProps?: ComponentPropsWithoutRef<
 		typeof Magic['PhoneStack']
 	>['codeScreenProps']
+	/**
+	 * Endpoint provided to you by doorman.
+	 */
+	endpoint: string
 }
 
 export function withPhoneAuth<P>(
 	Component: ComponentType<P & { user: firebase.User }>,
-	options: Options = empty.object
+	options: Options
 ) {
 	const {
 		Loading,
@@ -26,6 +29,7 @@ export function withPhoneAuth<P>(
 		tintColor,
 		phoneScreenProps,
 		codeScreenProps,
+		endpoint,
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		/**
@@ -39,7 +43,7 @@ export function withPhoneAuth<P>(
 				? DoormanProvider
 				: React.Fragment
 		return (
-			<Provider>
+			<Provider endpoint={endpoint}>
 				<AuthGate>
 					{({ loading, user }) => {
 						if (loading) {
