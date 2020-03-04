@@ -41,13 +41,16 @@ const Constants = {
 	verify: 'verifyToken',
 }
 
-const getEndpoint = (ending?: string) => {
-	if (configurationHasKey(configuration) && configuration.endpoint) {
-		return `${configuration.endpoint}/${ending ?? ''}`
-	} else {
-		return console.error(InitializationErrorMessage, { error: 'no endpoint' })
-	}
-}
+// const getEndpoint = (ending?: string) => {
+// 	if (configurationHasKey(configuration) && configuration.endpoint) {
+// 		return `${configuration.endpoint}/${ending ?? ''}`
+// 	} else {
+// 		return console.error(InitializationErrorMessage, { error: 'no endpoint' })
+// 	}
+// }
+
+const getEndpoint = () =>
+	configurationHasKey(configuration) ? configuration.endpoint : ''
 
 const initialize = ({
 	endpoint,
@@ -75,10 +78,11 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 			throw new Error(InitializationErrorMessage)
 		}
 		const response: { success: boolean; error: null } = await fetch(
-			`${getEndpoint(Constants.signIn)}`,
+			getEndpoint(),
 			{
 				body: JSON.stringify({
 					phone: info.phoneNumber,
+					action: Constants.signIn,
 				}),
 				method: 'POST',
 			}
@@ -102,11 +106,12 @@ const verifyCode = async ({
 			throw new Error(InitializationErrorMessage)
 		}
 		const response: Promise<{ token: string; uid: string }> = await fetch(
-			`${getEndpoint(Constants.verify)}`,
+			getEndpoint(),
 			{
 				body: JSON.stringify({
 					code,
 					phone,
+					action: Constants.verify,
 				}),
 				method: 'POST',
 			}
