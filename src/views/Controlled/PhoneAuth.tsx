@@ -8,10 +8,16 @@ type Props = Omit<
 > & {
 	onSmsSuccessfullySent(info: { phoneNumber: string }): void
 	onSmsError?: (error: unknown) => void
+	testNumbers?: string[]
 }
 
 export default function ControlledPhoneAuth(props: Props) {
-	const { onSmsSuccessfullySent, onSmsError, ...otherProps } = props
+	const {
+		onSmsSuccessfullySent,
+		onSmsError,
+		testNumbers,
+		...otherProps
+	} = props
 
 	const {
 		phoneNumber,
@@ -21,29 +27,18 @@ export default function ControlledPhoneAuth(props: Props) {
 		loading,
 	} = usePhoneNumber({
 		onSmsSuccessfullySent,
+		onSmsError,
+		testNumbers,
 	})
 
 	return (
 		<PhoneAuth
 			{...otherProps}
-			{...{ phoneNumber, valid, loading }}
 			onChangePhoneNumber={onChangePhoneNumber}
 			onSubmitPhone={submitPhone}
-			// onSubmitPhone={async ({ phoneNumber }) => {
-			// 	setLoading(true)
-			// 	const response = await doorman.signInWithPhoneNumber({ phoneNumber })
-			// 	setLoading(false)
-
-			// 	if (response.success) {
-			// 		onSmsSuccessfullySent({ phoneNumber })
-			// 	} else {
-			// 		console.warn(
-			// 			'Error signing in with phone number. See doorman Magic.PhoneAuth component',
-			// 			response
-			// 		)
-			// 		onSmsError?.(response.error)
-			// 	}
-			// }}
+			phoneNumber={phoneNumber}
+			valid={valid}
+			loading={loading}
 		/>
 	)
 }

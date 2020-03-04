@@ -36,7 +36,7 @@ export default function useConfirmPhone({
 				const { token } = verify
 				if (token) onCodeVerified.current({ token })
 
-				setLoading(false)
+				// setLoading(false)
 			} catch (e) {
 				console.error('verify token failed: ', e)
 				setLoading(false)

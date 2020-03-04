@@ -22,7 +22,6 @@
 		"skipLibCheck": true,
 		"experimentalDecorators": true,
 		"pretty": true,
-		"emitDeclarationOnly": true,
 		"resolveJsonModule": true
 	},
 	"include": ["src/index.ts"],

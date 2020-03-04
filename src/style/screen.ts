@@ -10,4 +10,7 @@ export const ScreenStyle = StyleSheet.create({
 	buttonWrapper: {
 		marginVertical: 16,
 	},
+	button: {
+		paddingVertical: 4,
+	},
 })

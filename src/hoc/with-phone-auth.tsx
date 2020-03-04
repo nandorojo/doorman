@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react'
+import React, { ComponentType, ComponentPropsWithoutRef } from 'react'
 import { AuthGate } from '../components/AuthGate'
 import { Magic } from '../views/Controlled'
 import { DoormanProvider, useDoormanContext } from '../context'
@@ -8,18 +8,30 @@ type Options = {
 	Loading?: ComponentType
 	includeProvider?: boolean
 	tintColor?: string
+	phoneScreenProps?: ComponentPropsWithoutRef<
+		typeof Magic['PhoneStack']
+	>['phoneScreenProps']
+	codeScreenProps?: ComponentPropsWithoutRef<
+		typeof Magic['PhoneStack']
+	>['codeScreenProps']
 }
 
 export function withPhoneAuth<P>(
 	Component: ComponentType<P & { user: firebase.User }>,
 	options: Options = empty.object
 ) {
-	const { Loading, includeProvider = true, tintColor } = options
+	const {
+		Loading,
+		includeProvider = true,
+		tintColor,
+		phoneScreenProps,
+		codeScreenProps,
+	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		/**
 		 * If the context is non-null, this means a provider already exists in the component tree.
 		 *
-		 * In this case, we add it ourselves. You can still deny `includeProvider` if you want.
+		 * If it doesn't, we add it ourselves. You can still deny `includeProvider` if you want.
 		 */
 		const providerExistsAlready = useDoormanContext()
 		const Provider =
@@ -36,7 +48,11 @@ export function withPhoneAuth<P>(
 
 						if (user) return <Component {...props} user={user} />
 
-						return <Magic.PhoneStack tintColor={tintColor} />
+						return (
+							<Magic.PhoneStack
+								{...{ phoneScreenProps, codeScreenProps, tintColor }}
+							/>
+						)
 					}}
 				</AuthGate>
 			</Provider>

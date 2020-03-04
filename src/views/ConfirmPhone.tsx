@@ -86,7 +86,7 @@ interface Props {
 	 * ```
 	 */
 	message?: string | ((info: { phoneNumber: string }) => ReactNode)
-	onPressResendCode?: (phoneNumber: string) => void
+	onPressResendCode?: (info: { phoneNumber: string }) => void
 	onReset?: () => void
 	tintColor?: string
 	/**
@@ -135,6 +135,10 @@ export function ConfirmPhone(props: Props) {
 			clearButtonMode="while-editing"
 			label="6-digit code"
 			textContentType="oneTimeCode"
+			autoFocus
+			keyboardType="number-pad"
+			accessibilityHint="6-digit phone number texted to you"
+			returnKeyType="done"
 		/>
 	)
 
@@ -142,9 +146,9 @@ export function ConfirmPhone(props: Props) {
 		!loading && props.onPressResendCode ? (
 			<>
 				<TouchableOpacity
-					onPress={() => props.onPressResendCode?.(props.phoneNumber)}
+					onPress={() => props.onPressResendCode?.({ phoneNumber })}
 				>
-					<Text style={[styles.message, styles.number]}>Resend Code</Text>
+					<Text style={[{ color: tintColor }, styles.resend]}>Resend Code</Text>
 				</TouchableOpacity>
 			</>
 		) : null
@@ -177,6 +181,10 @@ const styles = StyleSheet.create({
 	},
 	number: {
 		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	resend: {
+		marginTop: 16,
 		textAlign: 'center',
 	},
 	...ScreenStyle,

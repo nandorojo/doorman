@@ -11,4 +11,8 @@ export const TextStyle = StyleSheet.create({
 		marginBottom: 16,
 		fontSize: 16,
 	},
+	disclaimer: {
+		color: 'gray',
+		fontSize: 12,
+	},
 })

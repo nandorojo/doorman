@@ -55,12 +55,25 @@ export default function FirebasePhoneStack(props: Props) {
 				{...codeScreenProps}
 				phoneNumber={phoneNumber}
 				tintColor={props?.tintColor}
-				onCodeVerified={info => {
+				onCodeVerified={async info => {
 					if (props?.onCodeVerified) props?.onCodeVerified?.(info)
 					else {
 						const { token } = info
-						if (token) firebase.auth().signInWithCustomToken(token)
-						else console.warn('oooo no token lol')
+						if (token) {
+							// sign the user in
+							const { user } = await firebase
+								.auth()
+								.signInWithCustomToken(token)
+							console.log('oooooo', { user })
+
+							// if the user doesn't exist in the DB yet, add the user to the DB
+							// if (user && !(await doorman.doesUserExist({ uid: user.uid }))) {
+							// 	// you might also use this logic to navigate to a new user onboarding screen
+							// 	doorman.addUserToDb(user)
+							// }
+						} else {
+							console.warn('oooo no token lol')
+						}
 					}
 				}}
 			/>

@@ -118,7 +118,7 @@ const verifyCode = async ({
 	}
 }
 
-const doesUserExist = async (user: firebase.User) => {
+const doesUserExist = async (user: { uid: string }) => {
 	return await firebase
 		.firestore()
 		.collection(UsersCollection)
