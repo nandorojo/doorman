@@ -18,6 +18,12 @@ type Props = {
 		ComponentPropsWithoutRef<typeof ControlledConfirmPhone>,
 		'phoneNumber' | 'tintColor' | 'onCodeVerified'
 	>
+	/**
+	 * Test phone numbers array.
+	 *
+	 * Example: ['+15555555555']
+	 */
+	testNumbers?: string[]
 }
 
 export default function FirebasePhoneStack(props: Props) {
@@ -26,6 +32,7 @@ export default function FirebasePhoneStack(props: Props) {
 	const {
 		phoneScreenProps = empty.object,
 		codeScreenProps = empty.object,
+		testNumbers,
 	} = props
 
 	if (!phoneNumber)
@@ -41,6 +48,7 @@ export default function FirebasePhoneStack(props: Props) {
 						setPhoneNumber(phoneNumber)
 					}}
 					tintColor={props?.tintColor}
+					testNumbers={testNumbers}
 				/>
 			</>
 		)

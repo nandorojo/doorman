@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { doorman } from '../methods'
+import { useNetworkReducer } from './use-network-reducer'
 
 const CodeLength = 6
 
@@ -20,7 +21,8 @@ export default function useConfirmPhone({
 	onCodeVerified: onVerified,
 }: Props) {
 	const [code, setCode] = useState('')
-	const [uploading, setLoading] = useState(false)
+	// const [uploading, setLoading] = useState(false)
+	const { loading: uploading, error, setLoading } = useNetworkReducer()
 
 	const onCodeVerified = useRef(onVerified)
 	useEffect(() => {
@@ -48,12 +50,13 @@ export default function useConfirmPhone({
 		} else {
 			setLoading(false)
 		}
-	}, [code, phoneNumber])
+	}, [code, phoneNumber, setLoading])
 
 	return {
 		code,
 		onChangeCode: setCode,
 		loading: uploading,
 		reset: () => setCode(''),
+		error,
 	}
 }

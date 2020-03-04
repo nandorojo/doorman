@@ -1,4 +1,2 @@
-import npm from '../../package.json'
-
 export const PackageName = 'Doorman'
-export const npmPackageName = npm.name
+export const npmPackageName = 'react-native-doorman'

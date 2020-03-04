@@ -13,6 +13,8 @@ import { doorman } from '${npmPackageName}'
 doorman.initialize({
 	endpoint: ENDPOINT_YOU_GOT_FROM_DOORMAN_CLI
 })
+
+or give the endpoint to your <DoormanProvider /> component at the root of your app. 
 `
 
 interface NotInitialized {
@@ -52,6 +54,13 @@ const Constants = {
 const getEndpoint = () =>
 	configurationHasKey(configuration) ? configuration.endpoint : ''
 
+const post = (body: object) =>
+	fetch(getEndpoint(), {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(body),
+	}).then(r => r.json())
+
 const initialize = ({
 	endpoint,
 	firebaseConfig,
@@ -77,17 +86,20 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 		if (!configuration.hasInitialized) {
 			throw new Error(InitializationErrorMessage)
 		}
-		const response: { success: boolean; error: null } = await fetch(
-			getEndpoint(),
+		const { error, success }: { success: boolean; error?: string } = await post(
 			{
-				body: JSON.stringify({
-					phone: info.phoneNumber,
-					action: Constants.signIn,
-				}),
-				method: 'POST',
+				phone: info.phoneNumber,
+				action: Constants.signIn,
 			}
-		).then(r => r.json())
-		return response
+		)
+
+		if (error) throw new Error(error)
+		if (!success) {
+			throw new Error(
+				'unknown error: success was false but there was no error message'
+			)
+		}
+		return { success }
 	} catch (e) {
 		console.error('Error using signInWithPhoneNumber: ', e)
 		return { error: e, success: false }
@@ -100,26 +112,21 @@ const verifyCode = async ({
 }: {
 	code: string
 	phoneNumber: string
-}): Promise<{ token: string | null; success: boolean; uid?: string }> => {
+}): Promise<{ token: string | null; success: boolean; error?: string }> => {
 	try {
 		if (!configuration.hasInitialized) {
 			throw new Error(InitializationErrorMessage)
 		}
-		const response: Promise<{ token: string; uid: string }> = await fetch(
-			getEndpoint(),
-			{
-				body: JSON.stringify({
-					code,
-					phone,
-					action: Constants.verify,
-				}),
-				method: 'POST',
-			}
-		).then(res => res.json())
-		return { success: true, token: (await response).token }
+		const { token, error }: { token: string; error?: string } = await post({
+			code,
+			phone,
+			action: Constants.verify,
+		})
+		if (!token) throw new Error(error)
+		return { success: true, token }
 	} catch (e) {
 		console.error('Error using verifyToken: ', e)
-		return { token: null, success: false }
+		return { token: null, success: false, error: e }
 	}
 }
 
