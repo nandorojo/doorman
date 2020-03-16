@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, ComponentPropsWithoutRef } from 'react'
 import {
 	View,
 	StyleSheet,
@@ -10,6 +10,10 @@ import {
 import { TextInput, ActivityIndicator } from 'react-native-paper'
 import { ScreenStyle } from '../style/screen'
 import { TextStyle } from '../style/text'
+import Container from '../../../react-native-bootstrap/src/components/Container'
+import { Page } from '../components/Page'
+import { Paragraph, H1 } from '../components'
+import { empty } from '../utils/empty'
 
 interface Props {
 	code: string
@@ -46,7 +50,9 @@ interface Props {
 	 * ```jsx
 	 * import * as React from 'react'
 	 * import { useConfirmPhone, ConfirmPhone } from 'doorman'
-	 *
+	 *import Container from '../../../react-native-bootstrap/src/components/Container/index'
+import { H1 } from '../components/Text'
+
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
 	 *
@@ -124,6 +130,10 @@ interface Props {
 	 * Text style for the `error` message prop.
 	 */
 	errorStyle?: TextStyleType
+	/**
+	 * Props for the scroll view containing the whole screen. For styles, see `containerStyle`
+	 */
+	containerProps?: Omit<ComponentPropsWithoutRef<typeof ScrollView>, 'style'>
 }
 
 export function ConfirmPhone(props: Props) {
@@ -139,23 +149,24 @@ export function ConfirmPhone(props: Props) {
 		errorStyle,
 		resending,
 		resendText = 'Resend Code',
+		containerProps = empty.object,
 	} = props
 
 	const renderMessage = () => {
 		if (message) {
-			if (typeof message === 'function') {
-				return <Text style={styles.subtitle}>{message({ phoneNumber })}</Text>
-			}
-
-			return <Text style={styles.subtitle}>{message}</Text>
+			return (
+				<Paragraph style={styles.subtitle}>
+					{typeof message === 'function' ? message({ phoneNumber }) : message}
+				</Paragraph>
+			)
 		}
 
 		return (
-			<Text style={styles.subtitle}>
+			<Paragraph style={styles.subtitle}>
 				We just sent a 6-digit code to{' '}
-				<Text style={styles.number}>{phoneNumber}</Text>. Enter it below to
-				continue.
-			</Text>
+				<Paragraph style={styles.number}>{phoneNumber}</Paragraph>. Enter it
+				below to continue.
+			</Paragraph>
 		)
 	}
 	const renderInput = () => (
@@ -182,9 +193,9 @@ export function ConfirmPhone(props: Props) {
 					disabled={resending}
 					onPress={() => props.onPressResendCode?.({ phoneNumber })}
 				>
-					<Text style={[{ color: tintColor }, styles.resend]}>
+					<Paragraph style={[{ color: tintColor }, styles.resend]}>
 						{resending ? 'Resending code...' : resendText}
-					</Text>
+					</Paragraph>
 				</TouchableOpacity>
 			</>
 		) : null
@@ -207,20 +218,20 @@ export function ConfirmPhone(props: Props) {
 	}
 
 	return (
-		<ScrollView keyboardShouldPersistTaps="handled" style={styles.container}>
+		<Page containerProps={containerProps}>
 			<View style={styles.wrapper}>
-				<Text style={TextStyle.h1}>{title}</Text>
+				<H1>{title}</H1>
 				{renderMessage()}
 				{renderInput()}
 				{renderLoader()}
 				{renderError()}
 				{renderResend()}
 			</View>
-		</ScrollView>
+		</Page>
 	)
 }
 
-const styles = StyleSheet.create({
+const styles = {
 	message: {
 		textAlign: 'center',
 		marginVertical: 10,
@@ -236,4 +247,4 @@ const styles = StyleSheet.create({
 	},
 	...ScreenStyle,
 	...TextStyle,
-})
+}

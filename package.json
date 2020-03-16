@@ -58,7 +58,9 @@
 	"dependencies": {
 		"react-native-paper": "^3.6.0",
 		"react-native-phone-input": "^0.2.4",
-		"react-native-text-input-mask": "^2.0.0"
+		"react-native-text-input-mask": "^2.0.0",
+		"react-native-extended-stylesheet": "^0.12.0",
+		"react-phone-number-input": "^3.0.22"
 	},
 	"peerDependencies": {
 		"firebase": "*",

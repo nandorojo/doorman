@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native'
 
-export const TextStyle = StyleSheet.create({
+export const TextStyle = {
 	h1: {
 		fontSize: 26,
-		fontWeight: 'bold',
+		fontWeight: 'bold' as 'bold',
 		marginBottom: 16,
 		marginTop: 8,
 	},
@@ -23,4 +23,4 @@ export const TextStyle = StyleSheet.create({
 		borderColor: 'red',
 		color: 'red',
 	},
-})
+}

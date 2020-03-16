@@ -1,0 +1,8 @@
+input {
+  outline: none;
+  /* padding: 12px; */
+  border: none;
+  font-size: 24px;
+  background-color: transparent;
+  font-weight: bold;
+}

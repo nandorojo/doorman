@@ -3,6 +3,7 @@ import { AuthGate } from '../components/AuthGate'
 import { Magic } from '../views/Controlled'
 import { DoormanProvider, useDoormanContext } from '../context'
 import { InitializationProps } from '../methods'
+import { theme } from '../style/theme'
 
 type Options = {
 	Loading?: ComponentType
@@ -34,6 +35,7 @@ type Options = {
 	 * It receives one prop: a function called `next` that should be called whenever a user wants to continue to the auth screens.
 	 */
 	SplashScreen?: ComponentType<{ next: () => void }>
+	theme?: ReturnType<typeof theme>
 }
 
 export function withPhoneAuth<P>(
@@ -52,6 +54,7 @@ export function withPhoneAuth<P>(
 		doorman,
 		testNumbers,
 		SplashScreen,
+		theme: themeOption,
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		console.log('IN WITH PHONE AUTH HOC??')
@@ -68,7 +71,7 @@ export function withPhoneAuth<P>(
 				? DoormanProvider
 				: React.Fragment
 		return (
-			<Provider {...doorman}>
+			<Provider theme={themeOption} {...doorman}>
 				<AuthGate>
 					{({ loading, user }) => {
 						if (loading) {

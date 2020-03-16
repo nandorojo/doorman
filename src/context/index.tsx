@@ -2,10 +2,17 @@ import React, { useContext, useEffect } from 'react'
 import { createContext, ReactNode } from 'react'
 import { useFirebaseAuthGate } from '../hooks/use-firebase-auth-gate'
 import { doorman, InitializationProps } from '../methods'
+import { theme as themeCreator } from '../style/theme'
 
 type Context = null | {
 	user: null | firebase.User
 	loading: boolean
+	theme?: ReturnType<typeof themeCreator>
+}
+
+type Props = {
+	theme?: ReturnType<typeof themeCreator>
+	children: ReactNode
 }
 
 const DoormanContext = createContext<Context>(null)
@@ -13,9 +20,8 @@ const DoormanContext = createContext<Context>(null)
 export function DoormanProvider({
 	children,
 	projectId,
-}: {
-	children: ReactNode
-} & InitializationProps) {
+	theme = themeCreator(),
+}: Props & InitializationProps) {
 	const auth = useFirebaseAuthGate()
 
 	useEffect(() => {
@@ -23,7 +29,9 @@ export function DoormanProvider({
 	}, [projectId])
 
 	return (
-		<DoormanContext.Provider value={auth}>{children}</DoormanContext.Provider>
+		<DoormanContext.Provider value={{ ...auth, theme }}>
+			{children}
+		</DoormanContext.Provider>
 	)
 }
 

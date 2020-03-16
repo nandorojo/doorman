@@ -1,25 +1,10 @@
-import React, { MutableRefObject, useRef, useEffect, useCallback } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 // @ts-ignore
 import Input from 'react-native-phone-input'
-import { TextStyle, StyleProp, TextInput } from 'react-native'
-import { empty } from '../utils/empty'
+import { empty } from '../../utils/empty'
+import { PhoneInputRef, PhoneInputProps } from './types'
 
-type Ref = {
-	isValidNumber(): boolean
-	getValue(): boolean
-	focus(): void
-	blur(): void
-}
-
-type Props = {
-	value: string
-	onChangePhoneNumber: (info: { phoneNumber: string; valid: boolean }) => void
-	textStyle?: StyleProp<TextStyle>
-	inputRef?: MutableRefObject<Ref | null>
-	inputProps?: TextInput['props']
-	disabled?: boolean
-	style?: TextInput['props']['style']
-}
+type Props = PhoneInputProps
 
 export function PhoneInput(props: Props) {
 	const {
@@ -31,7 +16,7 @@ export function PhoneInput(props: Props) {
 		style,
 	} = props
 
-	const ref = useRef<Ref>(null)
+	const ref = useRef<PhoneInputRef>(null)
 	useEffect(() => {
 		if (inputRef?.current) inputRef.current = ref.current
 	})

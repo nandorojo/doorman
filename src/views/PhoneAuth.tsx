@@ -2,9 +2,11 @@ import React, { useCallback, ComponentPropsWithoutRef, ReactNode } from 'react'
 import { View, ViewStyle, ScrollView, Text, Alert } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
-import { TextStyle } from '../style/text'
 import { ScreenStyle } from '../style/screen'
-import { PhoneInput } from '../components/PhoneInput'
+import { Page } from '../components/Page'
+import { useTextStyle } from '../hooks/use-style'
+import ReactPhoneInput from 'react-phone-number-input'
+import { PhoneInput, H1, Paragraph } from '../components'
 
 type Props = {
 	/**
@@ -122,6 +124,9 @@ type Props = {
 	 * @example
 	 * ```jsx
 	 * import { Button } from 'react-native-paper'
+	 *import Page from '../components/Page'
+	 *import { useTextStyle } from '../hooks/use-style'
+	 *import { H1 } from '../components/Text'
 	 *
 	 * export default () => {
 	 * 	return (
@@ -139,6 +144,24 @@ type Props = {
 			submit: () => void
 		}
 	) => ReactNode
+	/**
+	 * A two-letter country code for formatting `value`
+	 * when a user inputs a national phone number (example: `(213) 373-4253`).
+	 * The user can still input a phone number in international format.
+	 * Default example: "US".
+	 */
+	defaultCountry?: ComponentPropsWithoutRef<
+		typeof ReactPhoneInput
+	>['defaultCountry']
+	/**
+	 * Function to render a custom input component.
+	 *
+	 * By default, uses react-native-phone-input on mobile and react-phone-number-input on web.
+	 */
+	renderInput?: (props: {
+		value: string
+		onChangeText: (info: { phoneNumber: string; valid: boolean }) => void
+	}) => ReactNode
 }
 
 export const PhoneAuth = (props: Props) => {
@@ -162,10 +185,12 @@ export const PhoneAuth = (props: Props) => {
 		invalidNumberAlertText = 'Please enter a valid phone number.',
 		renderButton,
 	} = props
+
 	const submit = useCallback(() => onSubmitPhone({ phoneNumber }), [
 		phoneNumber,
 		onSubmitPhone,
 	])
+
 	const button = () => {
 		const renderProps: ComponentPropsWithoutRef<typeof Button> = {
 			mode: 'contained',
@@ -185,66 +210,47 @@ export const PhoneAuth = (props: Props) => {
 		if (renderButton) return renderButton({ ...renderProps, valid, submit })
 		return <Button {...renderProps} />
 	}
+
 	const renderDisclaimer = () => {
 		if (typeof disclaimer === 'function') {
 			return disclaimer({ buttonText })
 		}
 		return disclaimer
 	}
+	const input = useCallback(() => {
+		return (
+			<PhoneInput
+				value={phoneNumber}
+				onChangePhoneNumber={onChangePhoneNumber}
+				inputProps={{
+					autoFocus: true,
+					selectionColor: tintColor,
+					placeholder: 'Phone number',
+					...inputProps,
+				}}
+				textStyle={{ fontSize: 20, fontWeight: 'bold' }}
+				style={{
+					padding: 16,
+					backgroundColor: '#e8e8e880',
+					borderRadius: 4,
+					...inputStyle,
+				}}
+			/>
+		)
+	}, [inputProps, inputStyle, onChangePhoneNumber, phoneNumber, tintColor])
+
+	const TextStyle = useTextStyle()
 
 	return (
-		<ScrollView
-			{...containerProps}
-			style={[styles.container, containerStyle]}
-			// centerContent
-			keyboardDismissMode="on-drag"
-			scrollEnabled={false}
-			keyboardShouldPersistTaps="handled"
-		>
+		<Page containerProps={containerProps}>
 			<View style={styles.wrapper}>
-				<Text style={TextStyle.h1}>{title}</Text>
-				<Text style={TextStyle.subtitle}>{message}</Text>
-				<View>
-					{/*<TextInput
-						{...inputProps}
-						placeholder="+1 555-654-4654"
-						value={phoneNumber}
-						onChangeText={text =>
-							onChangePhoneNumber({ phoneNumber: text, valid })
-						}
-						disabled={loading}
-						style={inputStyle}
-						mode="outlined"
-						label="Phone Number"
-						underlineColor={tintColor}
-						selectionColor={tintColor}
-						onSubmitEditing={submit}
-						autoFocus
-						// textContentType=""
-						keyboardType="phone-pad"
-					/>*/}
-					<PhoneInput
-						value={phoneNumber}
-						onChangePhoneNumber={onChangePhoneNumber}
-						inputProps={{
-							autoFocus: true,
-							selectionColor: tintColor,
-							placeholder: 'Phone number',
-							...inputProps,
-						}}
-						textStyle={{ fontSize: 20, fontWeight: 'bold' }}
-						style={{
-							padding: 16,
-							backgroundColor: '#e8e8e880',
-							borderRadius: 4,
-							...inputStyle,
-						}}
-					/>
-				</View>
+				<H1>{title}</H1>
+				<Paragraph>{message}</Paragraph>
+				<View>{input()}</View>
 				<View style={styles.buttonWrapper}>{button()}</View>
 				<Text style={TextStyle.disclaimer}>{renderDisclaimer()}</Text>
 			</View>
-		</ScrollView>
+		</Page>
 	)
 }
 
