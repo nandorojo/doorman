@@ -17,13 +17,16 @@ doorman.initialize({
 or give the endpoint to your <DoormanProvider /> component at the root of your app. 
 `
 
-interface NotInitialized {
+type NotInitialized = {
 	hasInitialized: false
 }
 
-interface Initialized {
+export type InitializationProps = {
+	projectId: string
+}
+
+type Initialized = InitializationProps & {
 	hasInitialized: true
-	endpoint: string
 }
 
 type Configuration = NotInitialized | Initialized
@@ -52,7 +55,9 @@ const Constants = {
 // }
 
 const getEndpoint = () =>
-	configurationHasKey(configuration) ? configuration.endpoint : ''
+	configurationHasKey(configuration)
+		? `https://us-central1-${configuration.projectId}.cloudfunctions.net/doormanPhoneLogic`
+		: ''
 
 const post = (body: object) =>
 	fetch(getEndpoint(), {
@@ -62,16 +67,15 @@ const post = (body: object) =>
 	}).then(r => r.json())
 
 const initialize = ({
-	endpoint,
+	projectId,
 	firebaseConfig,
 }: {
-	endpoint: string
 	firebaseConfig?: Parameters<typeof initializeApp>['0']
-}) => {
+} & InitializationProps) => {
 	configuration = {
 		...configuration,
 		hasInitialized: true,
-		endpoint,
+		projectId,
 	}
 	if (firebaseConfig) {
 		return !firebase.apps.length
@@ -86,20 +90,21 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 		if (!configuration.hasInitialized) {
 			throw new Error(InitializationErrorMessage)
 		}
-		const { error, success }: { success: boolean; error?: string } = await post(
-			{
-				phone: info.phoneNumber,
-				action: Constants.signIn,
-			}
-		)
+		const {
+			error,
+			success,
+		}: { success: boolean; error?: 'custom/code-does-not-match' } = await post({
+			phone: info.phoneNumber,
+			action: Constants.signIn,
+		})
 
 		if (error) throw new Error(error)
 		if (!success) {
-			throw new Error(
-				'unknown error: success was false but there was no error message'
+			console.warn(
+				'Warning: success was false for sending SMS, but there was no error message. If you are using test numbers, disregard this warning.'
 			)
 		}
-		return { success }
+		return { success: true }
 	} catch (e) {
 		console.error('Error using signInWithPhoneNumber: ', e)
 		return { error: e, success: false }
@@ -156,6 +161,14 @@ const getUser = async (user: { uid: string }) => {
 		.then(doc => doc.data())
 }
 
+const updateUserDisplayName = async ({
+	displayName,
+}: {
+	displayName: string
+}) => {
+	return firebase.auth().currentUser?.updateProfile({ displayName })
+}
+
 export const doorman = {
 	initialize,
 	signInWithPhoneNumber,
@@ -163,4 +176,5 @@ export const doorman = {
 	doesUserExist,
 	addUserToDb,
 	getUser,
+	updateUserDisplayName,
 }

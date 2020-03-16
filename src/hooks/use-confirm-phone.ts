@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { doorman } from '../methods'
 import { useNetworkReducer } from './use-network-reducer'
 
@@ -16,48 +16,72 @@ type Props = {
 	phoneNumber: string
 }
 
+type Errors = 'Error: custom/code-does-not-match'
+
 export default function useConfirmPhone({
 	phoneNumber,
 	onCodeVerified: onVerified,
 }: Props) {
 	const [code, setCode] = useState('')
 	// const [uploading, setLoading] = useState(false)
-	const {
-		loading: uploading,
-		error,
-		setLoading,
-		setError,
-	} = useNetworkReducer()
+	const { loading: uploading, error, setLoading, setError } = useNetworkReducer<
+		Errors
+	>()
+	const [resending, setResending] = useState(false)
+
+	const resend = useCallback(async () => {
+		try {
+			setResending(true)
+			setError(null)
+			const { error, success } = await doorman.signInWithPhoneNumber({
+				phoneNumber,
+			})
+			if (error) throw new Error(error)
+			setResending(false)
+			if (!success) {
+				console.warn(
+					'SMS did not properly send a code from the resend() function in the useConfirmPhone() hook. If you are using test numbers, disregard this warning.'
+				)
+			}
+			return { success: true, error: null }
+		} catch (e) {
+			setResending(false)
+			setError(e.message)
+			return { success: false, error: e.message as string }
+		}
+	}, [setError, phoneNumber])
 
 	const onCodeVerified = useRef(onVerified)
 	useEffect(() => {
 		onCodeVerified.current = onVerified
 	})
+	console.log('setttt codddeeee', code)
 
 	useEffect(() => {
+		console.log('effffecccctttt', code)
 		const send = async () => {
 			setLoading(true)
 			try {
-				const verify = await doorman.verifyCode({ code, phoneNumber })
-				console.log('verifyyyying code', verify)
-				const { token } = verify
-				if (token) onCodeVerified.current({ token })
-				setError(null)
+				const { token, error } = await doorman.verifyCode({ code, phoneNumber })
+				if (token) {
+					setError(null)
+					return onCodeVerified.current({ token })
+				}
 
-				// setLoading(false)
+				if (error) throw new Error(error)
 			} catch (e) {
-				console.error('verify token failed: ', e)
-				setError(e)
+				setError(e.message)
 				setLoading(false)
 			}
 		}
 
-		if (code.length === CodeLength && !uploading) {
+		if (code.length === CodeLength) {
 			send()
 		} else {
 			setLoading(false)
+			setError(null)
 		}
-	}, [code, phoneNumber, setLoading, setError, uploading])
+	}, [code, phoneNumber, setLoading, setError])
 
 	return {
 		code,
@@ -65,5 +89,7 @@ export default function useConfirmPhone({
 		loading: uploading,
 		reset: () => setCode(''),
 		error,
+		resend,
+		resending,
 	}
 }

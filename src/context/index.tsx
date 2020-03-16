@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { createContext, ReactNode } from 'react'
 import { useFirebaseAuthGate } from '../hooks/use-firebase-auth-gate'
-import { doorman } from '../methods'
+import { doorman, InitializationProps } from '../methods'
 
 type Context = null | {
 	user: null | firebase.User
@@ -12,16 +12,15 @@ const DoormanContext = createContext<Context>(null)
 
 export function DoormanProvider({
 	children,
-	endpoint,
+	projectId,
 }: {
 	children: ReactNode
-	endpoint: string
-}) {
+} & InitializationProps) {
 	const auth = useFirebaseAuthGate()
 
 	useEffect(() => {
-		doorman.initialize({ endpoint })
-	}, [endpoint])
+		doorman.initialize({ projectId })
+	}, [projectId])
 
 	return (
 		<DoormanContext.Provider value={auth}>{children}</DoormanContext.Provider>

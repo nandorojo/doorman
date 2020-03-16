@@ -1,4 +1,14 @@
-import React, { useState, ComponentPropsWithoutRef } from 'react'
+import React, {
+	useState,
+	ComponentPropsWithoutRef,
+	useRef,
+	useEffect,
+} from 'react'
+import {
+	Transitioning,
+	Transition,
+	TransitioningView,
+} from 'react-native-reanimated'
 import firebase from 'firebase/app'
 import ControlledPhoneAuth from './PhoneAuth'
 import ControlledConfirmPhone from './ConfirmPhone'
@@ -34,6 +44,74 @@ export default function FirebasePhoneStack(props: Props) {
 		codeScreenProps = empty.object,
 		testNumbers,
 	} = props
+
+	const transitionRef = useRef<TransitioningView>(null)
+	useEffect(() => {
+		transitionRef.current?.animateNextTransition()
+	}, [phoneNumber])
+
+	return (
+		<Transitioning.View
+			ref={transitionRef}
+			transition={
+				<Transition.Together>
+					{/* <Transition.Out type="fade" durationMs={100} /> */}
+					<Transition.Change interpolation="easeInOut" />
+					<Transition.In type="fade" />
+				</Transition.Together>
+			}
+			style={{ flex: 1 }}
+		>
+			{!phoneNumber ? (
+				<>
+					<Appbar.Header style={{ backgroundColor: props?.tintColor }}>
+						<Appbar.Content title="Sign in" />
+					</Appbar.Header>
+					<ControlledPhoneAuth
+						{...phoneScreenProps}
+						onSmsSuccessfullySent={({ phoneNumber }) => {
+							setPhoneNumber(phoneNumber)
+						}}
+						tintColor={props?.tintColor}
+						testNumbers={testNumbers}
+					/>
+				</>
+			) : (
+				<>
+					<Appbar.Header style={{ backgroundColor: props?.tintColor }}>
+						<Appbar.BackAction onPress={() => setPhoneNumber('')} />
+						<Appbar.Content title="Confirm number" />
+					</Appbar.Header>
+					<ControlledConfirmPhone
+						{...codeScreenProps}
+						phoneNumber={phoneNumber}
+						tintColor={props?.tintColor}
+						onCodeVerified={async info => {
+							if (props?.onCodeVerified) props?.onCodeVerified?.(info)
+							else {
+								const { token } = info
+								if (token) {
+									// sign the user in
+									const { user } = await firebase
+										.auth()
+										.signInWithCustomToken(token)
+									console.log('oooooo', { user })
+
+									// if the user doesn't exist in the DB yet, add the user to the DB
+									// if (user && !(await doorman.doesUserExist({ uid: user.uid }))) {
+									// 	// you might also use this logic to navigate to a new user onboarding screen
+									// 	doorman.addUserToDb(user)
+									// }
+								} else {
+									console.warn('oooo no token lol')
+								}
+							}
+						}}
+					/>
+				</>
+			)}
+		</Transitioning.View>
+	)
 
 	if (!phoneNumber)
 		return (

@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef } from 'react'
 import { ConfirmPhone } from '../ConfirmPhone'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
-import { doorman } from '../../methods'
+import { Alert } from 'react-native'
 
 type Props = Parameters<typeof useConfirmPhone>[0] &
 	Omit<
@@ -13,17 +13,29 @@ type Props = Parameters<typeof useConfirmPhone>[0] &
 	}
 
 export default function ControlledConfirmPhone(props: Props) {
-	const { code, onChangeCode, loading } = useConfirmPhone({
+	const {
+		code,
+		onChangeCode,
+		loading,
+		error,
+		resend,
+		resending,
+	} = useConfirmPhone({
 		onCodeVerified: props.onCodeVerified,
 		phoneNumber: props.phoneNumber,
 	})
 
 	return (
 		<ConfirmPhone
-			{...{ code, onChangeCode, loading }}
+			{...{ code, onChangeCode, loading, error, resending }}
 			tintColor={props.tintColor}
 			phoneNumber={props.phoneNumber}
-			onPressResendCode={doorman.signInWithPhoneNumber}
+			onPressResendCode={async () => {
+				const { success } = await resend()
+				if (success) {
+					Alert.alert('✅', `6-digit code was resent to ${props.phoneNumber}.`)
+				}
+			}}
 		/>
 	)
 }

@@ -1,28 +1,23 @@
 import { useReducer, useCallback } from 'react'
 
-type State<Error> = {
+type State<E extends string = string> = {
 	loading: boolean
-	error: null | Error
+	error: E | null
 }
 
-const initialState: State<Error> = {
-	loading: false,
-	error: null,
-}
-
-type Action<Error> =
+type Action<E> =
 	| {
 			type: 'start loading' | 'stop loading' | 'clear error'
 	  }
 	| {
 			type: 'new error'
-			error: Error
+			error: E
 	  }
 
-const reducer = <Error = string>(
-	state: State<Error>,
-	action: Action<Error>
-): State<Error> => {
+const createReducer = <E extends string = string>() => (
+	state: State<E>,
+	action: Action<E>
+): State<E> => {
 	switch (action.type) {
 		case 'clear error':
 			return {
@@ -49,18 +44,24 @@ const reducer = <Error = string>(
 	}
 }
 
-export const useNetworkReducer = <Error>(state?: State<Error>) => {
-	const [{ loading, error }, dispatch] = useReducer(
-		reducer,
-		state ?? initialState
+export const useNetworkReducer = <E extends string = string>(
+	state?: State<E>
+) => {
+	const [s, dispatch] = useReducer(
+		createReducer<E>(),
+		state ?? {
+			loading: false,
+			error: null,
+		}
 	)
+	const { loading, error } = s
 	const setLoading = useCallback(
 		(loading: boolean) =>
 			dispatch({ type: loading ? 'start loading' : 'stop loading' }),
 		[dispatch]
 	)
 	const setError = useCallback(
-		(error: Error | null) =>
+		(error: E | null) =>
 			error
 				? dispatch({ type: 'new error', error })
 				: dispatch({ type: 'clear error' }),

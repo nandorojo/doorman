@@ -5,5 +5,5 @@ import PhoneStack from './PhoneStack'
 export const Magic = {
 	ConfirmPhone: ControlledConfirmPhone,
 	PhoneAuth: ControlledPhoneAuth,
-	PhoneStack: PhoneStack,
+	PhoneAuthStack: PhoneStack,
 }

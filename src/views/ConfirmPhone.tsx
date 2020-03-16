@@ -87,7 +87,27 @@ interface Props {
 	 * ```
 	 */
 	message?: string | ((info: { phoneNumber: string }) => ReactNode)
+	/**
+	 * Callback function called when user presses "Resent Code" button
+	 */
 	onPressResendCode?: (info: { phoneNumber: string }) => void
+	/**
+	 * Override text for button that lets users to resend code.
+	 *
+	 * Default: `Resend Code`
+	 */
+	resendText?: string
+	/**
+	 * Boolean to indicate if resending the code is loading.
+	 *
+	 * Used with the `useConfirmPhone` hook.
+	 */
+	resending?: boolean
+	/**
+	 * Text style prop for the resend text. If you just want to change the color, see the `tintColor` prop.
+	 */
+	resendStyle?: TextStyleType
+	/** */
 	onReset?: () => void
 	tintColor?: string
 	/**
@@ -117,6 +137,8 @@ export function ConfirmPhone(props: Props) {
 		title = 'Enter Code',
 		error,
 		errorStyle,
+		resending,
+		resendText = 'Resend Code',
 	} = props
 
 	const renderMessage = () => {
@@ -157,9 +179,12 @@ export function ConfirmPhone(props: Props) {
 		!loading && props.onPressResendCode ? (
 			<>
 				<TouchableOpacity
+					disabled={resending}
 					onPress={() => props.onPressResendCode?.({ phoneNumber })}
 				>
-					<Text style={[{ color: tintColor }, styles.resend]}>Resend Code</Text>
+					<Text style={[{ color: tintColor }, styles.resend]}>
+						{resending ? 'Resending code...' : resendText}
+					</Text>
 				</TouchableOpacity>
 			</>
 		) : null
@@ -175,7 +200,7 @@ export function ConfirmPhone(props: Props) {
 		return (
 			!!error && (
 				<Text style={[styles.error, errorStyle]}>
-					Please try again Error: {error}
+					{error}. Please try resending the code.
 				</Text>
 			)
 		)
