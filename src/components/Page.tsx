@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo, ComponentPropsWithoutRef } from 'react'
-import { View, StyleSheet, ViewStyle, ScrollView } from 'react-native'
+import { View, ViewStyle, ScrollView, StyleProp } from 'react-native'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 import { empty } from '../utils/empty'
 import { ScreenStyle } from '../style/screen'
@@ -16,7 +16,7 @@ type Props = {
 export function Page(props: Props) {
 	const { children, style, containerProps = empty.object } = props
 	const { phone } = useBreakpoints()
-	const memoStyle = useMemo(
+	const memoStyle = useMemo<StyleProp<ViewStyle>>(
 		() => [{ alignSelf: 'center', maxWidth: !phone ? 800 : '100%' }, style],
 		[style, phone]
 	)
@@ -25,18 +25,10 @@ export function Page(props: Props) {
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
 			style={ScreenStyle.container}
-			// centerContent
 			keyboardDismissMode="on-drag"
-			// scrollEnabled={false}
 			{...containerProps}
 		>
 			<View style={memoStyle}>{children}</View>
 		</ScrollView>
 	)
 }
-
-const styles = StyleSheet.create({
-	container: {
-		alignSelf: 'center',
-	},
-})

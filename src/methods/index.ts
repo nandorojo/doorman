@@ -22,7 +22,7 @@ type NotInitialized = {
 }
 
 export type InitializationProps = {
-	projectId: string
+	publicAppId: string
 }
 
 type Initialized = InitializationProps & {
@@ -38,12 +38,15 @@ let configuration: Configuration = {
 const UsersCollection = '__DOORMAN_USERS'
 
 function configurationHasKey(config: Configuration): config is Initialized {
-	return !!(config as Initialized).hasInitialized
+	return (
+		!!(config as Initialized).hasInitialized &&
+		!!(config as Initialized).publicAppId
+	)
 }
 
 const Constants = {
-	signIn: 'logInWithPhoneNumber',
-	verify: 'verifyToken',
+	signIn: 'loginWithPhone',
+	verify: 'verifyCode',
 }
 
 // const getEndpoint = (ending?: string) => {
@@ -54,11 +57,13 @@ const Constants = {
 // 	}
 // }
 
-const getEndpoint = () =>
-	configurationHasKey(configuration)
-		? `https://us-central1-${configuration.projectId}.cloudfunctions.net/doormanPhoneLogic`
-		: ''
-
+const getEndpoint = () => {
+	if (configurationHasKey(configuration))
+		return `https://sending-messages-for-doorman.herokuapp.com/phoneLogic`
+	throw new Error(
+		'Tried to call doorman before it was initialized. Make sure to either use the Doorman withPhoneAuth HOC at the root of your app, wrap your app with the <DoormanProvider>, or run doorman.initialize() at the root of your app before any render code.\n\nYou must initialize the app with your Public App ID, found on your Doorman dashboard.'
+	)
+}
 const post = (body: object) =>
 	fetch(getEndpoint(), {
 		method: 'POST',
@@ -67,7 +72,7 @@ const post = (body: object) =>
 	}).then(r => r.json())
 
 const initialize = ({
-	projectId,
+	publicAppId,
 	firebaseConfig,
 }: {
 	firebaseConfig?: Parameters<typeof initializeApp>['0']
@@ -75,7 +80,7 @@ const initialize = ({
 	configuration = {
 		...configuration,
 		hasInitialized: true,
-		projectId,
+		publicAppId,
 	}
 	if (firebaseConfig) {
 		return !firebase.apps.length
@@ -96,6 +101,7 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 		}: { success: boolean; error?: 'custom/code-does-not-match' } = await post({
 			phone: info.phoneNumber,
 			action: Constants.signIn,
+			accountId: configuration.publicAppId,
 		})
 
 		if (error) throw new Error(error)
@@ -126,6 +132,7 @@ const verifyCode = async ({
 			code,
 			phone,
 			action: Constants.verify,
+			accountId: configuration.publicAppId,
 		})
 		if (!token) throw new Error(error)
 		return { success: true, token }

@@ -1,6 +1,6 @@
 import React, { ComponentType, ComponentPropsWithoutRef, useState } from 'react'
 import { AuthGate } from '../components/AuthGate'
-import { Magic } from '../views/Controlled'
+import { Phone } from '../views'
 import { DoormanProvider, useDoormanContext } from '../context'
 import { InitializationProps } from '../methods'
 import { theme } from '../style/theme'
@@ -8,12 +8,12 @@ import { theme } from '../style/theme'
 type Options = {
 	Loading?: ComponentType
 	includeProvider?: boolean
-	tintColor?: string
+	// tintColor?: string
 	phoneScreenProps?: ComponentPropsWithoutRef<
-		typeof Magic['PhoneAuthStack']
+		typeof Phone['Stack']
 	>['phoneScreenProps']
 	codeScreenProps?: ComponentPropsWithoutRef<
-		typeof Magic['PhoneAuthStack']
+		typeof Phone['Stack']
 	>['codeScreenProps']
 	/**
 	 * Endpoint provided to you by doorman.
@@ -48,7 +48,7 @@ export function withPhoneAuth<P>(
 	const {
 		Loading,
 		includeProvider = true,
-		tintColor,
+		// tintColor,
 		phoneScreenProps,
 		codeScreenProps,
 		doorman,
@@ -84,11 +84,11 @@ export function withPhoneAuth<P>(
 							return <SplashScreen next={() => setSplashDone(true)} />
 
 						return (
-							<Magic.PhoneAuthStack
+							<Phone.Stack
 								{...{
 									phoneScreenProps,
 									codeScreenProps,
-									tintColor,
+									// tintColor,
 									testNumbers,
 								}}
 							/>

@@ -1,5 +1,3 @@
-import { StyleSheet } from 'react-native'
-
 export const TextStyle = {
 	h1: {
 		fontSize: 26,

@@ -2,10 +2,10 @@ import { StyleSheet } from 'react-native'
 
 export const ScreenStyle = StyleSheet.create({
 	container: {
-		paddingTop: 16,
+		padding: 16,
 	},
 	wrapper: {
-		padding: 16,
+		padding: 0,
 	},
 	buttonWrapper: {
 		marginVertical: 16,

@@ -162,6 +162,12 @@ type Props = {
 		value: string
 		onChangeText: (info: { phoneNumber: string; valid: boolean }) => void
 	}) => ReactNode
+	/**
+	 * Default: `true`.
+	 *
+	 * If true, the send button & disclaimer will only appear for valid phone numbers.
+	 */
+	hideButtonForInvalidNumber?: boolean
 }
 
 export const PhoneAuth = (props: Props) => {
@@ -184,6 +190,7 @@ export const PhoneAuth = (props: Props) => {
 		disclaimer = `By tapping "${buttonText}", an SMS may be sent. Message & data rates may apply.`,
 		invalidNumberAlertText = 'Please enter a valid phone number.',
 		renderButton,
+		hideButtonForInvalidNumber = true,
 	} = props
 
 	const submit = useCallback(() => onSubmitPhone({ phoneNumber }), [
@@ -208,6 +215,7 @@ export const PhoneAuth = (props: Props) => {
 			children: buttonText,
 		}
 		if (renderButton) return renderButton({ ...renderProps, valid, submit })
+
 		return <Button {...renderProps} />
 	}
 
@@ -242,13 +250,15 @@ export const PhoneAuth = (props: Props) => {
 	const TextStyle = useTextStyle()
 
 	return (
-		<Page containerProps={containerProps}>
+		<Page containerProps={containerProps} style={containerStyle}>
 			<View style={styles.wrapper}>
 				<H1>{title}</H1>
 				<Paragraph>{message}</Paragraph>
 				<View>{input()}</View>
-				<View style={styles.buttonWrapper}>{button()}</View>
-				<Text style={TextStyle.disclaimer}>{renderDisclaimer()}</Text>
+				<View style={{ opacity: !valid && hideButtonForInvalidNumber ? 0 : 1 }}>
+					<View style={styles.buttonWrapper}>{button()}</View>
+					<Text style={TextStyle.disclaimer}>{renderDisclaimer()}</Text>
+				</View>
 			</View>
 		</Page>
 	)

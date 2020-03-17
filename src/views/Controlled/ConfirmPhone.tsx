@@ -2,6 +2,7 @@ import React, { ComponentPropsWithoutRef } from 'react'
 import { ConfirmPhone } from '../ConfirmPhone'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
 import { Alert } from 'react-native'
+import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 
 type Props = Parameters<typeof useConfirmPhone>[0] &
 	Omit<
@@ -24,11 +25,12 @@ export default function ControlledConfirmPhone(props: Props) {
 		onCodeVerified: props.onCodeVerified,
 		phoneNumber: props.phoneNumber,
 	})
+	const { tintColor } = useDoormanTheme()
 
 	return (
 		<ConfirmPhone
 			{...{ code, onChangeCode, loading, error, resending }}
-			tintColor={props.tintColor}
+			tintColor={props.tintColor ?? tintColor}
 			phoneNumber={props.phoneNumber}
 			onPressResendCode={async () => {
 				const { success } = await resend()

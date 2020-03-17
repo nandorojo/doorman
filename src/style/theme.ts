@@ -1,4 +1,5 @@
 import { empty } from '../utils/empty'
+import { TextStyle } from 'react-native'
 
 type Theme = {
 	tintColor: string
@@ -9,6 +10,7 @@ type Theme = {
 	grayColor: string
 	backgroundColor: string
 	backgroundGradient: string[]
+	textAlign: TextStyle['textAlign']
 }
 
 export const theme = (customTheme: Partial<Theme> = empty.object): Theme => {
@@ -21,6 +23,7 @@ export const theme = (customTheme: Partial<Theme> = empty.object): Theme => {
 		inputTextColor: 'black',
 		textColor: 'black',
 		backgroundGradient: [],
+		textAlign: 'center',
 		...customTheme,
 	}
 }

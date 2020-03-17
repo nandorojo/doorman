@@ -19,14 +19,14 @@ const DoormanContext = createContext<Context>(null)
 
 export function DoormanProvider({
 	children,
-	projectId,
+	publicAppId,
 	theme = themeCreator(),
 }: Props & InitializationProps) {
 	const auth = useFirebaseAuthGate()
 
 	useEffect(() => {
-		doorman.initialize({ projectId })
-	}, [projectId])
+		doorman.initialize({ publicAppId })
+	}, [publicAppId])
 
 	return (
 		<DoormanContext.Provider value={{ ...auth, theme }}>

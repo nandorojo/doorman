@@ -1,16 +1,15 @@
 import React, { ReactNode, ComponentPropsWithoutRef } from 'react'
 import {
 	View,
-	StyleSheet,
 	ScrollView,
 	Text,
 	TouchableOpacity,
 	TextStyle as TextStyleType,
+	ViewStyle,
 } from 'react-native'
 import { TextInput, ActivityIndicator } from 'react-native-paper'
 import { ScreenStyle } from '../style/screen'
 import { TextStyle } from '../style/text'
-import Container from '../../../react-native-bootstrap/src/components/Container'
 import { Page } from '../components/Page'
 import { Paragraph, H1 } from '../components'
 import { empty } from '../utils/empty'
@@ -134,6 +133,10 @@ import { H1 } from '../components/Text'
 	 * Props for the scroll view containing the whole screen. For styles, see `containerStyle`
 	 */
 	containerProps?: Omit<ComponentPropsWithoutRef<typeof ScrollView>, 'style'>
+	/**
+	 * Style the outer screen.
+	 */
+	containerStyle?: ViewStyle
 }
 
 export function ConfirmPhone(props: Props) {
@@ -150,6 +153,7 @@ export function ConfirmPhone(props: Props) {
 		resending,
 		resendText = 'Resend Code',
 		containerProps = empty.object,
+		containerStyle,
 	} = props
 
 	const renderMessage = () => {
@@ -193,7 +197,9 @@ export function ConfirmPhone(props: Props) {
 					disabled={resending}
 					onPress={() => props.onPressResendCode?.({ phoneNumber })}
 				>
-					<Paragraph style={[{ color: tintColor }, styles.resend]}>
+					<Paragraph
+						style={[{ color: tintColor }, styles.resend as TextStyleType]}
+					>
 						{resending ? 'Resending code...' : resendText}
 					</Paragraph>
 				</TouchableOpacity>
@@ -218,7 +224,7 @@ export function ConfirmPhone(props: Props) {
 	}
 
 	return (
-		<Page containerProps={containerProps}>
+		<Page containerProps={containerProps} style={containerStyle}>
 			<View style={styles.wrapper}>
 				<H1>{title}</H1>
 				{renderMessage()}
@@ -238,8 +244,8 @@ const styles = {
 		fontSize: 18,
 	},
 	number: {
-		fontWeight: 'bold',
-		textAlign: 'center',
+		fontWeight: 'bold' as 'bold',
+		textAlign: 'center' as 'center',
 	},
 	resend: {
 		marginTop: 16,
