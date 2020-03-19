@@ -13,20 +13,22 @@ type Context = null | {
 type Props = {
 	theme?: ReturnType<typeof themeCreator>
 	children: ReactNode
+	onAuthStateChanged?: (user: firebase.User | null) => void
 }
 
 const DoormanContext = createContext<Context>(null)
 
 export function DoormanProvider({
 	children,
-	publicAppId,
+	publicProjectId,
+	onAuthStateChanged,
 	theme = themeCreator(),
 }: Props & InitializationProps) {
-	const auth = useFirebaseAuthGate()
+	const auth = useFirebaseAuthGate({ onAuthStateChanged })
 
 	useEffect(() => {
-		doorman.initialize({ publicAppId })
-	}, [publicAppId])
+		doorman.initialize({ publicProjectId })
+	}, [publicProjectId])
 
 	return (
 		<DoormanContext.Provider value={{ ...auth, theme }}>

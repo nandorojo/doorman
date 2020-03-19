@@ -17,7 +17,7 @@ export function AuthGate({ children }: Props) {
 
 	console.error(`💩 ${PackageName} error:
 
-Tried to use <AuthGate> component before initializing app without the <${PackageName}Provider /> component before it.
+Tried to use <AuthGate> component before initializing app with the <${PackageName}Provider /> component before it.
 
 Make sure to put the provider at the root of your app.
 	`)

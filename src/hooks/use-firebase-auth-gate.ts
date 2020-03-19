@@ -1,13 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import { empty } from '../utils/empty'
 
-export function useFirebaseAuthGate() {
+type Props = {
+	onAuthStateChanged?: (user: firebase.User | null) => void
+}
+
+export function useFirebaseAuthGate(
+	{ onAuthStateChanged }: Props = empty.object
+) {
 	const [user, setUser] = useState<firebase.User | null>(null)
 	const [loading, setLoading] = useState(true)
 
+	const callback = useRef(onAuthStateChanged)
+	useEffect(() => {
+		callback.current = onAuthStateChanged
+	})
+
 	useEffect(() => {
 		const unsubscribe = firebase.auth().onIdTokenChanged(auth => {
+			callback.current?.(auth)
 			setUser(auth)
 			setLoading(false)
 		})

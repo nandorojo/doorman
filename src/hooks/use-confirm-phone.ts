@@ -55,10 +55,8 @@ export default function useConfirmPhone({
 	useEffect(() => {
 		onCodeVerified.current = onVerified
 	})
-	console.log('setttt codddeeee', code)
 
 	useEffect(() => {
-		console.log('effffecccctttt', code)
 		const send = async () => {
 			setLoading(true)
 			try {

@@ -124,9 +124,6 @@ type Props = {
 	 * @example
 	 * ```jsx
 	 * import { Button } from 'react-native-paper'
-	 *import Page from '../components/Page'
-	 *import { useTextStyle } from '../hooks/use-style'
-	 *import { H1 } from '../components/Text'
 	 *
 	 * export default () => {
 	 * 	return (
@@ -168,6 +165,12 @@ type Props = {
 	 * If true, the send button & disclaimer will only appear for valid phone numbers.
 	 */
 	hideButtonForInvalidNumber?: boolean
+	/**
+	 * The type of button you want.
+	 *
+	 * The options are: `fixed-bottom` and `normal`. If it's fixed at the bottom, it goes up when the keyboard opens and is large.
+	 */
+	buttonType: 'fixed-bottom' | 'normal'
 }
 
 export const PhoneAuth = (props: Props) => {
