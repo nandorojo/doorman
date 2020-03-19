@@ -22,7 +22,7 @@ type NotInitialized = {
 }
 
 export type InitializationProps = {
-	publicAppId: string
+	publicProjectId: string
 }
 
 type Initialized = InitializationProps & {
@@ -40,7 +40,7 @@ const UsersCollection = '__DOORMAN_USERS'
 function configurationHasKey(config: Configuration): config is Initialized {
 	return (
 		!!(config as Initialized).hasInitialized &&
-		!!(config as Initialized).publicAppId
+		!!(config as Initialized).publicProjectId
 	)
 }
 
@@ -72,7 +72,7 @@ const post = (body: object) =>
 	}).then(r => r.json())
 
 const initialize = ({
-	publicAppId,
+	publicProjectId,
 	firebaseConfig,
 }: {
 	firebaseConfig?: Parameters<typeof initializeApp>['0']
@@ -80,7 +80,7 @@ const initialize = ({
 	configuration = {
 		...configuration,
 		hasInitialized: true,
-		publicAppId,
+		publicProjectId,
 	}
 	if (firebaseConfig) {
 		return !firebase.apps.length
@@ -90,7 +90,11 @@ const initialize = ({
 	return null
 }
 
-const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
+const signInWithPhoneNumber = async ({
+	phoneNumber,
+}: {
+	phoneNumber: string
+}) => {
 	try {
 		if (!configuration.hasInitialized) {
 			throw new Error(InitializationErrorMessage)
@@ -99,9 +103,9 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 			error,
 			success,
 		}: { success: boolean; error?: 'custom/code-does-not-match' } = await post({
-			phone: info.phoneNumber,
+			phoneNumber,
 			action: Constants.signIn,
-			accountId: configuration.publicAppId,
+			publicProjectId: configuration.publicProjectId,
 		})
 
 		if (error) throw new Error(error)
@@ -119,7 +123,7 @@ const signInWithPhoneNumber = async (info: { phoneNumber: string }) => {
 
 const verifyCode = async ({
 	code,
-	phoneNumber: phone,
+	phoneNumber,
 }: {
 	code: string
 	phoneNumber: string
@@ -128,16 +132,16 @@ const verifyCode = async ({
 		if (!configuration.hasInitialized) {
 			throw new Error(InitializationErrorMessage)
 		}
-		const { token, error }: { token: string; error?: string } = await post({
+		const { token, message }: { token: string; message?: string } = await post({
 			code,
-			phone,
+			phoneNumber,
 			action: Constants.verify,
-			accountId: configuration.publicAppId,
+			publicProjectId: configuration.publicProjectId,
 		})
-		if (!token) throw new Error(error)
+		if (!token) throw new Error(message)
 		return { success: true, token }
 	} catch (e) {
-		console.error('Error using verifyToken: ', e)
+		console.error('Error using Doorman function verifyCode: ', e)
 		return { token: null, success: false, error: e }
 	}
 }
