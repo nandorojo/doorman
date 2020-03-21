@@ -7,6 +7,7 @@ import {
 import { doorman } from '../methods'
 import { useControlledOrInternalState } from './use-controlled-state'
 import { PhoneAuth } from '../views/PhoneAuth'
+import { useAuthFlowState } from './use-auth-flow-state'
 
 interface Props {
 	phoneNumber?: string
@@ -35,31 +36,36 @@ type onChangePhoneNumber = ComponentPropsWithoutRef<
 >['onChangePhoneNumber']
 
 export function usePhoneNumber(props: Props) {
-	const [phoneNumber, setPhoneNumber] = useControlledOrInternalState(
-		{
-			state: props.phoneNumber,
-			setState: state => props.onChangePhoneNumber?.(state as string),
-		},
-		'+1'
-	)
-	const [valid, setValid] = useState(false)
+	// const [phoneNumber, setPhoneNumber] = useControlledOrInternalState(
+	// 	{
+	// 		state: props.phoneNumber,
+	// 		setState: state => props.onChangePhoneNumber?.(state as string),
+	// 	},
+	// 	'+1'
+	// )
+	const {
+		phoneNumber,
+		onChangePhoneNumber: setPhoneNumber,
+		isValidPhoneNumber,
+	} = useAuthFlowState()
+	// const [valid, setValid] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const { onSmsSuccessfullySent, onSmsError, testNumbers } = props
 
 	const onChangePhoneNumber: onChangePhoneNumber = useCallback(
-		({ phoneNumber, valid }) => {
+		({ phoneNumber = '', valid }) => {
 			setLoading(false)
-			let isValid = valid
+			// let isValid = valid
 			// if it's one of the test numbers, mark it as valid
 			if (testNumbers && testNumbers.length > 10) {
 				console.warn(
 					'usePhoneNumber issue in onChangePhoneNumber. You passed a testNumbers argument with more than ten test numbers. This can slow down the TextInput. Make sure to reduce this number in production.'
 				)
 			}
-			if (phoneNumber?.includes('+1555') && phoneNumber?.length === 12) {
-				isValid = true
-			}
-			setValid(isValid)
+			// if (phoneNumber?.includes('+1555') && phoneNumber?.length === 12) {
+			// 	isValid = true
+			// }
+			// setValid(isValid)
 			setPhoneNumber(phoneNumber)
 		},
 		[testNumbers, setPhoneNumber]
@@ -91,7 +97,7 @@ export function usePhoneNumber(props: Props) {
 		phoneNumber,
 		onChangePhoneNumber,
 		submitPhone,
-		valid,
+		valid: isValidPhoneNumber,
 		loading,
 	}
 }

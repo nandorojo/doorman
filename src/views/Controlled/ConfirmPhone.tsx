@@ -3,17 +3,18 @@ import { ConfirmPhone } from '../ConfirmPhone'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
 import { Alert } from 'react-native'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
+import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
-type Props = Parameters<typeof useConfirmPhone>[0] &
+type Props = Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'> &
 	Omit<
 		ComponentPropsWithoutRef<typeof ConfirmPhone>,
-		'onChangeCode' | 'onPressResendCode' | 'loading' | 'code'
+		'onChangeCode' | 'onPressResendCode' | 'loading' | 'code' | 'phoneNumber'
 	> & {
-		phoneNumber: string
 		tintColor?: string
 	}
 
 export default function ControlledConfirmPhone(props: Props) {
+	const { phoneNumber } = useAuthFlowState()
 	const {
 		code,
 		onChangeCode,
@@ -23,7 +24,7 @@ export default function ControlledConfirmPhone(props: Props) {
 		resending,
 	} = useConfirmPhone({
 		onCodeVerified: props.onCodeVerified,
-		phoneNumber: props.phoneNumber,
+		phoneNumber,
 	})
 	const { tintColor } = useDoormanTheme()
 
@@ -31,11 +32,11 @@ export default function ControlledConfirmPhone(props: Props) {
 		<ConfirmPhone
 			{...{ code, onChangeCode, loading, error, resending }}
 			tintColor={props.tintColor ?? tintColor}
-			phoneNumber={props.phoneNumber}
+			phoneNumber={phoneNumber}
 			onPressResendCode={async () => {
 				const { success } = await resend()
 				if (success) {
-					Alert.alert('✅', `6-digit code was resent to ${props.phoneNumber}.`)
+					Alert.alert('✅', `6-digit code was resent to ${phoneNumber}.`)
 				}
 			}}
 			{...props}

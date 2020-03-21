@@ -1,13 +1,20 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useReducer, useCallback } from 'react'
 import { createContext, ReactNode } from 'react'
 import { useFirebaseAuthGate } from '../hooks/use-firebase-auth-gate'
 import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
+import { isPossiblePhoneNumber } from 'react-phone-number-input'
+import { isTestPhoneNumber } from '../utils/is-test-phone-number'
 
 type Context = null | {
 	user: null | firebase.User
 	loading: boolean
 	theme?: ReturnType<typeof themeCreator>
+	authFlowState: AuthFlowState & {
+		authenticateApp: () => void
+		onChangePhoneNumber: (phoneNumber: string) => void
+		setCodeScreenReady: (ready: boolean) => void
+	}
 }
 
 type Props = {
@@ -18,20 +25,105 @@ type Props = {
 
 const DoormanContext = createContext<Context>(null)
 
+type AuthFlowState = {
+	phoneNumber: string
+	/**
+	 * If true, the <AuthFlow /> component shows the Verify Code Screen.
+	 */
+	ready: boolean
+	isValidPhoneNumber: boolean
+}
+
+type AuthFlowStateAction =
+	| { type: 'UPDATE_PHONE_NUMBER'; phoneNumber: string }
+	| { type: 'SET_READY'; ready: boolean }
+
+const authFlowStateReducer = (
+	state: AuthFlowState,
+	action: AuthFlowStateAction
+): AuthFlowState => {
+	switch (action.type) {
+		case 'SET_READY':
+			return {
+				...state,
+				ready: action.ready,
+			}
+		case 'UPDATE_PHONE_NUMBER':
+			return {
+				...state,
+				phoneNumber: action.phoneNumber,
+				isValidPhoneNumber:
+					isPossiblePhoneNumber(action.phoneNumber) ||
+					isTestPhoneNumber(action.phoneNumber),
+			}
+		default:
+			throw new Error(
+				'🚨🥶 Doorman AuthFlowState reducer error. Called an inexistent action.'
+			)
+	}
+}
+
+/**
+ * The auth flow state is handled at the root of the app.
+ *
+ * The `phoneNumber` prop is used always, whether someone is building a custom auth flow or not.
+ *
+ * The `ready` prop is only used when Doorman is handling the entire flow, via either `withPhoneAuth` or `AuthFlow`.
+ *
+ * This means that the phone number the user is typing, as well as the `ready` state of the flow, is available to all screens.
+ *
+ * The `<AuthFlow.PhoneScreen />` component will access the `phoneNumber` and `onChangePhoneNumber`. It will call `setCodeScreenReady(true)` to advance.
+ */
+const useCreateAuthFlowState = (): AuthFlowState & {
+	authenticateApp: () => void
+	onChangePhoneNumber: (phoneNumber: string) => void
+	setCodeScreenReady: (ready: boolean) => void
+} => {
+	const [authState, dispatch] = useReducer(authFlowStateReducer, {
+		phoneNumber: '+1',
+		ready: false,
+		isValidPhoneNumber: false,
+	})
+
+	const authenticateApp = useCallback(() => {
+		dispatch({ type: 'SET_READY', ready: false })
+	}, [])
+	const onChangePhoneNumber = useCallback((phoneNumber: string) => {
+		dispatch({ type: 'UPDATE_PHONE_NUMBER', phoneNumber })
+	}, [])
+	const setCodeScreenReady = useCallback(
+		(ready: boolean) => dispatch({ type: 'SET_READY', ready }),
+		[]
+	)
+
+	return {
+		...authState,
+		authenticateApp,
+		onChangePhoneNumber,
+		setCodeScreenReady,
+	}
+}
+
 export function DoormanProvider({
 	children,
 	publicProjectId,
-	onAuthStateChanged,
+	onAuthStateChanged: onAuthStateChangedProp,
 	theme = themeCreator(),
 }: Props & InitializationProps) {
-	const auth = useFirebaseAuthGate({ onAuthStateChanged })
+	const authFlowState = useCreateAuthFlowState()
+	const auth = useFirebaseAuthGate({
+		onAuthStateChanged: user => {
+			onAuthStateChangedProp?.(user)
+			authFlowState.setCodeScreenReady(false)
+		},
+	})
 
 	useEffect(() => {
 		doorman.initialize({ publicProjectId })
 	}, [publicProjectId])
 
 	return (
-		<DoormanContext.Provider value={{ ...auth, theme }}>
+		<DoormanContext.Provider value={{ ...auth, theme, authFlowState }}>
 			{children}
 		</DoormanContext.Provider>
 	)

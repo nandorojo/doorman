@@ -18,6 +18,7 @@ import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
 import { useCallback } from 'react'
 import { StyleSheet } from 'react-native'
+import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
 type Props = {
 	onCodeVerified?: ComponentPropsWithoutRef<
@@ -52,6 +53,7 @@ type Props = {
 export function AuthFlow(props: Props) {
 	const [phoneNumber, setPhoneNumber] = useState('')
 	const { tintColor } = useDoormanTheme()
+	const { setCodeScreenReady, ready } = useAuthFlowState()
 
 	const {
 		phoneScreenProps = empty.object,
@@ -92,7 +94,10 @@ export function AuthFlow(props: Props) {
 		if (renderHeader) return renderHeader({ screen: 'code' })
 
 		return (
-			<Button style={{ marginTop: 50 }} onPress={() => setPhoneNumber('')}>
+			<Button
+				style={{ marginTop: 50 }}
+				onPress={() => setCodeScreenReady(false)}
+			>
 				back
 			</Button>
 		)
@@ -106,7 +111,13 @@ export function AuthFlow(props: Props) {
 				<Appbar.Content title={codeScreenHeaderText} />
 			</Appbar.Header>
 		)
-	}, [renderHeader, headerProps, codeScreenHeaderText, tintColor])
+	}, [
+		renderHeader,
+		headerProps,
+		codeScreenHeaderText,
+		tintColor,
+		setCodeScreenReady,
+	])
 
 	return (
 		<Transitioning.View
@@ -120,14 +131,15 @@ export function AuthFlow(props: Props) {
 			}
 			style={styles.container}
 		>
-			{!phoneNumber ? (
+			{!ready ? (
 				<>
 					<ControlledPhoneAuth
 						// renderHeader={renderPhoneHeader}
 						renderHeader={null}
 						{...phoneScreenProps}
 						onSmsSuccessfullySent={({ phoneNumber }) => {
-							setPhoneNumber(phoneNumber)
+							// setPhoneNumber(phoneNumber)
+							setCodeScreenReady(true)
 						}}
 						tintColor={tintColor}
 						testNumbers={testNumbers}
@@ -137,7 +149,6 @@ export function AuthFlow(props: Props) {
 				<>
 					<ControlledConfirmPhone
 						{...codeScreenProps}
-						phoneNumber={phoneNumber}
 						tintColor={tintColor}
 						renderHeader={renderCodeHeader}
 						onCodeVerified={async info => {
