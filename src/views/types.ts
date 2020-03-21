@@ -49,7 +49,7 @@ export type CommonScreenProps = {
 	/**
 	 * (Optional) custom props to be passed to the header.
 	 *
-	 * See the `react-native-paper` docs for the `Appbar.Header` props: https://callstack.github.io/react-native-paper/appbar-header.html
+	 * See the `react-native-elements` docs for the `Header` props: https://react-native-elements.github.io/react-native-elements/docs/header.html
 	 */
 	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
 	/**

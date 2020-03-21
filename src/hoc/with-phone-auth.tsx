@@ -1,11 +1,11 @@
 import React, { ComponentType, ComponentPropsWithoutRef, useState } from 'react'
 import { AuthGate } from '../components/AuthGate'
 import { AuthFlow } from '../views'
-import { DoormanProvider, useDoormanContext } from '../context'
+import { DoormanProvider, useDoormanContext, ProviderProps } from '../context'
 import { InitializationProps } from '../methods'
 import { theme } from '../style/theme'
 
-type Options = {
+type Options = Omit<ProviderProps, 'children'> & {
 	Loading?: ComponentType
 	includeProvider?: boolean
 	// tintColor?: string
@@ -13,10 +13,6 @@ type Options = {
 		typeof AuthFlow
 	>['phoneScreenProps']
 	codeScreenProps?: ComponentPropsWithoutRef<typeof AuthFlow>['codeScreenProps']
-	/**
-	 * Endpoint provided to you by doorman.
-	 */
-	testNumbers?: string[]
 	/**
 	 * **Required:** Your app's config for doorman.
 	 *
@@ -33,7 +29,6 @@ type Options = {
 	 * It receives one prop: a function called `next` that should be called whenever a user wants to continue to the auth screens.
 	 */
 	SplashScreen?: ComponentType<{ next: () => void }>
-	theme?: ReturnType<typeof theme>
 }
 
 export function withPhoneAuth<P>(
@@ -50,9 +45,10 @@ export function withPhoneAuth<P>(
 		phoneScreenProps,
 		codeScreenProps,
 		doorman,
-		testNumbers,
 		SplashScreen,
 		theme: themeOption,
+		initialPhoneNumber,
+		onAuthStateChanged,
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		console.log('IN WITH PHONE AUTH HOC??')
@@ -69,7 +65,12 @@ export function withPhoneAuth<P>(
 				? DoormanProvider
 				: React.Fragment
 		return (
-			<Provider theme={themeOption} {...doorman}>
+			<Provider
+				onAuthStateChanged={onAuthStateChanged}
+				initialPhoneNumber={initialPhoneNumber}
+				theme={themeOption}
+				{...doorman}
+			>
 				<AuthGate>
 					{({ loading, user }) => {
 						if (loading) {
@@ -83,12 +84,8 @@ export function withPhoneAuth<P>(
 
 						return (
 							<AuthFlow
-								{...{
-									phoneScreenProps,
-									codeScreenProps,
-									// tintColor,
-									testNumbers,
-								}}
+								phoneScreenProps={phoneScreenProps}
+								codeScreenProps={codeScreenProps}
 							/>
 						)
 					}}

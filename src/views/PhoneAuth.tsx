@@ -25,6 +25,7 @@ import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
 import Animated from 'react-native-reanimated'
 import { useTimingTransition, bInterpolate } from 'react-native-redash'
+import { Header } from 'react-native-elements'
 
 type Props = CommonScreenProps & {
 	/**
@@ -172,9 +173,9 @@ type Props = CommonScreenProps & {
 	 * The user can still input a phone number in international format.
 	 * Default example: "US".
 	 */
-	defaultCountry?: ComponentPropsWithoutRef<
-		typeof ReactPhoneInput
-	>['defaultCountry']
+	// defaultCountry?: ComponentPropsWithoutRef<
+	// 	typeof ReactPhoneInput
+	// >['defaultCountry']
 	/**
 	 * Function to render a custom input component.
 	 *
@@ -250,7 +251,7 @@ export const PhoneAuth = (props: Props) => {
 		textAlign = 'center',
 		headerText = 'Sign In',
 		headerProps,
-		headerBackgroundColor = '#000000',
+		headerBackgroundColor = 'transparent',
 		textColor = 'white',
 		disclaimerColor,
 		headerTintColor,
@@ -261,7 +262,7 @@ export const PhoneAuth = (props: Props) => {
 		inputType = 'elevated',
 		buttonBackgroundColor,
 		buttonTextColor,
-		headerTitleStyle,
+		headerTitleStyle = empty.object,
 		renderHeaderTitle,
 	} = props
 
@@ -271,6 +272,8 @@ export const PhoneAuth = (props: Props) => {
 		duration: 200,
 		// easing: Easing.inOut(Easing.linear),
 	})
+
+	const TextStyle = useTextStyle()
 
 	useEffect(() => {
 		const validateProps = () => {
@@ -288,7 +291,7 @@ export const PhoneAuth = (props: Props) => {
 		onSubmitPhone,
 	])
 
-	const button = () => {
+	const button = useCallback(() => {
 		const renderProps: ComponentPropsWithoutRef<typeof Button> = {
 			mode: 'contained',
 			style: [
@@ -319,9 +322,21 @@ export const PhoneAuth = (props: Props) => {
 				labelStyle={{ color: buttonTextColor ?? 'white' }}
 			/>
 		)
-	}
+	}, [
+		buttonBackgroundColor,
+		buttonProps,
+		buttonStyle,
+		buttonText,
+		buttonTextColor,
+		invalidNumberAlertText,
+		loading,
+		renderButton,
+		shouldButtonShow,
+		submit,
+		valid,
+	])
 
-	const renderDisclaimer = () => {
+	const renderDisclaimer = useCallback(() => {
 		if (typeof disclaimer === 'function') {
 			return disclaimer({ buttonText })
 		}
@@ -335,7 +350,14 @@ export const PhoneAuth = (props: Props) => {
 				{disclaimer}
 			</Text>
 		)
-	}
+	}, [
+		TextStyle.disclaimer,
+		buttonText,
+		disclaimer,
+		disclaimerColor,
+		textAlign,
+		textColor,
+	])
 	const input = useCallback(() => {
 		if (renderInput)
 			return renderInput({
@@ -430,8 +452,6 @@ export const PhoneAuth = (props: Props) => {
 		inputProps,
 	])
 
-	const TextStyle = useTextStyle()
-
 	const background = useCallback(() => {
 		if (renderBackground === null) return null
 		if (renderBackground) return renderBackground()
@@ -444,29 +464,51 @@ export const PhoneAuth = (props: Props) => {
 		if (renderHeader) return renderHeader({ screen: 'phone' })
 
 		return (
-			<Appbar.Header
+			<Header
+				containerStyle={{
+					backgroundColor: headerBackgroundColor,
+					justifyContent: textAlign === 'left' ? 'space-between' : 'center',
+					borderBottomWidth: 0,
+				}}
 				{...headerProps}
-				style={{ backgroundColor: headerBackgroundColor, elevation: 0 }}
-			>
-				{(!!renderHeaderTitle && renderHeaderTitle()) || (
-					<View style={{ flex: 1, paddingHorizontal: 16 }}>
-						<Text
-							style={[
-								{
-									textAlign,
-									color: headerTintColor ?? textColor,
-									fontWeight: '500',
-									fontSize: 18,
-								},
-								headerTitleStyle,
-							]}
-						>
-							{headerText}
-						</Text>
-					</View>
-				)}
-			</Appbar.Header>
+				centerComponent={
+					renderHeaderTitle?.() ?? {
+						text: headerText,
+						style: {
+							color: headerTintColor ?? textColor,
+							...headerTitleStyle,
+							fontWeight: '500',
+							fontSize: 18,
+						},
+					}
+				}
+			/>
 		)
+
+		// return (
+		// 	<Appbar.Header
+		// 		{...headerProps}
+		// 		style={{ backgroundColor: headerBackgroundColor, elevation: 0 }}
+		// 	>
+		// 		{(!!renderHeaderTitle && renderHeaderTitle()) || (
+		// 			<View style={{ flex: 1, paddingHorizontal: 16 }}>
+		// 				<Text
+		// 					style={[
+		// 						{
+		// 							textAlign,
+		// 							color: headerTintColor ?? textColor,
+		// 							fontWeight: '500',
+		// 							fontSize: 18,
+		// 						},
+		// 						headerTitleStyle,
+		// 					]}
+		// 				>
+		// 					{headerText}
+		// 				</Text>
+		// 			</View>
+		// 		)}
+		// 	</Appbar.Header>
+		// )
 	}, [
 		renderHeader,
 		headerProps,

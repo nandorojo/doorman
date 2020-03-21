@@ -5,6 +5,7 @@ import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
+import { empty } from '../utils/empty'
 
 type Context = null | {
 	user: null | firebase.User
@@ -17,10 +18,17 @@ type Context = null | {
 	}
 }
 
-type Props = {
+export type ProviderProps = {
 	theme?: ReturnType<typeof themeCreator>
 	children: ReactNode
 	onAuthStateChanged?: (user: firebase.User | null) => void
+	/**
+	 * (Optional) The initial state of the phone number field.
+	 * If you aren't based in the US, you may want to set this to the prefix of your country.
+	 *
+	 * Default: `+1`
+	 */
+	initialPhoneNumber?: string
 }
 
 const DoormanContext = createContext<Context>(null)
@@ -74,13 +82,15 @@ const authFlowStateReducer = (
  *
  * The `<AuthFlow.PhoneScreen />` component will access the `phoneNumber` and `onChangePhoneNumber`. It will call `setCodeScreenReady(true)` to advance.
  */
-const useCreateAuthFlowState = (): AuthFlowState & {
+const useCreateAuthFlowState = (props?: {
+	initialPhoneNumber?: string
+}): AuthFlowState & {
 	authenticateApp: () => void
 	onChangePhoneNumber: (phoneNumber: string) => void
 	setCodeScreenReady: (ready: boolean) => void
 } => {
 	const [authState, dispatch] = useReducer(authFlowStateReducer, {
-		phoneNumber: '+1',
+		phoneNumber: props?.initialPhoneNumber ?? '+1',
 		ready: false,
 		isValidPhoneNumber: false,
 	})
@@ -109,7 +119,7 @@ export function DoormanProvider({
 	publicProjectId,
 	onAuthStateChanged: onAuthStateChangedProp,
 	theme = themeCreator(),
-}: Props & InitializationProps) {
+}: ProviderProps & InitializationProps) {
 	const authFlowState = useCreateAuthFlowState()
 	const auth = useFirebaseAuthGate({
 		onAuthStateChanged: user => {

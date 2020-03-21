@@ -126,49 +126,6 @@ export function AuthFlow(props: Props) {
 		setCodeScreenReady,
 	])
 
-	// return (
-	// 	<View style={styles.container}>
-	// 		<>
-	// 			<ControlledPhoneAuth
-	// 				// renderHeader={renderPhoneHeader}
-	// 				renderHeader={null}
-	// 				{...commonScreenProps}
-	// 				{...phoneScreenProps}
-	// 				onSmsSuccessfullySent={() => {
-	// 					// setPhoneNumber(phoneNumber)
-	// 					setCodeScreenReady(true)
-	// 				}}
-	// 				tintColor={tintColor}
-	// 				testNumbers={testNumbers}
-	// 			/>
-	// 		</>
-	// 		<Animated.View
-	// 			style={{
-	// 				opacity: transition,
-	// 				...StyleSheet.absoluteFillObject,
-	// 				transform: [{ translateX: ready ? 0 : 1 }],
-	// 			}}
-	// 		>
-	// 			<ControlledConfirmPhone
-	// 				{...commonScreenProps}
-	// 				{...codeScreenProps}
-	// 				tintColor={tintColor}
-	// 				renderHeader={renderCodeHeader}
-	// 				onCodeVerified={async info => {
-	// 					if (props?.onCodeVerified) props?.onCodeVerified?.(info)
-	// 					else {
-	// 						const { token } = info
-	// 						if (token) {
-	// 							// sign the user in
-	// 							await firebase.auth().signInWithCustomToken(token)
-	// 						}
-	// 					}
-	// 				}}
-	// 			/>
-	// 		</Animated.View>
-	// 	</View>
-	// )
-
 	return (
 		<Transitioning.View
 			ref={transitionRef}
@@ -184,12 +141,9 @@ export function AuthFlow(props: Props) {
 			{!ready ? (
 				<>
 					<ControlledPhoneAuth
-						// renderHeader={renderPhoneHeader}
-						renderHeader={null}
 						{...commonScreenProps}
 						{...phoneScreenProps}
 						onSmsSuccessfullySent={() => {
-							// setPhoneNumber(phoneNumber)
 							setCodeScreenReady(true)
 						}}
 						tintColor={tintColor}
