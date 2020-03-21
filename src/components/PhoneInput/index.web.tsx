@@ -14,7 +14,7 @@ export function PhoneInput(props: Props) {
 		onChangePhoneNumber,
 		value,
 		disabled,
-		textStyle,
+		textStyle = empty.object,
 		style = empty.object,
 		inputRef,
 		inputProps,
@@ -36,7 +36,8 @@ export function PhoneInput(props: Props) {
 
 	return (
 		<PhoneInputForm
-			style={{ ...(style as CSSProperties), fontSize: 18 }}
+			{...inputProps}
+			style={{ ...(style as CSSProperties), ...textStyle }}
 			value={value}
 			onChange={onChangeText}
 			flags={flags}
@@ -44,6 +45,7 @@ export function PhoneInput(props: Props) {
 			defaultCountry="US"
 			international
 			autoFocus
+			// color="white"
 		/>
 	)
 }

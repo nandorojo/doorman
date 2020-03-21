@@ -38,6 +38,7 @@ export default function ControlledConfirmPhone(props: Props) {
 					Alert.alert('✅', `6-digit code was resent to ${props.phoneNumber}.`)
 				}
 			}}
+			{...props}
 		/>
 	)
 }

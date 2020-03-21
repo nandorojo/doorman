@@ -6,4 +6,6 @@ input {
   background-color: transparent;
   font-weight: bold;
   /* font-family: initial; */
+  font-family: "Source Code Pro", monospace;
+  color: inherit;
 }

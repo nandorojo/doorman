@@ -12,9 +12,12 @@ import {
 import firebase from 'firebase/app'
 import ControlledPhoneAuth from './PhoneAuth'
 import ControlledConfirmPhone from './ConfirmPhone'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Button } from 'react-native-paper'
 import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
+import { CommonScreenProps } from '../types'
+import { useCallback } from 'react'
+import { StyleSheet } from 'react-native'
 
 type Props = {
 	onCodeVerified?: ComponentPropsWithoutRef<
@@ -44,9 +47,9 @@ type Props = {
 	 * Text that shows in the header bar at the top for the code verification screen. Default: `Confirm Number`
 	 */
 	codeScreenHeaderText?: string
-}
+} & CommonScreenProps
 
-export default function PhoneAuthStack(props: Props) {
+export function AuthFlow(props: Props) {
 	const [phoneNumber, setPhoneNumber] = useState('')
 	const { tintColor } = useDoormanTheme()
 
@@ -57,12 +60,53 @@ export default function PhoneAuthStack(props: Props) {
 		headerProps = empty.object,
 		phoneScreenHeaderText = 'Sign In',
 		codeScreenHeaderText = 'Confirm Number',
+		renderHeader,
+		...otherProps
 	} = props
+
+	const commonScreenProps: CommonScreenProps = {
+		...otherProps,
+	}
 
 	const transitionRef = useRef<TransitioningView>(null)
 	useEffect(() => {
 		transitionRef.current?.animateNextTransition()
 	}, [phoneNumber])
+
+	const renderPhoneHeader = useCallback(() => {
+		if (renderHeader === null) return null
+		if (renderHeader) return renderHeader({ screen: 'phone' })
+
+		return (
+			<Appbar.Header
+				{...headerProps}
+				style={{ backgroundColor: tintColor, elevation: 0 }}
+			>
+				<Appbar.Content title={phoneScreenHeaderText} />
+			</Appbar.Header>
+		)
+	}, [renderHeader, headerProps, tintColor, phoneScreenHeaderText])
+
+	const renderCodeHeader = useCallback(() => {
+		if (renderHeader === null) return null
+		if (renderHeader) return renderHeader({ screen: 'code' })
+
+		return (
+			<Button style={{ marginTop: 50 }} onPress={() => setPhoneNumber('')}>
+				back
+			</Button>
+		)
+
+		return (
+			<Appbar.Header
+				{...headerProps}
+				style={{ backgroundColor: tintColor, elevation: 0 }}
+			>
+				<Appbar.BackAction onPress={() => setPhoneNumber('')} />
+				<Appbar.Content title={codeScreenHeaderText} />
+			</Appbar.Header>
+		)
+	}, [renderHeader, headerProps, codeScreenHeaderText, tintColor])
 
 	return (
 		<Transitioning.View
@@ -74,17 +118,13 @@ export default function PhoneAuthStack(props: Props) {
 					<Transition.In type="fade" />
 				</Transition.Together>
 			}
-			style={{ flex: 1 }}
+			style={styles.container}
 		>
 			{!phoneNumber ? (
 				<>
-					<Appbar.Header
-						{...headerProps}
-						style={{ backgroundColor: tintColor }}
-					>
-						<Appbar.Content title={phoneScreenHeaderText} />
-					</Appbar.Header>
 					<ControlledPhoneAuth
+						// renderHeader={renderPhoneHeader}
+						renderHeader={null}
 						{...phoneScreenProps}
 						onSmsSuccessfullySent={({ phoneNumber }) => {
 							setPhoneNumber(phoneNumber)
@@ -95,32 +135,18 @@ export default function PhoneAuthStack(props: Props) {
 				</>
 			) : (
 				<>
-					<Appbar.Header style={{ backgroundColor: tintColor }}>
-						<Appbar.BackAction onPress={() => setPhoneNumber('')} />
-						<Appbar.Content title={codeScreenHeaderText} />
-					</Appbar.Header>
 					<ControlledConfirmPhone
 						{...codeScreenProps}
 						phoneNumber={phoneNumber}
 						tintColor={tintColor}
+						renderHeader={renderCodeHeader}
 						onCodeVerified={async info => {
 							if (props?.onCodeVerified) props?.onCodeVerified?.(info)
 							else {
 								const { token } = info
 								if (token) {
 									// sign the user in
-									const { user } = await firebase
-										.auth()
-										.signInWithCustomToken(token)
-									console.log('oooooo', { user })
-
-									// if the user doesn't exist in the DB yet, add the user to the DB
-									// if (user && !(await doorman.doesUserExist({ uid: user.uid }))) {
-									// 	// you might also use this logic to navigate to a new user onboarding screen
-									// 	doorman.addUserToDb(user)
-									// }
-								} else {
-									console.warn('oooo no token lol')
+									await firebase.auth().signInWithCustomToken(token)
 								}
 							}
 						}}
@@ -129,57 +155,13 @@ export default function PhoneAuthStack(props: Props) {
 			)}
 		</Transitioning.View>
 	)
-
-	// if (!phoneNumber)
-	// 	return (
-	// 		<>
-	// 			<Appbar.Header style={{ backgroundColor: props?.tintColor }}>
-	// 				<Appbar.Content title="Sign in" />
-	// 			</Appbar.Header>
-	// 			<ControlledPhoneAuth
-	// 				{...phoneScreenProps}
-	// 				onSmsSuccessfullySent={({ phoneNumber }) => {
-	// 					console.log('seeeent', { phoneNumber })
-	// 					setPhoneNumber(phoneNumber)
-	// 				}}
-	// 				tintColor={props?.tintColor}
-	// 				testNumbers={testNumbers}
-	// 			/>
-	// 		</>
-	// 	)
-
-	// return (
-	// 	<>
-	// 		<Appbar.Header style={{ backgroundColor: props?.tintColor }}>
-	// 			<Appbar.BackAction onPress={() => setPhoneNumber('')} />
-	// 			<Appbar.Content title="Confirm number" />
-	// 		</Appbar.Header>
-	// 		<ControlledConfirmPhone
-	// 			{...codeScreenProps}
-	// 			phoneNumber={phoneNumber}
-	// 			tintColor={props?.tintColor}
-	// 			onCodeVerified={async info => {
-	// 				if (props?.onCodeVerified) props?.onCodeVerified?.(info)
-	// 				else {
-	// 					const { token } = info
-	// 					if (token) {
-	// 						// sign the user in
-	// 						const { user } = await firebase
-	// 							.auth()
-	// 							.signInWithCustomToken(token)
-	// 						console.log('oooooo', { user })
-
-	// 						// if the user doesn't exist in the DB yet, add the user to the DB
-	// 						// if (user && !(await doorman.doesUserExist({ uid: user.uid }))) {
-	// 						// 	// you might also use this logic to navigate to a new user onboarding screen
-	// 						// 	doorman.addUserToDb(user)
-	// 						// }
-	// 					} else {
-	// 						console.warn('oooo no token lol')
-	// 					}
-	// 				}
-	// 			}}
-	// 		/>
-	// 	</>
-	// )
 }
+
+AuthFlow.Phone = ControlledPhoneAuth
+AuthFlow.Confirm = ControlledConfirmPhone
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+})

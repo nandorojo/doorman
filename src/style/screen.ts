@@ -13,4 +13,7 @@ export const ScreenStyle = StyleSheet.create({
 	button: {
 		paddingVertical: 4,
 	},
+	inputContainer: {
+		marginVertical: 16,
+	},
 })

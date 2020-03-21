@@ -1,12 +1,29 @@
-import React, { useCallback, ComponentPropsWithoutRef, ReactNode } from 'react'
-import { View, ViewStyle, ScrollView, Text, Alert } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
+import React, {
+	useCallback,
+	ComponentPropsWithoutRef,
+	ReactNode,
+	useEffect,
+} from 'react'
+import {
+	View,
+	ViewStyle,
+	ScrollView,
+	Text,
+	Alert,
+	TextStyle,
+	Keyboard,
+} from 'react-native'
+import { Button, TextInput, Appbar } from 'react-native-paper'
 import { empty } from '../utils/empty'
 import { ScreenStyle } from '../style/screen'
 import { Page } from '../components/Page'
 import { useTextStyle } from '../hooks/use-style'
 import ReactPhoneInput from 'react-phone-number-input'
 import { PhoneInput, H1, Paragraph } from '../components'
+import { CommonScreenProps } from './types'
+import { ScreenBackground } from '../components/Background'
+import Animated from 'react-native-reanimated'
+import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
 type Props = {
 	/**
@@ -98,7 +115,7 @@ type Props = {
 	 * ```jsx
 	 * export default () => {
 	 * 	return (
-	 * 	 <PhoneAuth
+	 * 	 <AuthFlow.PhoneScreen
 	 *     disclaimer={({ buttonText }) => `When you press "${buttonText}", we'll send you a text. Message & data rates may apply. Reply chill to stop.`}
 	 *   />
 	 *  )
@@ -106,6 +123,12 @@ type Props = {
 	 * ```
 	 */
 	disclaimer?: string | ((info: { buttonText: string }) => string)
+	/**
+	 * Optional custom color for the disclaimer text.
+	 *
+	 * If you want more generalized color editing, see `textColor` prop.
+	 */
+	disclaimerColor?: string
 	/**
 	 * (Optional) If someone presses "Send" and their number is invalid, an alert will pop up with this message.
 	 *
@@ -124,10 +147,11 @@ type Props = {
 	 * @example
 	 * ```jsx
 	 * import { Button } from 'react-native-paper'
-	 *
+	 *import { ScreenBackground } from '../components/Background'
+
 	 * export default () => {
 	 * 	return (
-	 * 	 <PhoneAuth
+	 * 	 <AuthFlow.PhoneScreen
 	 *     renderButton={({ valid, loading, submit, ...props }) => <Button {...props} {...yourOtherPropsHere} onPress={valid && !loading ? submit : undefined} />}
 	 *     ...
 	 *   />
@@ -169,9 +193,32 @@ type Props = {
 	 * The type of button you want.
 	 *
 	 * The options are: `fixed-bottom` and `normal`. If it's fixed at the bottom, it goes up when the keyboard opens and is large.
+	 *
+	 * 🚨**Note:** 🚨 If you choose `fixed-bottom`, and you are using React Navigation's stack, you might face bugs when they keyboard opens. The solution is to make your header transparent on this React Navigation screen.
+	 * See: https://reactnavigation.org/docs/stack-navigator/#headertransparent
 	 */
-	buttonType: 'fixed-bottom' | 'normal'
-}
+	buttonType?: 'fixed-bottom' | 'normal'
+	/**
+	 * If `true`, the default app wrapper will no longer be a KeyboardAvoidingView. Note that this will face bugs if you have `buttonType` set to `fixed-bottom`.
+	 *
+	 * 🚨**Note:** 🚨 If you are using React Navigation's stack navigator for this screen, you may be facing bugs with the KeyboardAvoidingView.
+	 *
+	 * You have two options to fix it: 1) set the stactk's [headerTransparent](https://reactnavigation.org/docs/stack-navigator/#headertransparent) option to true, or set this prop to `true`. If you do not have `headerTransparent` set to true, then you will face bugs with a KeyboardAvoidingView.
+	 */
+	disableKeyboardHandler?: boolean
+	/**
+	 * (Optional) custom text that shows up in the header at the top. Default: `Sign In`. For nothing, put an empty string.
+	 */
+	headerText?: string
+	/**
+	 * Custom background color for the send button. Defaults to the `tintColor` prop if not set.
+	 */
+	buttonBackgroundColor?: string
+	/**
+	 * Custom text color for the send button. Defaults to the `white` prop if not set.
+	 */
+	buttonTextColor?: string
+} & CommonScreenProps
 
 export const PhoneAuth = (props: Props) => {
 	const {
@@ -194,7 +241,46 @@ export const PhoneAuth = (props: Props) => {
 		invalidNumberAlertText = 'Please enter a valid phone number.',
 		renderButton,
 		hideButtonForInvalidNumber = true,
+		backgroundColor,
+		renderBackground,
+		renderHeader,
+		buttonType,
+		disableKeyboardHandler,
+		textAlign = 'center',
+		headerText = 'Sign In',
+		headerProps,
+		headerBackgroundColor = '#000000',
+		textColor = 'white',
+		disclaimerColor,
+		headerTintColor,
+		renderInput,
+		inputBackgroundColor,
+		inputTextColor,
+		inputContainerStyle,
+		inputType = 'elevated',
+		buttonBackgroundColor,
+		buttonTextColor,
+		headerTitleStyle,
+		renderHeaderTitle,
 	} = props
+
+	const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
+
+	const buttonOpacity = useTimingTransition(shouldButtonShow, {
+		duration: 200,
+		// easing: Easing.inOut(Easing.linear),
+	})
+
+	useEffect(() => {
+		const validateProps = () => {
+			if (disableKeyboardHandler && buttonType === 'fixed-bottom') {
+				console.warn(
+					'🚨Doorman Warning: You set your buttonType prop to fixed-bottom, and set disableKeyboardHandler to true. \n\nThis will cause bugs. Set the disableKeyboardHandler prop to false if you want to use the fixed-bottom buttonType.'
+				)
+			}
+		}
+		validateProps()
+	}, [disableKeyboardHandler, buttonType])
 
 	const submit = useCallback(() => onSubmitPhone({ phoneNumber }), [
 		phoneNumber,
@@ -204,11 +290,18 @@ export const PhoneAuth = (props: Props) => {
 	const button = () => {
 		const renderProps: ComponentPropsWithoutRef<typeof Button> = {
 			mode: 'contained',
-			style: [styles.button, { backgroundColor: tintColor }, buttonStyle],
+			style: [
+				styles.button,
+				{ backgroundColor: buttonBackgroundColor ?? 'black' },
+				buttonStyle,
+			],
 			onPress: () => {
+				if (!shouldButtonShow) return
+
 				if (!valid) {
 					Alert.alert(invalidNumberAlertText)
 				} else if (!loading) {
+					Keyboard.dismiss()
 					submit()
 				}
 			},
@@ -219,49 +312,175 @@ export const PhoneAuth = (props: Props) => {
 		}
 		if (renderButton) return renderButton({ ...renderProps, valid, submit })
 
-		return <Button {...renderProps} />
+		return (
+			<Button
+				{...renderProps}
+				labelStyle={{ color: buttonTextColor ?? 'white' }}
+			/>
+		)
 	}
 
 	const renderDisclaimer = () => {
 		if (typeof disclaimer === 'function') {
 			return disclaimer({ buttonText })
 		}
-		return disclaimer
+		return (
+			<Text
+				style={[
+					TextStyle.disclaimer,
+					{ textAlign, color: disclaimerColor ?? textColor },
+				]}
+			>
+				{disclaimer}
+			</Text>
+		)
 	}
 	const input = useCallback(() => {
+		if (renderInput)
+			return renderInput({
+				value: phoneNumber,
+				onChangeText: onChangePhoneNumber,
+			})
+
+		const inputStyles: {
+			[key in typeof inputType | 'common']: {
+				style: ViewStyle
+				textStyle: TextStyle
+			}
+		} = {
+			elevated: {
+				style: {
+					backgroundColor: inputBackgroundColor ?? 'white',
+					borderRadius: 5,
+					...inputStyle,
+				},
+				textStyle: {
+					fontSize: 20,
+					fontWeight: 'bold',
+					color: inputTextColor ?? 'black',
+				},
+			},
+			flat: {
+				style: {
+					borderBottomColor: 'white',
+					borderBottomWidth: 1,
+				},
+				textStyle: {
+					color: inputTextColor ?? 'white',
+				},
+			},
+			common: {
+				style: {
+					padding: 16,
+				},
+				textStyle: {
+					fontSize: 24,
+					fontWeight: 'bold',
+					color: inputTextColor,
+				},
+			},
+		}
 		return (
 			<PhoneInput
 				value={phoneNumber}
 				onChangePhoneNumber={onChangePhoneNumber}
 				inputProps={{
-					autoFocus: true,
+					// autoFocus: true,
 					selectionColor: tintColor,
 					placeholder: 'Phone number',
+					placeholderTextColor:
+						inputType === 'elevated' ? '#00000070' : '#ffffff70',
+					keyboardAppearance: 'dark',
 					...inputProps,
 				}}
-				textStyle={{ fontSize: 20, fontWeight: 'bold' }}
-				style={{
-					padding: 16,
-					backgroundColor: '#e8e8e880',
-					borderRadius: 4,
-					...inputStyle,
+				textStyle={{
+					...inputStyles.common.textStyle,
+					...inputStyles[inputType].textStyle,
 				}}
+				style={{ ...inputStyles.common.style, ...inputStyles[inputType].style }}
 			/>
 		)
-	}, [inputProps, inputStyle, onChangePhoneNumber, phoneNumber, tintColor])
+	}, [
+		renderInput,
+		phoneNumber,
+		onChangePhoneNumber,
+		inputType,
+		inputBackgroundColor,
+		inputStyle,
+		inputTextColor,
+		tintColor,
+		inputProps,
+	])
 
 	const TextStyle = useTextStyle()
 
+	const background = useCallback(() => {
+		if (renderBackground === null) return null
+		if (renderBackground) return renderBackground()
+
+		return <ScreenBackground color={backgroundColor} />
+	}, [renderBackground, backgroundColor])
+
+	const header = useCallback(() => {
+		if (renderHeader === null) return null
+		if (renderHeader) return renderHeader({ screen: 'phone' })
+
+		return (
+			<Appbar.Header
+				{...headerProps}
+				style={{ backgroundColor: headerBackgroundColor, elevation: 0 }}
+			>
+				{(!!renderHeaderTitle && renderHeaderTitle()) || (
+					<View style={{ flex: 1, paddingHorizontal: 16 }}>
+						<Text
+							style={[
+								{
+									textAlign,
+									color: headerTintColor ?? textColor,
+									fontWeight: '500',
+									fontSize: 18,
+								},
+								headerTitleStyle,
+							]}
+						>
+							{headerText}
+						</Text>
+					</View>
+				)}
+			</Appbar.Header>
+		)
+	}, [
+		renderHeader,
+		headerProps,
+		headerBackgroundColor,
+		renderHeaderTitle,
+		textAlign,
+		headerTintColor,
+		textColor,
+		headerTitleStyle,
+		headerText,
+	])
+
 	return (
-		<Page containerProps={containerProps} style={containerStyle}>
-			<View style={styles.wrapper}>
-				<H1>{title}</H1>
-				<Paragraph>{message}</Paragraph>
-				<View>{input()}</View>
-				<View style={{ opacity: !valid && hideButtonForInvalidNumber ? 0 : 1 }}>
+		<Page
+			header={header}
+			containerProps={containerProps}
+			style={containerStyle}
+			background={background}
+		>
+			<View>
+				<H1 style={{ textAlign, color: textColor }}>{title}</H1>
+				<Paragraph style={{ textAlign, color: textColor }}>{message}</Paragraph>
+				<View style={[styles.inputContainer]}>{input()}</View>
+				<Animated.View
+					style={{
+						opacity: buttonOpacity,
+						transform: [{ translateY: bInterpolate(buttonOpacity, 5, 0) }],
+					}}
+				>
 					<View style={styles.buttonWrapper}>{button()}</View>
-					<Text style={TextStyle.disclaimer}>{renderDisclaimer()}</Text>
-				</View>
+					{renderDisclaimer()}
+				</Animated.View>
 			</View>
 		</Page>
 	)

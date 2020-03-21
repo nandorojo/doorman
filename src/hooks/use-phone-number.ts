@@ -56,7 +56,9 @@ export function usePhoneNumber(props: Props) {
 					'usePhoneNumber issue in onChangePhoneNumber. You passed a testNumbers argument with more than ten test numbers. This can slow down the TextInput. Make sure to reduce this number in production.'
 				)
 			}
-			if (phoneNumber.includes('+1555')) isValid = true
+			if (phoneNumber?.includes('+1555') && phoneNumber?.length === 12) {
+				isValid = true
+			}
 			setValid(isValid)
 			setPhoneNumber(phoneNumber)
 		},

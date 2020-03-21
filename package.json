@@ -32,9 +32,9 @@
 		"@types/react-native": "^0.60.22",
 		"@types/uuid": "^3.4.5",
 		"eslint": "^6.8.0",
-		"eslint-config-nando": "^1.0.3",
+		"eslint-config-nando": "^1.0.7",
 		"prettier": "^1.19.1",
-		"react": "^16.11.0",
+		"react": "~16.9.0",
 		"react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
 		"typescript": "^3.7.5"
 	},
@@ -55,9 +55,12 @@
 		]
 	},
 	"dependencies": {
+		"expo-linear-gradient": "^8.0.0",
+		"react-native-elements": "^1.2.7",
 		"react-native-extended-stylesheet": "^0.12.0",
 		"react-native-paper": "^3.6.0",
 		"react-native-phone-input": "^0.2.4",
+		"react-native-redash": "^10.0.1",
 		"react-native-text-input-mask": "^2.0.0",
 		"react-phone-number-input": "^3.0.22"
 	},

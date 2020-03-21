@@ -1,4 +1,4 @@
-import React, { ReactNode, ComponentPropsWithoutRef } from 'react'
+import React, { ReactNode, ComponentPropsWithoutRef, useCallback } from 'react'
 import {
 	View,
 	ScrollView,
@@ -13,8 +13,10 @@ import { TextStyle } from '../style/text'
 import { Page } from '../components/Page'
 import { Paragraph, H1 } from '../components'
 import { empty } from '../utils/empty'
+import { CommonScreenProps } from './types'
+import { ScreenBackground } from '../components/Background'
 
-interface Props {
+type Props = {
 	code: string
 	/**
 	 * Required prop: Function called every time the code is changed. It is recommended to use this with the `useConfirmPhone` hook.
@@ -137,7 +139,7 @@ import { H1 } from '../components/Text'
 	 * Style the outer screen.
 	 */
 	containerStyle?: ViewStyle
-}
+} & CommonScreenProps
 
 export function ConfirmPhone(props: Props) {
 	const {
@@ -154,6 +156,9 @@ export function ConfirmPhone(props: Props) {
 		resendText = 'Resend Code',
 		containerProps = empty.object,
 		containerStyle,
+		renderBackground,
+		backgroundColor,
+		renderHeader,
 	} = props
 
 	const renderMessage = () => {
@@ -183,7 +188,6 @@ export function ConfirmPhone(props: Props) {
 			clearButtonMode="while-editing"
 			label="6-digit code"
 			textContentType="oneTimeCode"
-			autoFocus
 			keyboardType="number-pad"
 			accessibilityHint="6-digit phone number texted to you"
 			returnKeyType="done"
@@ -223,8 +227,25 @@ export function ConfirmPhone(props: Props) {
 		)
 	}
 
+	const background = useCallback(() => {
+		if (renderBackground === null) return null
+		if (renderBackground) return renderBackground()
+
+		return <ScreenBackground color={backgroundColor} />
+	}, [renderBackground, backgroundColor])
+
+	const header = useCallback(
+		() => renderHeader?.({ screen: 'phone' }) ?? null,
+		[renderHeader]
+	)
+
 	return (
-		<Page containerProps={containerProps} style={containerStyle}>
+		<Page
+			header={header}
+			background={background}
+			containerProps={containerProps}
+			style={containerStyle}
+		>
 			<View style={styles.wrapper}>
 				<H1>{title}</H1>
 				{renderMessage()}

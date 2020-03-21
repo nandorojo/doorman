@@ -1,6 +1,6 @@
-import { ReactNode } from 'react'
-import { TextStyle } from 'react-native'
-import { InputProps } from 'chat/lib/typescript/components/Chat/types'
+import { ReactNode, ComponentPropsWithoutRef } from 'react'
+import { TextStyle, ViewStyle } from 'react-native'
+import { Appbar } from 'react-native-paper/lib/typescript/src'
 
 export type CommonScreenProps = {
 	/**
@@ -8,9 +8,29 @@ export type CommonScreenProps = {
 	 *
 	 * Set to `center` if you want the screen text and input to be centered by default.
 	 */
-	textAlign?: TextStyle['alignItems']
-	headerColor?: string
-	messageColor?: string
+	textAlign?: TextStyle['textAlign']
+	/**
+	 * The default text color. If you want more granular customization, see `titleColor`, `disclaimerColor` and `messageColor`.
+	 *
+	 * Default: `white`
+	 */
+	textColor?: TextStyle['textAlign']
+	/**
+	 * Background color for the header at the top of the screen.
+	 *
+	 * Default: `transparent`.
+	 *
+	 * If you want a lot of customization, see the `renderHeader` prop.
+	 */
+	headerBackgroundColor?: string
+	/**
+	 * Optionally render a custom component in place of the header title. This useful if you want to render your logo, for instance.
+	 */
+	renderHeaderTitle?: () => ReactNode
+	/**
+	 * Optional custom color for the text and back icon in the header. Default: 'white'
+	 */
+	headerTintColor?: string
 	/**
 	 * Either a string or array of strings.
 	 *
@@ -19,22 +39,37 @@ export type CommonScreenProps = {
 	 * Make sure to memoize this prop if you're using a gradient using `useMemo`.
 	 *
 	 * @example
+	 * ```es6
+	 * export default () => {
+	 *   const backgroundColor = useMemo(() => ['blue', 'green' ],[])
+	 *   return <Phone.Stack backgroundColor={backgroundColor} {...otherProps} />
+	 * }
 	 * ```
-	 * const backgroundColor = useMemo(() => ['blue', 'green' ],[])
-	 * <Phone.Stack backgroundColor={backgroundColor} />
-	 * ```
+	 */
+	/**
+	 * (Optional) custom props to be passed to the header.
+	 *
+	 * See the `react-native-paper` docs for the `Appbar.Header` props: https://callstack.github.io/react-native-paper/appbar-header.html
+	 */
+	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
+	/**
+	 * Custom styles for the title in the header.
+	 *
+	 * If you just want to edit the text color, see `headerTintColor`.
+	 */
+	headerTitleStyle?: TextStyle
+	/**
+	 * Color or array of colors. If it's an array, it will show a gradient background.
+	 *
+	 * The default is the follwing gradient: ['', '']
 	 */
 	backgroundColor?: string | string[]
 	/**
-	 * A function that returns a custom component that will replace the default background color.
+	 * A function that returns a custom component that will replace the default background.
 	 *
-	 * Note that this View should have the `StyleSheet.absoluteFill` in its styles so that it covers the entire screen.
+	 * This View should have the `StyleSheet.absoluteFill` in its styles so that it covers the entire screen.
 	 */
 	renderBackground?: () => ReactNode
-	/**
-	 * Function that renders a custom TextInput component
-	 */
-	renderInput?: (info: { onChangeText: string; text: string }) => ReactNode
 	/**
 	 * Background color for the text input
 	 */
@@ -44,17 +79,22 @@ export type CommonScreenProps = {
 	 */
 	inputTextColor?: string
 	/**
-	 * Input style. Can either be a style prop directly, or a pure function that receives the default styles as its only argument and returns your updated styles.
-	 */
-	inputStyle?:
-		| InputProps['style']
-		| ((defaultStyle: InputProps['style']) => InputProps['style'])
-
-	/**
 	 * Define which premade style type for the input you would like.
 	 *
 	 * `elevated` has dropshadow and a colored background that contrasts with the screen background.
 	 * `flat` has a transparent background and is more subtle.
 	 */
 	inputType?: 'elevated' | 'flat'
+	/**
+	 * Optional function that renders a custom header. If `null`, will not return a header.
+	 *
+	 * Receives one argument: a dictionary with a `screen` field, which can be `code` or `phone`. This tells you which screen the header is currently on.
+	 *
+	 * @param info.screen - 'code' or 'phone', indicating which screen the header is currently being rendered on.
+	 */
+	renderHeader?: null | ((screen: { screen: 'code' | 'phone' }) => ReactNode)
+	/**
+	 * (Optional) Style the view that contains the text input.
+	 */
+	inputContainerStyle?: ViewStyle
 }

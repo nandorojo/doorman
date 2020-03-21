@@ -1,6 +1,6 @@
 import React, { ComponentType, ComponentPropsWithoutRef, useState } from 'react'
 import { AuthGate } from '../components/AuthGate'
-import { Phone } from '../views'
+import { AuthFlow } from '../views'
 import { DoormanProvider, useDoormanContext } from '../context'
 import { InitializationProps } from '../methods'
 import { theme } from '../style/theme'
@@ -10,11 +10,9 @@ type Options = {
 	includeProvider?: boolean
 	// tintColor?: string
 	phoneScreenProps?: ComponentPropsWithoutRef<
-		typeof Phone['Stack']
+		typeof AuthFlow
 	>['phoneScreenProps']
-	codeScreenProps?: ComponentPropsWithoutRef<
-		typeof Phone['Stack']
-	>['codeScreenProps']
+	codeScreenProps?: ComponentPropsWithoutRef<typeof AuthFlow>['codeScreenProps']
 	/**
 	 * Endpoint provided to you by doorman.
 	 */
@@ -84,7 +82,7 @@ export function withPhoneAuth<P>(
 							return <SplashScreen next={() => setSplashDone(true)} />
 
 						return (
-							<Phone.Stack
+							<AuthFlow
 								{...{
 									phoneScreenProps,
 									codeScreenProps,
