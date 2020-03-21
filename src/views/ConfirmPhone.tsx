@@ -16,7 +16,7 @@ import { empty } from '../utils/empty'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
 
-type Props = {
+type Props = CommonScreenProps & {
 	code: string
 	/**
 	 * Required prop: Function called every time the code is changed. It is recommended to use this with the `useConfirmPhone` hook.
@@ -139,9 +139,9 @@ import { H1 } from '../components/Text'
 	 * Style the outer screen.
 	 */
 	containerStyle?: ViewStyle
-} & CommonScreenProps
+}
 
-export function ConfirmPhone(props: Props) {
+function Confirm(props: Props) {
 	const {
 		code,
 		onChangeCode,
@@ -257,6 +257,8 @@ export function ConfirmPhone(props: Props) {
 		</Page>
 	)
 }
+
+export const ConfirmPhone = React.memo(Confirm)
 
 const styles = {
 	message: {

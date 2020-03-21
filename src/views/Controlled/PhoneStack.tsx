@@ -4,10 +4,11 @@ import React, {
 	useRef,
 	useEffect,
 } from 'react'
-import {
+import Animated, {
 	Transitioning,
 	Transition,
 	TransitioningView,
+	Easing,
 } from 'react-native-reanimated'
 import firebase from 'firebase/app'
 import ControlledPhoneAuth from './PhoneAuth'
@@ -17,8 +18,9 @@ import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
 import { useCallback } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform, Dimensions, View } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
+import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
 type Props = {
 	onCodeVerified?: ComponentPropsWithoutRef<
@@ -51,7 +53,6 @@ type Props = {
 } & CommonScreenProps
 
 export function AuthFlow(props: Props) {
-	const [phoneNumber, setPhoneNumber] = useState('')
 	const { tintColor } = useDoormanTheme()
 	const { setCodeScreenReady, ready } = useAuthFlowState()
 
@@ -72,8 +73,13 @@ export function AuthFlow(props: Props) {
 
 	const transitionRef = useRef<TransitioningView>(null)
 	useEffect(() => {
-		transitionRef.current?.animateNextTransition()
-	}, [phoneNumber])
+		if (Platform.OS !== 'web') transitionRef.current?.animateNextTransition()
+	}, [ready])
+	const transition = useTimingTransition(ready, {
+		duration: 400,
+		easing: Easing.inOut(Easing.linear),
+	})
+	const translateX = bInterpolate(transition, Dimensions.get('window').width, 0)
 
 	const renderPhoneHeader = useCallback(() => {
 		if (renderHeader === null) return null
@@ -92,6 +98,7 @@ export function AuthFlow(props: Props) {
 	const renderCodeHeader = useCallback(() => {
 		if (renderHeader === null) return null
 		if (renderHeader) return renderHeader({ screen: 'code' })
+		return null
 
 		return (
 			<Button
@@ -119,6 +126,49 @@ export function AuthFlow(props: Props) {
 		setCodeScreenReady,
 	])
 
+	// return (
+	// 	<View style={styles.container}>
+	// 		<>
+	// 			<ControlledPhoneAuth
+	// 				// renderHeader={renderPhoneHeader}
+	// 				renderHeader={null}
+	// 				{...commonScreenProps}
+	// 				{...phoneScreenProps}
+	// 				onSmsSuccessfullySent={() => {
+	// 					// setPhoneNumber(phoneNumber)
+	// 					setCodeScreenReady(true)
+	// 				}}
+	// 				tintColor={tintColor}
+	// 				testNumbers={testNumbers}
+	// 			/>
+	// 		</>
+	// 		<Animated.View
+	// 			style={{
+	// 				opacity: transition,
+	// 				...StyleSheet.absoluteFillObject,
+	// 				transform: [{ translateX: ready ? 0 : 1 }],
+	// 			}}
+	// 		>
+	// 			<ControlledConfirmPhone
+	// 				{...commonScreenProps}
+	// 				{...codeScreenProps}
+	// 				tintColor={tintColor}
+	// 				renderHeader={renderCodeHeader}
+	// 				onCodeVerified={async info => {
+	// 					if (props?.onCodeVerified) props?.onCodeVerified?.(info)
+	// 					else {
+	// 						const { token } = info
+	// 						if (token) {
+	// 							// sign the user in
+	// 							await firebase.auth().signInWithCustomToken(token)
+	// 						}
+	// 					}
+	// 				}}
+	// 			/>
+	// 		</Animated.View>
+	// 	</View>
+	// )
+
 	return (
 		<Transitioning.View
 			ref={transitionRef}
@@ -136,8 +186,9 @@ export function AuthFlow(props: Props) {
 					<ControlledPhoneAuth
 						// renderHeader={renderPhoneHeader}
 						renderHeader={null}
+						{...commonScreenProps}
 						{...phoneScreenProps}
-						onSmsSuccessfullySent={({ phoneNumber }) => {
+						onSmsSuccessfullySent={() => {
 							// setPhoneNumber(phoneNumber)
 							setCodeScreenReady(true)
 						}}
@@ -148,6 +199,7 @@ export function AuthFlow(props: Props) {
 			) : (
 				<>
 					<ControlledConfirmPhone
+						{...commonScreenProps}
 						{...codeScreenProps}
 						tintColor={tintColor}
 						renderHeader={renderCodeHeader}

@@ -10,8 +10,9 @@ import {
 	ScrollView,
 	Text,
 	Alert,
-	TextStyle,
+	TextStyle as TextStyleType,
 	Keyboard,
+	Platform,
 } from 'react-native'
 import { Button, TextInput, Appbar } from 'react-native-paper'
 import { empty } from '../utils/empty'
@@ -25,7 +26,7 @@ import { ScreenBackground } from '../components/Background'
 import Animated from 'react-native-reanimated'
 import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
-type Props = {
+type Props = CommonScreenProps & {
 	/**
 	 * Phone number's current state. Used with the `usePhoneNumber` hook.
 	 *
@@ -218,7 +219,7 @@ type Props = {
 	 * Custom text color for the send button. Defaults to the `white` prop if not set.
 	 */
 	buttonTextColor?: string
-} & CommonScreenProps
+}
 
 export const PhoneAuth = (props: Props) => {
 	const {
@@ -345,7 +346,7 @@ export const PhoneAuth = (props: Props) => {
 		const inputStyles: {
 			[key in typeof inputType | 'common']: {
 				style: ViewStyle
-				textStyle: TextStyle
+				textStyle: TextStyleType
 			}
 		} = {
 			elevated: {
@@ -386,11 +387,28 @@ export const PhoneAuth = (props: Props) => {
 				onChangePhoneNumber={onChangePhoneNumber}
 				inputProps={{
 					// autoFocus: true,
-					selectionColor: tintColor,
+					...Platform.select({
+						web: empty.object,
+						default: {
+							selectionColor: tintColor,
+							placeholderTextColor:
+								inputType === 'elevated' ? '#00000070' : '#ffffff70',
+							keyboardAppearance: 'dark',
+						},
+					}),
 					placeholder: 'Phone number',
-					placeholderTextColor:
-						inputType === 'elevated' ? '#00000070' : '#ffffff70',
-					keyboardAppearance: 'dark',
+					// selectionColor: Platform.select({
+					// 	web: undefined,
+					// 	default: tintColor,
+					// }),
+					// placeholderTextColor: Platform.select({
+					// 	web: undefined,
+					// 	default: inputType === 'elevated' ? '#00000070' : '#ffffff70',
+					// }),
+					// keyboardAppearance: Platform.select({
+					// 	web: undefined,
+					// 	default: 'dark',
+					// }),
 					...inputProps,
 				}}
 				textStyle={{
@@ -471,7 +489,9 @@ export const PhoneAuth = (props: Props) => {
 			<View>
 				<H1 style={{ textAlign, color: textColor }}>{title}</H1>
 				<Paragraph style={{ textAlign, color: textColor }}>{message}</Paragraph>
-				<View style={[styles.inputContainer]}>{input()}</View>
+				<View style={[styles.inputContainer, inputContainerStyle]}>
+					{input()}
+				</View>
 				<Animated.View
 					style={{
 						opacity: buttonOpacity,
