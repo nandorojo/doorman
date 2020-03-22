@@ -1,7 +1,6 @@
 import React, { ComponentPropsWithoutRef } from 'react'
 import { usePhoneNumber } from '../../hooks/use-phone-number'
 import { PhoneAuth } from '../Phone-Screen'
-import { Appbar } from 'react-native-paper'
 
 type Props = Omit<
 	ComponentPropsWithoutRef<typeof PhoneAuth>,
