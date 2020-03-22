@@ -80,7 +80,7 @@ type Props = CommonScreenProps & {
 	 */
 	inputStyle?: ComponentPropsWithoutRef<typeof TextInput>['style']
 	/**
-	 * The color used for the screens color scheme. To get more specific style, check out the other style props. Changing this color will update the send button and text selection color.
+	 * The color used for the screens color scheme, such as highlighting the text. This prop is getting phased out, so instead, check out the other style props.
 	 */
 	tintColor?: string
 	/**

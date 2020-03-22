@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef } from 'react'
 import { usePhoneNumber } from '../../hooks/use-phone-number'
-import { PhoneAuth } from '../PhoneAuth'
+import { PhoneAuth } from '../Phone-Screen'
 import { Appbar } from 'react-native-paper'
 
 type Props = Omit<
@@ -9,7 +9,6 @@ type Props = Omit<
 > & {
 	onSmsSuccessfullySent(info: { phoneNumber: string }): void
 	onSmsError?: (error: unknown) => void
-	testNumbers?: string[]
 	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
 	/**
 	 * The initial value of the hpone number input before typing.
@@ -21,12 +20,7 @@ type Props = Omit<
 }
 
 export default function ControlledPhoneAuth(props: Props) {
-	const {
-		onSmsSuccessfullySent,
-		onSmsError,
-		testNumbers,
-		...otherProps
-	} = props
+	const { onSmsSuccessfullySent, onSmsError, ...otherProps } = props
 
 	const {
 		phoneNumber,
@@ -37,7 +31,6 @@ export default function ControlledPhoneAuth(props: Props) {
 	} = usePhoneNumber({
 		onSmsSuccessfullySent,
 		onSmsError,
-		testNumbers,
 	})
 
 	return (

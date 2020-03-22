@@ -23,12 +23,12 @@ type Props = CommonScreenProps & {
 	/**
 	 * Required prop: Function called every time the code is changed. It is recommended to use this with the `useConfirmPhone` hook.
 	 *
-	 * To have this logic fully handled for you, see the `AuthFlow.VerifyScreen` component. Or, for an even simpler experience, see the `AuthFlow` stack.
+	 * To have this logic fully handled for you, see the `AuthFlow.ConfirmScreen` component. Or, for an even simpler experience, see the `AuthFlow` stack.
 	 *
 	 * @example
 	 * ```jsx
 	 * import * as React from 'react'
-	 * import { useConfirmPhone, VerifyScreen } from 'react-native-doorman'
+	 * import { useConfirmPhone, ConfirmScreen } from 'react-native-doorman'
 	 *
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
@@ -47,12 +47,12 @@ type Props = CommonScreenProps & {
 	/**
 	 * (Optional) Boolean to show if it's loading. If true, shows a loading indicator. It is recommended to use this with the `useConfirmPhone` hook.
 	 *
-	 * To have this logic fully handled for you, see the `AuthFlow.VerifyScreen` component. Or, for an even simpler experience, see the `AuthFlow` stack.
+	 * To have this logic fully handled for you, see the `AuthFlow.ConfirmScreen` component. Or, for an even simpler experience, see the `AuthFlow` stack.
 	 *
 	 *  * @example
 	 * ```jsx
 	 * import * as React from 'react'
-	 * import { useConfirmPhone, VerifyScreen } from 'react-native-doorman'
+	 * import { useConfirmPhone, ConfirmScreen } from 'react-native-doorman'
 	 *
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
@@ -400,7 +400,7 @@ function Confirm(props: Props) {
 	)
 }
 
-export const VerifyScreen = React.memo(Confirm)
+export const ConfirmScreen = React.memo(Confirm)
 
 const styles = {
 	message: {

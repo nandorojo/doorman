@@ -11,8 +11,8 @@ import Animated, {
 	Easing,
 } from 'react-native-reanimated'
 import firebase from 'firebase/app'
-import ControlledPhoneAuth from './PhoneAuth'
-import ControlledConfirmPhone from './ConfirmPhone'
+import ControlledPhoneAuth from './Controlled-Phone-Screen'
+import ControlledConfirmPhone from './Controlled-Confirm-Screen'
 import { Appbar, Button } from 'react-native-paper'
 import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
@@ -35,12 +35,6 @@ type Props = {
 		ComponentPropsWithoutRef<typeof ControlledConfirmPhone>,
 		'phoneNumber' | 'tintColor' | 'onCodeVerified'
 	>
-	/**
-	 * Test phone numbers array.
-	 *
-	 * Example: ['+15555555555']
-	 */
-	testNumbers?: string[]
 	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
 	/**
 	 * Text that shows in the header bar at the top for the phone auth screen. Default: `Sign In`
@@ -59,11 +53,6 @@ export function AuthFlow(props: Props) {
 	const {
 		phoneScreenProps = empty.object,
 		codeScreenProps = empty.object,
-		testNumbers,
-		headerProps = empty.object,
-		phoneScreenHeaderText = 'Sign In',
-		codeScreenHeaderText = 'Confirm Number',
-		renderHeader,
 		...otherProps
 	} = props
 
@@ -75,56 +64,56 @@ export function AuthFlow(props: Props) {
 	useEffect(() => {
 		if (Platform.OS !== 'web') transitionRef.current?.animateNextTransition()
 	}, [ready])
-	const transition = useTimingTransition(ready, {
-		duration: 400,
-		easing: Easing.inOut(Easing.linear),
-	})
-	const translateX = bInterpolate(transition, Dimensions.get('window').width, 0)
+	// const transition = useTimingTransition(ready, {
+	// 	duration: 400,
+	// 	easing: Easing.inOut(Easing.linear),
+	// })
+	// const translateX = bInterpolate(transition, Dimensions.get('window').width, 0)
 
-	const renderPhoneHeader = useCallback(() => {
-		if (renderHeader === null) return null
-		if (renderHeader) return renderHeader({ screen: 'phone' })
+	// const renderPhoneHeader = useCallback(() => {
+	// 	if (renderHeader === null) return null
+	// 	if (renderHeader) return renderHeader({ screen: 'phone' })
 
-		return (
-			<Appbar.Header
-				{...headerProps}
-				style={{ backgroundColor: tintColor, elevation: 0 }}
-			>
-				<Appbar.Content title={phoneScreenHeaderText} />
-			</Appbar.Header>
-		)
-	}, [renderHeader, headerProps, tintColor, phoneScreenHeaderText])
+	// 	return (
+	// 		<Appbar.Header
+	// 			{...headerProps}
+	// 			style={{ backgroundColor: tintColor, elevation: 0 }}
+	// 		>
+	// 			<Appbar.Content title={phoneScreenHeaderText} />
+	// 		</Appbar.Header>
+	// 	)
+	// }, [renderHeader, headerProps, tintColor, phoneScreenHeaderText])
 
-	const renderCodeHeader = useCallback(() => {
-		if (renderHeader === null) return null
-		if (renderHeader) return renderHeader({ screen: 'code' })
-		return null
+	// const renderCodeHeader = useCallback(() => {
+	// 	if (renderHeader === null) return null
+	// 	if (renderHeader) return renderHeader({ screen: 'code' })
+	// 	return null
 
-		return (
-			<Button
-				style={{ marginTop: 50 }}
-				onPress={() => setCodeScreenReady(false)}
-			>
-				back
-			</Button>
-		)
+	// 	return (
+	// 		<Button
+	// 			style={{ marginTop: 50 }}
+	// 			onPress={() => setCodeScreenReady(false)}
+	// 		>
+	// 			back
+	// 		</Button>
+	// 	)
 
-		return (
-			<Appbar.Header
-				{...headerProps}
-				style={{ backgroundColor: tintColor, elevation: 0 }}
-			>
-				<Appbar.BackAction onPress={() => setPhoneNumber('')} />
-				<Appbar.Content title={codeScreenHeaderText} />
-			</Appbar.Header>
-		)
-	}, [
-		renderHeader,
-		headerProps,
-		codeScreenHeaderText,
-		tintColor,
-		setCodeScreenReady,
-	])
+	// 	return (
+	// 		<Appbar.Header
+	// 			{...headerProps}
+	// 			style={{ backgroundColor: tintColor, elevation: 0 }}
+	// 		>
+	// 			<Appbar.BackAction onPress={() => setPhoneNumber('')} />
+	// 			<Appbar.Content title={codeScreenHeaderText} />
+	// 		</Appbar.Header>
+	// 	)
+	// }, [
+	// 	renderHeader,
+	// 	headerProps,
+	// 	codeScreenHeaderText,
+	// 	tintColor,
+	// 	setCodeScreenReady,
+	// ])
 
 	return (
 		<Transitioning.View
@@ -147,7 +136,6 @@ export function AuthFlow(props: Props) {
 							setCodeScreenReady(true)
 						}}
 						tintColor={tintColor}
-						testNumbers={testNumbers}
 					/>
 				</>
 			) : (

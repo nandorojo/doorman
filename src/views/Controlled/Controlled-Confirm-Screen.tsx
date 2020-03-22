@@ -1,12 +1,12 @@
 import React, { ComponentPropsWithoutRef, useCallback } from 'react'
-import { VerifyScreen } from '../ConfirmPhone'
+import { ConfirmScreen } from '../Confirm-Screen'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
 import { Alert } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
 type Props = Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'> &
 	Omit<
-		ComponentPropsWithoutRef<typeof VerifyScreen>,
+		ComponentPropsWithoutRef<typeof ConfirmScreen>,
 		| 'onChangeCode'
 		| 'onPressResendCode'
 		| 'loading'
@@ -17,7 +17,7 @@ type Props = Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'> &
 		| 'resending'
 	>
 
-export default function ControlledVerifyScreen(props: Props) {
+export default function ControlledConfirmScreen(props: Props) {
 	const { phoneNumber } = useAuthFlowState()
 	const {
 		code,
@@ -41,7 +41,7 @@ export default function ControlledVerifyScreen(props: Props) {
 	)
 
 	return (
-		<VerifyScreen
+		<ConfirmScreen
 			{...{ code, onChangeCode, loading, error, resending }}
 			phoneNumber={phoneNumber}
 			onPressResendCode={onPressResendCode}

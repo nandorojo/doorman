@@ -5,8 +5,7 @@ import {
 	ComponentPropsWithoutRef,
 } from 'react'
 import { doorman } from '../methods'
-import { useControlledOrInternalState } from './use-controlled-state'
-import { PhoneAuth } from '../views/PhoneAuth'
+import { PhoneAuth } from '../views/Phone-Screen'
 import { useAuthFlowState } from './use-auth-flow-state'
 
 interface Props {
@@ -20,15 +19,6 @@ interface Props {
 	 */
 	onSmsSuccessfullySent(info: { phoneNumber: string }): void
 	onSmsError?(e: unknown): void
-	/**
-	 * If you are using test numbers, enter them exactly here.
-	 * If they are not put here, the hook will never mark these numbers (starting with 555) as valid.
-	 *
-	 * This probably shouldn't have more than a few numbers. Definitely don't make it a really long list.
-	 *
-	 * Example: ['+15555555555']
-	 */
-	testNumbers?: string[]
 }
 
 type onChangePhoneNumber = ComponentPropsWithoutRef<
@@ -36,13 +26,6 @@ type onChangePhoneNumber = ComponentPropsWithoutRef<
 >['onChangePhoneNumber']
 
 export function usePhoneNumber(props: Props) {
-	// const [phoneNumber, setPhoneNumber] = useControlledOrInternalState(
-	// 	{
-	// 		state: props.phoneNumber,
-	// 		setState: state => props.onChangePhoneNumber?.(state as string),
-	// 	},
-	// 	'+1'
-	// )
 	const {
 		phoneNumber,
 		onChangePhoneNumber: setPhoneNumber,
@@ -50,25 +33,14 @@ export function usePhoneNumber(props: Props) {
 	} = useAuthFlowState()
 	// const [valid, setValid] = useState(false)
 	const [loading, setLoading] = useState(false)
-	const { onSmsSuccessfullySent, onSmsError, testNumbers } = props
+	const { onSmsSuccessfullySent, onSmsError } = props
 
 	const onChangePhoneNumber: onChangePhoneNumber = useCallback(
 		({ phoneNumber = '', valid }) => {
 			setLoading(false)
-			// let isValid = valid
-			// if it's one of the test numbers, mark it as valid
-			if (testNumbers && testNumbers.length > 10) {
-				console.warn(
-					'usePhoneNumber issue in onChangePhoneNumber. You passed a testNumbers argument with more than ten test numbers. This can slow down the TextInput. Make sure to reduce this number in production.'
-				)
-			}
-			// if (phoneNumber?.includes('+1555') && phoneNumber?.length === 12) {
-			// 	isValid = true
-			// }
-			// setValid(isValid)
 			setPhoneNumber(phoneNumber)
 		},
-		[testNumbers, setPhoneNumber]
+		[setPhoneNumber]
 	)
 
 	const submitPhone = useCallback(async () => {
