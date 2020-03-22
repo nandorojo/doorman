@@ -13,7 +13,9 @@ type Theme = {
 	textAlign: TextStyle['textAlign']
 }
 
-export const theme = (customTheme: Partial<Theme> = empty.object): Theme => {
+export const theme = (
+	customTheme: Partial<Theme> = empty.object
+): Partial<Theme> => {
 	return {
 		tintColor: 'blue',
 		buttonTextColor: 'white',

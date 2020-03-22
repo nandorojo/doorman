@@ -20,5 +20,7 @@ export const TextStyle = {
 		borderWidth: 1,
 		borderColor: 'red',
 		color: 'red',
+		backgroundColor: 'white',
+		overflow: 'hidden',
 	},
 }

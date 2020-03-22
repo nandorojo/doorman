@@ -156,7 +156,7 @@ export function AuthFlow(props: Props) {
 						{...commonScreenProps}
 						{...codeScreenProps}
 						tintColor={tintColor}
-						renderHeader={renderCodeHeader}
+						// renderHeader={renderCodeHeader}
 						onCodeVerified={async info => {
 							if (props?.onCodeVerified) props?.onCodeVerified?.(info)
 							else {
@@ -167,6 +167,7 @@ export function AuthFlow(props: Props) {
 								}
 							}
 						}}
+						onGoBack={() => setCodeScreenReady(false)}
 					/>
 				</>
 			)}

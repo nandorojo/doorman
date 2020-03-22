@@ -14,7 +14,7 @@ export type CommonScreenProps = {
 	 *
 	 * Default: `white`
 	 */
-	textColor?: TextStyle['textAlign']
+	textColor?: TextStyle['color']
 	/**
 	 * Background color for the header at the top of the screen.
 	 *
@@ -28,7 +28,7 @@ export type CommonScreenProps = {
 	 */
 	renderHeaderTitle?: () => ReactNode
 	/**
-	 * Optional custom color for the text and back icon in the header. Default: 'white'
+	 * Optional custom color for the text and back icon in the header. If not set, it defaults to the value you set for the `textColor` prop.
 	 */
 	headerTintColor?: string
 	/**

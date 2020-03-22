@@ -31,25 +31,25 @@ type Props = CommonScreenProps & {
 	/**
 	 * Phone number's current state. Used with the `usePhoneNumber` hook.
 	 *
-	 * To have this logic fully handled for you, see the `Magic.PhoneAuth component.
+	 * To have this logic fully handled for you, see the `AuthFlow component.
 	 */
 	phoneNumber: string
 	/**
 	 * Callback function invoked whenever the user types a new phone number. Used with the `usePhoneNumber` hook.
 	 *
-	 * To have this logic fully handled for you, see the `Magic.PhoneAuth component.
+	 * To have this logic fully handled for you, see the `AuthFlow component.
 	 *
 	 * @param info
 	 * @param info.phoneNumber string that is the current phone number
 	 * @param info.valid boolean that tells you if the current phone number is valid or not. If yes, it's ready to send an SMS to.
 	 *
-	 * To have this logic handled for you, see the `Magic.PhoneAuth component.
+	 * To have this logic handled for you, see the `AuthFlow component.
 	 */
 	onChangePhoneNumber: (info: { phoneNumber: string; valid: boolean }) => void
 	/**
 	 * Callback function called when a user submits their phone number with the send button. Used with the `usePhoneNumber` hook.
 	 *
-	 * To have this logic fully handled for you, see the `Magic.PhoneAuth component.
+	 * To have this logic fully handled for you, see the `AuthFlow component.
 	 *
 	 * @param info a dictionary
 	 * @param info.phoneNumber the phone number used to submit
