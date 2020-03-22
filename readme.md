@@ -26,7 +26,7 @@ Our mission is to help you create **incredible apps** that **your users will lov
 
 ## 👾 Docs
 
-We have great [documentation](https://docs.doorman.cool).
+We have great [documentation](https://docs.doorman.cool). Check out our [setup guide](https://docs.doorman.cool/introduction/getting-started).
 
 ## 🤖 Examples
 
