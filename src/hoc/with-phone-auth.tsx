@@ -3,11 +3,28 @@ import { AuthGate } from '../components/AuthGate'
 import { AuthFlow } from '../views'
 import { DoormanProvider, useDoormanContext, ProviderProps } from '../context'
 import { InitializationProps } from '../methods'
+import ControlledPhoneAuth from '../views/Controlled/Controlled-Phone-Screen'
+import ControlledConfirmScreen from '../views/Controlled/Controlled-Confirm-Screen'
 
 type Options = Omit<ProviderProps, 'children'> & {
 	LoadingScreen?: ComponentType
 	includeProvider?: boolean
-	// tintColor?: string
+	/**
+	 * Callback function called when a user's 6-digit code is verified, and they are authenticated.
+	 *
+	 * You might want to use this for analytics.
+	 */
+	onCodeVerified?: ComponentPropsWithoutRef<
+		typeof ControlledConfirmScreen
+	>['onCodeVerified']
+	/**
+	 * Callback function called when the an SMS is successfully sent to the user.
+	 *
+	 * Receives a dictionary with the auth `token` value.
+	 */
+	onSmsSuccessfullySent?: ComponentPropsWithoutRef<
+		typeof ControlledPhoneAuth
+	>['onSmsSuccessfullySent']
 	phoneScreenProps?: ComponentPropsWithoutRef<
 		typeof AuthFlow
 	>['phoneScreenProps']
@@ -49,6 +66,8 @@ export function withPhoneAuth<P>(
 		theme: themeOption,
 		initialPhoneNumber,
 		onAuthStateChanged,
+		onCodeVerified,
+		onSmsSuccessfullySent,
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		const [splashDone, setSplashDone] = useState(!SplashScreen)
@@ -85,6 +104,8 @@ export function withPhoneAuth<P>(
 							<AuthFlow
 								phoneScreenProps={phoneScreenProps}
 								confirmScreenProps={confirmScreenProps}
+								onSmsSuccessfullySent={onSmsSuccessfullySent}
+								onCodeVerified={onCodeVerified}
 							/>
 						)
 					}}

@@ -15,7 +15,19 @@ type Props = Omit<
 	| 'error'
 	| 'resend'
 	| 'resending'
->
+> & {
+	/**
+	 * Optional callback function called whenever a user successfully confirms their phone number.
+	 *
+	 * You might want to use this to add to your analytics, for instance.
+	 *
+	 * @example
+	 * ```es6
+	 * <AuthFlow.PhoneScreen onCodeVerified={() => analytics.track('Code Success')} />
+	 * ```
+	 */
+	onCodeVerified?: (info: { token: string }) => void
+}
 
 export default function ControlledConfirmScreen(props: Props) {
 	const { phoneNumber } = useAuthFlowState()
@@ -30,6 +42,7 @@ export default function ControlledConfirmScreen(props: Props) {
 		onCodeVerified: async ({ token }) => {
 			if (token) {
 				// sign the user in
+				props.onCodeVerified?.({ token })
 				await firebase.auth().signInWithCustomToken(token)
 			}
 		},

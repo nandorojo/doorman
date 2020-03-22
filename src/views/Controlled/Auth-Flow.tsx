@@ -1,4 +1,9 @@
-import React, { ComponentPropsWithoutRef, useRef, useEffect } from 'react'
+import React, {
+	ComponentPropsWithoutRef,
+	useRef,
+	useEffect,
+	useCallback,
+} from 'react'
 import {
 	Transitioning,
 	Transition,
@@ -13,9 +18,6 @@ import { StyleSheet, Platform } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
 type Props = {
-	// onCodeVerified?: ComponentPropsWithoutRef<
-	// 	typeof ControlledConfirmPhone
-	// >['onCodeVerified']
 	phoneScreenProps?: Omit<
 		ComponentPropsWithoutRef<typeof ControlledPhoneAuth>,
 		'onSmsSuccessfullySent'
@@ -24,6 +26,12 @@ type Props = {
 		ComponentPropsWithoutRef<typeof ControlledConfirmPhone>,
 		'tintColor' | 'onCodeVerified'
 	>
+	onCodeVerified?: ComponentPropsWithoutRef<
+		typeof ControlledConfirmPhone
+	>['onCodeVerified']
+	onSmsSuccessfullySent?: ComponentPropsWithoutRef<
+		typeof ControlledPhoneAuth
+	>['onSmsSuccessfullySent']
 } & CommonScreenProps
 
 export function AuthFlow(props: Props) {
@@ -33,6 +41,8 @@ export function AuthFlow(props: Props) {
 	const {
 		phoneScreenProps = empty.object,
 		confirmScreenProps = empty.object,
+		onCodeVerified,
+		onSmsSuccessfullySent: onSent,
 		...otherProps
 	} = props
 
@@ -44,56 +54,22 @@ export function AuthFlow(props: Props) {
 	useEffect(() => {
 		if (Platform.OS !== 'web') transitionRef.current?.animateNextTransition()
 	}, [ready])
-	// const transition = useTimingTransition(ready, {
-	// 	duration: 400,
-	// 	easing: Easing.inOut(Easing.linear),
-	// })
-	// const translateX = bInterpolate(transition, Dimensions.get('window').width, 0)
 
-	// const renderPhoneHeader = useCallback(() => {
-	// 	if (renderHeader === null) return null
-	// 	if (renderHeader) return renderHeader({ screen: 'phone' })
+	const sendCallback = useRef(onSent)
+	useEffect(() => {
+		sendCallback.current = onSent
+	})
 
-	// 	return (
-	// 		<Appbar.Header
-	// 			{...headerProps}
-	// 			style={{ backgroundColor: tintColor, elevation: 0 }}
-	// 		>
-	// 			<Appbar.Content title={phoneScreenHeaderText} />
-	// 		</Appbar.Header>
-	// 	)
-	// }, [renderHeader, headerProps, tintColor, phoneScreenHeaderText])
-
-	// const renderCodeHeader = useCallback(() => {
-	// 	if (renderHeader === null) return null
-	// 	if (renderHeader) return renderHeader({ screen: 'code' })
-	// 	return null
-
-	// 	return (
-	// 		<Button
-	// 			style={{ marginTop: 50 }}
-	// 			onPress={() => setCodeScreenReady(false)}
-	// 		>
-	// 			back
-	// 		</Button>
-	// 	)
-
-	// 	return (
-	// 		<Appbar.Header
-	// 			{...headerProps}
-	// 			style={{ backgroundColor: tintColor, elevation: 0 }}
-	// 		>
-	// 			<Appbar.BackAction onPress={() => setPhoneNumber('')} />
-	// 			<Appbar.Content title={codeScreenHeaderText} />
-	// 		</Appbar.Header>
-	// 	)
-	// }, [
-	// 	renderHeader,
-	// 	headerProps,
-	// 	codeScreenHeaderText,
-	// 	tintColor,
-	// 	setCodeScreenReady,
-	// ])
+	const onSmsSuccessfullySent = useCallback(
+		(info: { phoneNumber: string }) => {
+			sendCallback.current?.(info)
+			setCodeScreenReady(true)
+		},
+		[setCodeScreenReady]
+	)
+	const onGoBack = useCallback(() => setCodeScreenReady(false), [
+		setCodeScreenReady,
+	])
 
 	return (
 		<Transitioning.View
@@ -112,9 +88,7 @@ export function AuthFlow(props: Props) {
 					<ControlledPhoneAuth
 						{...commonScreenProps}
 						{...phoneScreenProps}
-						onSmsSuccessfullySent={() => {
-							setCodeScreenReady(true)
-						}}
+						onSmsSuccessfullySent={onSmsSuccessfullySent}
 						tintColor={tintColor}
 					/>
 				</>
@@ -123,8 +97,8 @@ export function AuthFlow(props: Props) {
 					<ControlledConfirmPhone
 						{...commonScreenProps}
 						{...confirmScreenProps}
-						// onCodeVerified={props.onCodeVerified}
-						onGoBack={() => setCodeScreenReady(false)}
+						onGoBack={onGoBack}
+						onCodeVerified={onCodeVerified}
 					/>
 				</>
 			)}
