@@ -2,7 +2,6 @@ import React, { ComponentPropsWithoutRef, useCallback } from 'react'
 import { VerifyScreen } from '../ConfirmPhone'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
 import { Alert } from 'react-native'
-import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
 type Props = Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'> &
@@ -31,7 +30,6 @@ export default function ControlledVerifyScreen(props: Props) {
 		onCodeVerified: props.onCodeVerified,
 		phoneNumber,
 	})
-	const { tintColor } = useDoormanTheme()
 	const onPressResendCode = useCallback(
 		() => async () => {
 			const { success } = await resend()

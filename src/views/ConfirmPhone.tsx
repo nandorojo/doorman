@@ -28,7 +28,7 @@ type Props = CommonScreenProps & {
 	 * @example
 	 * ```jsx
 	 * import * as React from 'react'
-	 * import { useConfirmPhone, ConfirmPhone } from 'doorman'
+	 * import { useConfirmPhone, VerifyScreen } from 'react-native-doorman'
 	 *
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
@@ -52,11 +52,8 @@ type Props = CommonScreenProps & {
 	 *  * @example
 	 * ```jsx
 	 * import * as React from 'react'
-	 * import { useConfirmPhone, ConfirmPhone } from 'doorman'
-	 *import Container from '../../../react-native-bootstrap/src/components/Container/index'
-* import { H1 } from '../components/Text'
-* import { Header } from 'react-native-elements'
-
+	 * import { useConfirmPhone, VerifyScreen } from 'react-native-doorman'
+	 *
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
 	 *
@@ -403,7 +400,7 @@ function Confirm(props: Props) {
 	)
 }
 
-export const ConfirmPhone = React.memo(Confirm)
+export const VerifyScreen = React.memo(Confirm)
 
 const styles = {
 	message: {
