@@ -1,8 +1,8 @@
-# Welcome to Doorman 👋
+# Doorman 🚪🔥
 
-Firebase phone auth for Expo/React Native apps.
+<img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2ok9XEmtOjgeUUWgN1%2F-M2ole43XtPbBnxWTahm%2Fcarbon%20(39).png?alt=media&token=94d828b0-5f36-41b6-9f46-8f9ba057c3fe" />
 
----
+<img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
 Doorman lets React Native developers add phone authentication to their apps with ease. It works perfectly with **Firebase Auth and Expo**.
 
@@ -10,28 +10,26 @@ Doorman lets React Native developers add phone authentication to their apps with
 
 Our mission is to help you create **incredible apps** that **your users will love**. And that all starts with the first impression they make with your app – your auth flow.
 
-## [Docs](https://docs.doorman.cool)
+## With Doorman, you can...
+
+- 👟Build a phone authentication flow in a few lines of code.
+
+- 💅Fully customize the design to fit your app.
+
+* 👩‍💻Avoid maintaining a complex server.
+
+* 🔥Keep using Firebase Auth with Expo.
+
+* 🕺Create a native auth experience, without web views or popups.
 
 ## Examples
 
 - [React Navigation Example (v4 and v5)]()
 - `/examples` folder
 
-## With Doorman, you can...
+## [Docs]
 
-- 👟Build a phone authentication flow in a few lines of code.
-
-<img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2ok9XEmtOjgeUUWgN1%2F-M2ole43XtPbBnxWTahm%2Fcarbon%20(39).png?alt=media&token=94d828b0-5f36-41b6-9f46-8f9ba057c3fe" />
-
-- 💅Fully customize the design to fit your app.
-
-<img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
-
-- 👩‍💻Avoid maintaining a complex server.
-
-- 🔥Keep using Firebase Auth with Expo.
-
-- 🕺Create a native auth experience, without web views or popups.
+Head to our [Documentation](https://docs.doorman.cool).
 
 ## For issues
 
