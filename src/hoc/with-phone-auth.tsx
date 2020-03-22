@@ -3,7 +3,6 @@ import { AuthGate } from '../components/AuthGate'
 import { AuthFlow } from '../views'
 import { DoormanProvider, useDoormanContext, ProviderProps } from '../context'
 import { InitializationProps } from '../methods'
-import { theme } from '../style/theme'
 
 type Options = Omit<ProviderProps, 'children'> & {
 	Loading?: ComponentType
@@ -35,7 +34,6 @@ export function withPhoneAuth<P>(
 	Component: ComponentType<P & { user: firebase.User }>,
 	options: Options
 ) {
-	console.log('HOCCCC?')
 	// return () => null
 
 	const {
@@ -51,7 +49,6 @@ export function withPhoneAuth<P>(
 		onAuthStateChanged,
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
-		console.log('IN WITH PHONE AUTH HOC??')
 		const [splashDone, setSplashDone] = useState(!SplashScreen)
 
 		/**

@@ -36,7 +36,7 @@ export function usePhoneNumber(props: Props) {
 	const { onSmsSuccessfullySent, onSmsError } = props
 
 	const onChangePhoneNumber: onChangePhoneNumber = useCallback(
-		({ phoneNumber = '', valid }) => {
+		({ phoneNumber = '' }) => {
 			setLoading(false)
 			setPhoneNumber(phoneNumber)
 		},

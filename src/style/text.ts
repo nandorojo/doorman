@@ -21,6 +21,5 @@ export const TextStyle = {
 		borderColor: 'red',
 		color: 'red',
 		backgroundColor: 'white',
-		overflow: 'hidden',
 	},
 }

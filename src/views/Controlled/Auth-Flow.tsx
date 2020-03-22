@@ -1,32 +1,22 @@
-import React, {
-	useState,
-	ComponentPropsWithoutRef,
-	useRef,
-	useEffect,
-} from 'react'
-import Animated, {
+import React, { ComponentPropsWithoutRef, useRef, useEffect } from 'react'
+import {
 	Transitioning,
 	Transition,
 	TransitioningView,
-	Easing,
 } from 'react-native-reanimated'
-import firebase from 'firebase/app'
 import ControlledPhoneAuth from './Controlled-Phone-Screen'
 import ControlledConfirmPhone from './Controlled-Confirm-Screen'
-import { Appbar, Button } from 'react-native-paper'
+import { Appbar } from 'react-native-paper'
 import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
-import { useCallback } from 'react'
-import { StyleSheet, Platform, Dimensions, View } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
-import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
 type Props = {
 	onCodeVerified?: ComponentPropsWithoutRef<
 		typeof ControlledConfirmPhone
 	>['onCodeVerified']
-	// tintColor?: string
 	phoneScreenProps?: Omit<
 		ComponentPropsWithoutRef<typeof ControlledPhoneAuth>,
 		'onSmsSuccessfullySent' | 'tintColor'
@@ -143,18 +133,8 @@ export function AuthFlow(props: Props) {
 					<ControlledConfirmPhone
 						{...commonScreenProps}
 						{...codeScreenProps}
-						tintColor={tintColor}
 						// renderHeader={renderCodeHeader}
-						onCodeVerified={async info => {
-							if (props?.onCodeVerified) props?.onCodeVerified?.(info)
-							else {
-								const { token } = info
-								if (token) {
-									// sign the user in
-									await firebase.auth().signInWithCustomToken(token)
-								}
-							}
-						}}
+						onCodeVerified={props.onCodeVerified}
 						onGoBack={() => setCodeScreenReady(false)}
 					/>
 				</>

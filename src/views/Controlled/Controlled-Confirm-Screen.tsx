@@ -3,8 +3,11 @@ import { ConfirmScreen } from '../Confirm-Screen'
 import useConfirmPhone from '../../hooks/use-confirm-phone'
 import { Alert } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
+import firebase from 'firebase/app'
 
-type Props = Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'> &
+type Props = Partial<
+	Omit<Parameters<typeof useConfirmPhone>[0], 'phoneNumber'>
+> &
 	Omit<
 		ComponentPropsWithoutRef<typeof ConfirmScreen>,
 		| 'onChangeCode'
@@ -27,7 +30,13 @@ export default function ControlledConfirmScreen(props: Props) {
 		resend,
 		resending,
 	} = useConfirmPhone({
-		onCodeVerified: props.onCodeVerified,
+		onCodeVerified: async ({ token }) => {
+			props.onCodeVerified?.({ token })
+			if (token) {
+				// sign the user in
+				await firebase.auth().signInWithCustomToken(token)
+			}
+		},
 		phoneNumber,
 	})
 	const onPressResendCode = useCallback(

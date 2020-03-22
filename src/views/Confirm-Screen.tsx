@@ -2,11 +2,11 @@ import React, { ReactNode, ComponentPropsWithoutRef, useCallback } from 'react'
 import {
 	View,
 	ScrollView,
-	Text,
 	TouchableOpacity,
 	TextStyle as TextStyleType,
 	ViewStyle,
 	TextInput,
+	Text,
 } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper'
 import { ScreenStyle } from '../style/screen'
@@ -16,7 +16,9 @@ import { Paragraph, H1 } from '../components'
 import { empty } from '../utils/empty'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
-import { Header } from 'react-native-elements'
+import { Header, InputProps } from 'react-native-elements'
+import Animated from 'react-native-reanimated'
+import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
 type Props = CommonScreenProps & {
 	code: string
@@ -53,7 +55,7 @@ type Props = CommonScreenProps & {
 	 * ```jsx
 	 * import * as React from 'react'
 	 * import { useConfirmPhone, ConfirmScreen } from 'react-native-doorman'
-	 *
+
 	 * export default function ConfirmScreen(props) {
 	 * 	const { code, onChangeCode, reset, loading } = useConfirmPhone({ phoneNumber: props.phoneNumber })
 	 *
@@ -116,7 +118,7 @@ type Props = CommonScreenProps & {
 	resendStyle?: TextStyleType
 	/** */
 	// onReset?: () => void
-	tintColor?: string
+	// tintColor?: string
 	/**
 	 * Header text that appears at the top.
 	 *
@@ -157,6 +159,14 @@ type Props = CommonScreenProps & {
 	 * Optional color for the activity indicator when a message is sending. See also: `renderLoader` prop.
 	 */
 	loaderColor?: string
+	/**
+	 * Optional styles for the TextInput component.
+	 */
+	inputStyle?: TextStyleType
+	/**
+	 * Custom TextInput props. Note that there are many other props to customize the input. Do a page find for `input` to find them.
+	 */
+	inputProps?: InputProps
 }
 
 function Confirm(props: Props) {
@@ -166,7 +176,6 @@ function Confirm(props: Props) {
 		loading,
 		phoneNumber,
 		message,
-		tintColor,
 		title = 'Enter Code',
 		error,
 		errorStyle,
@@ -190,10 +199,12 @@ function Confirm(props: Props) {
 		inputBackgroundColor = 'white',
 		inputContainerStyle,
 		inputTextColor = 'black',
-		inputType,
+		inputType = 'elevated',
 		onGoBack,
 		onPressResendCode,
 		loaderColor,
+		inputStyle = empty.object,
+		inputProps = empty.object,
 	} = props
 
 	const renderMessage = useCallback(() => {
@@ -214,6 +225,22 @@ function Confirm(props: Props) {
 		)
 	}, [message, phoneNumber, textAlign, textColor])
 	const renderInput = useCallback(() => {
+		const inputStyles: {
+			[key in typeof inputType]: TextStyleType
+		} = {
+			elevated: {
+				backgroundColor: inputBackgroundColor ?? 'white',
+				borderRadius: 5,
+				// fontSize: 20,
+				fontWeight: 'bold',
+				color: inputTextColor ?? 'black',
+			},
+			flat: {
+				borderBottomColor: 'white',
+				borderBottomWidth: 1,
+				color: inputTextColor ?? 'white',
+			},
+		}
 		return (
 			<View style={[styles.inputContainer, inputContainerStyle]}>
 				<TextInput
@@ -227,15 +254,28 @@ function Confirm(props: Props) {
 					keyboardType="number-pad"
 					accessibilityHint="6-digit phone number texted to you"
 					returnKeyType="done"
-					style={{
-						borderRadius: 8,
-						padding: 20,
-						fontSize: 20,
-						textAlign,
-						fontWeight: 'bold',
-						backgroundColor: inputBackgroundColor,
-						color: inputTextColor,
-					}}
+					autoFocus
+					// style={{
+					// 	borderRadius: 8,
+					// 	padding: 20,
+					// 	fontSize: 20,
+					// 	textAlign,
+					// 	fontWeight: 'bold',
+					// 	backgroundColor: inputBackgroundColor,
+					// 	color: inputTextColor,
+					// }}
+					style={[
+						{
+							padding: 16,
+							fontSize: 24,
+							fontWeight: 'bold',
+							color: inputTextColor,
+							textAlign,
+							...inputStyles[inputType],
+						},
+						inputStyle,
+					]}
+					{...inputProps}
 				/>
 			</View>
 		)
@@ -243,7 +283,10 @@ function Confirm(props: Props) {
 		code,
 		inputBackgroundColor,
 		inputContainerStyle,
+		inputProps,
+		inputStyle,
 		inputTextColor,
+		inputType,
 		loading,
 		onChangeCode,
 		textAlign,
@@ -293,15 +336,31 @@ function Confirm(props: Props) {
 		[loading, renderLoader, textColor, loaderColor]
 	)
 
+	const errorOpacity = useTimingTransition(!!error)
+	// const errorTransform = [{ translateY: bIn}]
+
 	const renderError = useCallback(() => {
 		return (
-			!!error && (
-				<Text style={[styles.error, errorStyle]}>
+			<Animated.View
+				style={{
+					opacity: errorOpacity,
+					transform: [{ translateY: bInterpolate(errorOpacity, 5, 0) }],
+				}}
+			>
+				<Text
+					style={[
+						{
+							textAlign,
+						},
+						styles.error,
+						errorStyle,
+					]}
+				>
 					{error}. Please try resending the code.
 				</Text>
-			)
+			</Animated.View>
 		)
-	}, [error, errorStyle])
+	}, [error, errorOpacity, errorStyle, textAlign])
 
 	const background = useCallback(() => {
 		if (renderBackground === null) return null

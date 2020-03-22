@@ -10,9 +10,8 @@ type Props = {
 	 *
 	 * @param info dictionary returning a token
 	 * @param info.token string with a token you can use with your custom firebase auth
-	 * @param info.uid The user ID string returned from that person, if any.
 	 */
-	onCodeVerified(info: { token: string }): void
+	onCodeVerified: (info: { token: string }) => void
 	phoneNumber: string
 }
 

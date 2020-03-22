@@ -14,12 +14,12 @@ import {
 	Keyboard,
 	Platform,
 } from 'react-native'
-import { Button, TextInput, Appbar } from 'react-native-paper'
+import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
 import { ScreenStyle } from '../style/screen'
 import { Page } from '../components/Page'
 import { useTextStyle } from '../hooks/use-style'
-import ReactPhoneInput from 'react-phone-number-input'
+
 import { PhoneInput, H1, Paragraph } from '../components'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
@@ -378,7 +378,7 @@ export const PhoneAuth = (props: Props) => {
 					...inputStyle,
 				},
 				textStyle: {
-					fontSize: 20,
+					// fontSize: 20,
 					fontWeight: 'bold',
 					color: inputTextColor ?? 'black',
 				},
@@ -395,6 +395,7 @@ export const PhoneAuth = (props: Props) => {
 			common: {
 				style: {
 					padding: 16,
+					paddingVertical: 24,
 				},
 				textStyle: {
 					fontSize: 24,
@@ -431,6 +432,7 @@ export const PhoneAuth = (props: Props) => {
 					// 	web: undefined,
 					// 	default: 'dark',
 					// }),
+					autoFocus: true,
 					...inputProps,
 				}}
 				textStyle={{

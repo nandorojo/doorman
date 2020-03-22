@@ -5,7 +5,6 @@ import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
-import { empty } from '../utils/empty'
 
 type Context = null | {
 	user: null | firebase.User
