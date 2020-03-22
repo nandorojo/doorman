@@ -24,7 +24,7 @@ Our mission is to help you create **incredible apps** that **your users will lov
 
 * 🕺Create a native auth experience, without web views or popups.
 
-## Docs
+## 👾 Docs
 
 We have great [documentation](https://docs.doorman.cool).
 
@@ -32,11 +32,11 @@ We have great [documentation](https://docs.doorman.cool).
 
 - [React Navigation Example (v4 and v5)]()
 
-## Website
+## 👩‍💻 Website
 
 Check out [doorman.cool](https://doorman.cool).
 
-## For issues
+## 🚨 For issues
 
 Please use this repository to notify us of any issues and track ones we're working on.
 
