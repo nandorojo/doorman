@@ -4,6 +4,8 @@
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
+## What is Doorman?
+
 Doorman lets React Native developers add phone authentication to their apps with ease. It works perfectly with **Firebase Auth and Expo**.
 
 **We handle the backend and provide UI components** 😇 for Firebase phone auth. That means you can spend less time worrying about the auth flow, and more time building your actual features.
