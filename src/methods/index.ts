@@ -100,18 +100,21 @@ const signInWithPhoneNumber = async ({
 			throw new Error(InitializationErrorMessage)
 		}
 		const {
-			error,
+			message,
 			success,
-		}: { success: boolean; error?: 'custom/code-does-not-match' } = await post({
+		}: {
+			success: boolean
+			message?: 'custom/code-does-not-match'
+		} = await post({
 			phoneNumber,
 			action: Constants.signIn,
 			publicProjectId: configuration.publicProjectId,
 		})
 
-		if (error) throw new Error(error)
+		if (message) throw new Error(message)
 		if (!success) {
 			console.warn(
-				'Warning: success was false for sending SMS, but there was no error message. If you are using test numbers, disregard this warning.'
+				'Warning: success was false for sending SMS, but there was no error message. If you are using test numbers and everything still worked, you can disregard this warning.'
 			)
 		}
 		return { success: true }
