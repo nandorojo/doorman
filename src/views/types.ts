@@ -1,6 +1,6 @@
 import { ReactNode, ComponentPropsWithoutRef } from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
-import { Appbar } from 'react-native-paper/lib/typescript/src'
+import { Header } from 'react-native-elements'
 
 export type CommonScreenProps = {
 	/**
@@ -32,11 +32,24 @@ export type CommonScreenProps = {
 	 */
 	headerTintColor?: string
 	/**
+	 * (Optional) custom props to be passed to the header.
+	 *
+	 * See the `react-native-elements` docs for the `Header` props: https://react-native-elements.github.io/react-native-elements/docs/header.html
+	 */
+	headerProps?: ComponentPropsWithoutRef<typeof Header>
+	/**
+	 * Custom styles for the title in the header.
+	 *
+	 * If you just want to edit the text color, see `headerTintColor`.
+	 */
+	headerTitleStyle?: TextStyle
+	/**
 	 * Either a string or array of strings.
 	 *
 	 * If an array is passed, it will render a gradient.
 	 *
 	 * Make sure to memoize this prop if you're using a gradient using `useMemo`.
+	 * Or, place the array outside of the component code.
 	 *
 	 * @example
 	 * ```es6
@@ -45,23 +58,6 @@ export type CommonScreenProps = {
 	 *   return <Phone.Stack backgroundColor={backgroundColor} {...otherProps} />
 	 * }
 	 * ```
-	 */
-	/**
-	 * (Optional) custom props to be passed to the header.
-	 *
-	 * See the `react-native-elements` docs for the `Header` props: https://react-native-elements.github.io/react-native-elements/docs/header.html
-	 */
-	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
-	/**
-	 * Custom styles for the title in the header.
-	 *
-	 * If you just want to edit the text color, see `headerTintColor`.
-	 */
-	headerTitleStyle?: TextStyle
-	/**
-	 * Color or array of colors. If it's an array, it will show a gradient background.
-	 *
-	 * The default is the follwing gradient: ['', '']
 	 */
 	backgroundColor?: string | string[]
 	/**

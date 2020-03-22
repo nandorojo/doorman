@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer, useCallback } from 'react'
 import { createContext, ReactNode } from 'react'
-import { useFirebaseAuthGate } from '../hooks/use-firebase-auth-gate'
+import { useCreateFirebaseAuthListener } from '../hooks/use-create-firebase-auth-listener'
 import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
@@ -120,7 +120,7 @@ export function DoormanProvider({
 	theme = themeCreator(),
 }: ProviderProps & InitializationProps) {
 	const authFlowState = useCreateAuthFlowState()
-	const auth = useFirebaseAuthGate({
+	const auth = useCreateFirebaseAuthListener({
 		onAuthStateChanged: user => {
 			onAuthStateChangedProp?.(user)
 			authFlowState.setCodeScreenReady(false)

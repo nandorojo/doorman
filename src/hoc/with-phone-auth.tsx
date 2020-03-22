@@ -5,13 +5,15 @@ import { DoormanProvider, useDoormanContext, ProviderProps } from '../context'
 import { InitializationProps } from '../methods'
 
 type Options = Omit<ProviderProps, 'children'> & {
-	Loading?: ComponentType
+	LoadingScreen?: ComponentType
 	includeProvider?: boolean
 	// tintColor?: string
 	phoneScreenProps?: ComponentPropsWithoutRef<
 		typeof AuthFlow
 	>['phoneScreenProps']
-	codeScreenProps?: ComponentPropsWithoutRef<typeof AuthFlow>['codeScreenProps']
+	confirmScreenProps?: ComponentPropsWithoutRef<
+		typeof AuthFlow
+	>['confirmScreenProps']
 	/**
 	 * **Required:** Your app's config for doorman.
 	 *
@@ -37,11 +39,11 @@ export function withPhoneAuth<P>(
 	// return () => null
 
 	const {
-		Loading,
+		LoadingScreen,
 		includeProvider = true,
 		// tintColor,
 		phoneScreenProps,
-		codeScreenProps,
+		confirmScreenProps,
 		doorman,
 		SplashScreen,
 		theme: themeOption,
@@ -71,7 +73,7 @@ export function withPhoneAuth<P>(
 				<AuthGate>
 					{({ loading, user }) => {
 						if (loading) {
-							return Loading ? <Loading /> : <></>
+							return LoadingScreen ? <LoadingScreen /> : <></>
 						}
 
 						if (user) return <Component {...props} user={user} />
@@ -82,7 +84,7 @@ export function withPhoneAuth<P>(
 						return (
 							<AuthFlow
 								phoneScreenProps={phoneScreenProps}
-								codeScreenProps={codeScreenProps}
+								confirmScreenProps={confirmScreenProps}
 							/>
 						)
 					}}

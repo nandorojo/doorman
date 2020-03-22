@@ -17,7 +17,7 @@ type Props = {
 
 type Errors = 'Error: custom/code-does-not-match'
 
-export default function useConfirmPhone({
+export function useConfirmPhone({
 	phoneNumber,
 	onCodeVerified: onVerified,
 }: Props) {

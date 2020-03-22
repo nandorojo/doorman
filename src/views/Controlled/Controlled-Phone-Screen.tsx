@@ -9,7 +9,6 @@ type Props = Omit<
 > & {
 	onSmsSuccessfullySent(info: { phoneNumber: string }): void
 	onSmsError?: (error: unknown) => void
-	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
 	/**
 	 * The initial value of the hpone number input before typing.
 	 * You may want to set this to the prefix for your country.

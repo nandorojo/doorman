@@ -6,7 +6,6 @@ import {
 } from 'react-native-reanimated'
 import ControlledPhoneAuth from './Controlled-Phone-Screen'
 import ControlledConfirmPhone from './Controlled-Confirm-Screen'
-import { Appbar } from 'react-native-paper'
 import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
@@ -14,26 +13,17 @@ import { StyleSheet, Platform } from 'react-native'
 import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
 
 type Props = {
-	onCodeVerified?: ComponentPropsWithoutRef<
-		typeof ControlledConfirmPhone
-	>['onCodeVerified']
+	// onCodeVerified?: ComponentPropsWithoutRef<
+	// 	typeof ControlledConfirmPhone
+	// >['onCodeVerified']
 	phoneScreenProps?: Omit<
 		ComponentPropsWithoutRef<typeof ControlledPhoneAuth>,
-		'onSmsSuccessfullySent' | 'tintColor'
+		'onSmsSuccessfullySent'
 	>
-	codeScreenProps?: Omit<
+	confirmScreenProps?: Omit<
 		ComponentPropsWithoutRef<typeof ControlledConfirmPhone>,
-		'phoneNumber' | 'tintColor' | 'onCodeVerified'
+		'tintColor' | 'onCodeVerified'
 	>
-	headerProps?: ComponentPropsWithoutRef<typeof Appbar.Header>
-	/**
-	 * Text that shows in the header bar at the top for the phone auth screen. Default: `Sign In`
-	 */
-	phoneScreenHeaderText?: string
-	/**
-	 * Text that shows in the header bar at the top for the code verification screen. Default: `Confirm Number`
-	 */
-	codeScreenHeaderText?: string
 } & CommonScreenProps
 
 export function AuthFlow(props: Props) {
@@ -42,7 +32,7 @@ export function AuthFlow(props: Props) {
 
 	const {
 		phoneScreenProps = empty.object,
-		codeScreenProps = empty.object,
+		confirmScreenProps = empty.object,
 		...otherProps
 	} = props
 
@@ -132,9 +122,8 @@ export function AuthFlow(props: Props) {
 				<>
 					<ControlledConfirmPhone
 						{...commonScreenProps}
-						{...codeScreenProps}
-						// renderHeader={renderCodeHeader}
-						onCodeVerified={props.onCodeVerified}
+						{...confirmScreenProps}
+						// onCodeVerified={props.onCodeVerified}
 						onGoBack={() => setCodeScreenReady(false)}
 					/>
 				</>
