@@ -4,7 +4,7 @@
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
-## What is Doorman?
+## 🧐 What is Doorman?
 
 Doorman lets React Native developers add phone authentication to their apps with ease. It works perfectly with **Firebase Auth and Expo**.
 
@@ -12,7 +12,7 @@ Doorman lets React Native developers add phone authentication to their apps with
 
 Our mission is to help you create **incredible apps** that **your users will love**. And that all starts with the first impression they make with your app – your auth flow.
 
-## With Doorman, you can...
+## 😎 With Doorman, you can...
 
 - 👟Build a phone authentication flow in a few lines of code.
 
@@ -24,15 +24,20 @@ Our mission is to help you create **incredible apps** that **your users will lov
 
 * 🕺Create a native auth experience, without web views or popups.
 
-## Examples
+## Docs
+
+We have great [documentation](https://docs.doorman.cool).
+
+## 🤖 Examples
 
 - [React Navigation Example (v4 and v5)]()
-- `/examples` folder
 
-## [Docs]
+## Website
 
-Head to our [Documentation](https://docs.doorman.cool).
+Check out [doorman.cool](https://doorman.cool).
 
 ## For issues
 
 Please use this repository to notify us of any issues and track ones we're working on.
+
+You can also live chat us on [our website](https://doorman.cool) with any tight concerns. That said, we prefer that you make an issue here so that everyone else can fix problems you might have.
