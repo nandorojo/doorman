@@ -106,8 +106,8 @@ export function AuthFlow(props: Props) {
 	)
 }
 
-AuthFlow.Phone = ControlledPhoneAuth
-AuthFlow.Confirm = ControlledConfirmPhone
+AuthFlow.PhoneScreen = ControlledPhoneAuth
+AuthFlow.ConfirmScreen = ControlledConfirmPhone
 
 const styles = StyleSheet.create({
 	container: {

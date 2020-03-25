@@ -9,7 +9,7 @@ type Props = Omit<
 	onSmsSuccessfullySent(info: { phoneNumber: string }): void
 	onSmsError?: (error: unknown) => void
 	/**
-	 * The initial value of the hpone number input before typing.
+	 * The initial value of the phone number input before typing.
 	 * You may want to set this to the prefix for your country.
 	 * Default: '+1' for US.
 	 * Set to an empty string if you want none.
