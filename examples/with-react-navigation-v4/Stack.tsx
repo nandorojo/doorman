@@ -4,6 +4,8 @@ import { createStackNavigator } from 'react-navigation-stack'
 
 import { AuthFlow } from 'react-native-doorman'
 
+;() => <AuthFlow />
+
 const Phone = () => {
 	const { navigate } = useNavigation()
 
