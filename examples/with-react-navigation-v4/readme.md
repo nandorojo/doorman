@@ -13,6 +13,8 @@ expo start --ios # or expo start --android
 
 This example uses our test account's `publicProjectId` (found on the Doorman dashboard), and `firebaseConfig`, found on Firebase's website.
 
+To **deploy this in your own app**, you'll need to [create a project](https://app.doorman.cool) and follow the Doorman [setup guide](https://docs.doorman.cool/introduction/getting-started).
+
 ## 🧐 What is Doorman?
 
 Doorman lets React Native developers add phone authentication to their apps with ease. It works perfectly with **Firebase Auth and Expo**.
