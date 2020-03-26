@@ -2,7 +2,7 @@
 
 By default, Doorman implements its own "stack". However, if you're using React Navigation, this example shows you how to take more ownership of your auth flow.
 
-## To use this example:
+## 🏄🏾‍♂️ To use this example:
 
 ```sh
 git clone https://github.com/nandorojo/doorman
