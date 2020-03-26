@@ -5,6 +5,7 @@ import { DoormanProvider, useDoormanContext, ProviderProps } from '../context'
 import { InitializationProps } from '../methods'
 import ControlledPhoneAuth from '../views/Controlled/Controlled-Phone-Screen'
 import ControlledConfirmScreen from '../views/Controlled/Controlled-Confirm-Screen'
+import { CommonScreenProps } from '../views/types'
 
 type Options = Omit<ProviderProps, 'children'> & {
 	LoadingScreen?: ComponentType
@@ -47,7 +48,7 @@ type Options = Omit<ProviderProps, 'children'> & {
 	 * It receives one prop: a function called `next` that should be called whenever a user wants to continue to the auth screens.
 	 */
 	SplashScreen?: ComponentType<{ next: () => void }>
-}
+} & CommonScreenProps
 
 export function withPhoneAuth<P>(
 	Component: ComponentType<P & { user: firebase.User }>,
@@ -68,6 +69,7 @@ export function withPhoneAuth<P>(
 		onAuthStateChanged,
 		onCodeVerified,
 		onSmsSuccessfullySent,
+		...sharedScreenProps
 	} = options
 	const WithFirebasePhoneAuth = (props: P) => {
 		const [splashDone, setSplashDone] = useState(!SplashScreen)
@@ -84,7 +86,10 @@ export function withPhoneAuth<P>(
 				: React.Fragment
 		return (
 			<Provider
-				onAuthStateChanged={onAuthStateChanged}
+				onAuthStateChanged={user => {
+					onAuthStateChanged?.(user)
+					if (!user) setSplashDone(false)
+				}}
 				initialPhoneNumber={initialPhoneNumber}
 				theme={themeOption}
 				{...doorman}
@@ -102,6 +107,7 @@ export function withPhoneAuth<P>(
 
 						return (
 							<AuthFlow
+								{...sharedScreenProps}
 								phoneScreenProps={phoneScreenProps}
 								confirmScreenProps={confirmScreenProps}
 								onSmsSuccessfullySent={onSmsSuccessfullySent}
