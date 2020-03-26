@@ -1418,10 +1418,10 @@
     wcwidth "^1.0.1"
     ws "^1.1.0"
 
-"@react-native-community/masked-view@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.7.tgz#a65ce0702f55cb67fd777995de6fc7b3e5781903"
-  integrity sha512-9KbP7LTLFz9dx1heURJbO6nuVMdSjDez8znlrUzaB1nUwKVsTTwlKRuHxGUYIIkReLWrJQeCv9tidy+84z2eCw==
+"@react-native-community/masked-view@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.5.tgz#25421be6cd943a4b1660b62cfbcd45be8891462c"
+  integrity sha512-Lj1DzfCmW0f4HnmHtEuX8Yy2f7cnUA8r5KGGUuDDGtQt1so6QJkKeUmsnLo2zYDtsF8due6hvIL06Vdo5xxuLQ==
 
 "@react-navigation/core@^3.7.1":
   version "3.7.1"
@@ -1440,14 +1440,6 @@
   dependencies:
     hoist-non-react-statics "^3.3.2"
     react-native-safe-area-view "^0.14.8"
-
-"@react-navigation/stack@^5.2.6":
-  version "5.2.6"
-  resolved "https://registry.yarnpkg.com/@react-navigation/stack/-/stack-5.2.6.tgz#c9c12745c475ba409d63efea4e554da09ae3758c"
-  integrity sha512-yyxCmbynZ3WJhelt3F2+2/yAqegJWfXbuyoaKCmIOr1nKyTWA+uIJiYS1CdXLYvR7EK5OCN7WSCMruExx2tGhA==
-  dependencies:
-    color "^3.1.2"
-    react-native-iphone-x-helper "^1.2.1"
 
 "@types/bytebuffer@^5.0.40":
   version "5.0.40"
@@ -5078,10 +5070,10 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-native-doorman@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/react-native-doorman/-/react-native-doorman-1.1.7.tgz#27ca6dfb63dda3d87546d5b6fc3884cded71ac1e"
-  integrity sha512-fEW1532iJHQNdsdhAxWxBkq3K5FdWJLG/FgSyP0LDuXKC/gvL/QULU+6xvSoVAOm1oAzG4qjDWP6dmAAikKyzA==
+react-native-doorman@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/react-native-doorman/-/react-native-doorman-1.1.10.tgz#3b6d186067456e9c36060532b35adbe81cbff82e"
+  integrity sha512-Edbg5k6wtJWHsdSa2muIiUsuMH6gF4Z88Iy9hrpwrsg9szZ3Li66X6chMOMEt2aMA1Dv5CmGlaLST6cpWzo+Og==
   dependencies:
     expo-linear-gradient "^8.0.0"
     react-native-elements "^1.2.7"

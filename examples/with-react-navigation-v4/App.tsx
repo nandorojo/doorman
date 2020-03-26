@@ -1,49 +1,43 @@
 import * as React from 'react'
-import AuthStack from './Stack' // <-- made in step #2 😇
 import { DoormanProvider, AuthGate } from 'react-native-doorman'
-import { createAppContainer } from 'react-navigation'
-import { Text } from 'react-native'
+import { enableScreens } from 'react-native-screens'
 
-// initialize firebase
+import AfterAuth from './After-Auth'
+import { Auth } from './Auth-Stack'
+
+enableScreens()
+
+// 1. initialize firebase 👇
 import firebase from 'firebase/app'
 import 'firebase/auth'
-
-const firebaseConfig = {
-	apiKey: 'AIzaSyCn8HyP1tVZiagk-YvZRwjSwKdwQw5Pvng',
-	authDomain: 'tester-9d8bb.firebaseapp.com',
-	databaseURL: 'https://tester-9d8bb.firebaseio.com',
-	projectId: 'tester-9d8bb',
-	storageBucket: 'tester-9d8bb.appspot.com',
-	messagingSenderId: '760778283392',
-	appId: '1:760778283392:web:05cb35d0837c93c6584965',
+if (!firebase.apps.length) {
+	firebase.initializeApp({
+		apiKey: 'AIzaSyCn8HyP1tVZiagk-YvZRwjSwKdwQw5Pvng',
+		authDomain: 'tester-9d8bb.firebaseapp.com',
+		databaseURL: 'https://tester-9d8bb.firebaseio.com',
+		projectId: 'tester-9d8bb',
+		storageBucket: 'tester-9d8bb.appspot.com',
+		messagingSenderId: '760778283392',
+		appId: '1:760778283392:web:05cb35d0837c93c6584965',
+	})
 }
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig)
-
-// create react navigation container
-const Navigator = createAppContainer(AuthStack)
-
-// create our App component, shown once we've authed
-const AuthedApp = () => (
-	<Text
-		onPress={() => firebase.auth().signOut()}
-		style={{ paddingTop: 300, color: 'blue', fontSize: 24 }}
-	>
-		This app is authed!!
-	</Text>
-)
 
 const App = () => {
+	// 2. initialize Doorman 👇
 	return (
-		<DoormanProvider publicProjectId="djzlPQFxxzJikNQgLwxN">
+		<DoormanProvider
+			publicProjectId="djzlPQFxxzJikNQgLwxN"
+			onAuthStateChanged={user => console.log('updated user', { user })} // <-- optional, delete if you want.
+		>
 			<AuthGate>
 				{({ user, loading }) => {
 					if (loading) return <></>
 
 					// if a user is authenticated
-					if (user) return <AuthedApp />
+					if (user) return <AfterAuth />
 
 					// otherwise, send them to the auth flow
-					return <Navigator />
+					return <Auth />
 				}}
 			</AuthGate>
 		</DoormanProvider>
