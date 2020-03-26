@@ -1,3 +1,5 @@
+![alt text](assets/Frame 1.png)
+
 # 🚪 👾 Doorman + React Navigation v4 example
 
 By default, Doorman implements its own "stack". However, if you're using React Navigation, this example shows you how to take more ownership of your auth flow.
