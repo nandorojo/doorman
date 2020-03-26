@@ -4,9 +4,7 @@ By default, Doorman implements its own "stack". However, if you're using React N
 
 <img src="./assets/Frame 1.png" />
 
----
-
-## 🏄🏾‍♂️ To use this example:
+## 🏄🏾‍♂️ To try out this example:
 
 ```sh
 git clone https://github.com/nandorojo/doorman
@@ -17,7 +15,13 @@ expo start --ios # or expo start --android
 
 This example uses our test account's `publicProjectId` (found on the Doorman dashboard), and `firebaseConfig`, found on Firebase's console.
 
-To **deploy this in your own app**, you'll need to [create a project](https://app.doorman.cool) and follow the Doorman [setup guide](https://docs.doorman.cool/introduction/getting-started).
+---
+
+## Use this example in your own app
+
+To **deploy this in your own app**, you'll need to 1) [create a project](https://app.doorman.cool) on Doorman's dashboard, and 2) follow the Doorman [setup guide](https://docs.doorman.cool/introduction/getting-started).
+
+---
 
 ## 🧐 What is [Doorman](https://doorman.cool)?
 
