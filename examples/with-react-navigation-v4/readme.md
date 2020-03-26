@@ -4,7 +4,7 @@ By default, Doorman implements its own "stack". However, if you're using React N
 
 ## To use this example:
 
-```
+```sh
 git clone https://github.com/nandorojo/doorman
 cd examples/with-react-navigation-v4
 yarn
