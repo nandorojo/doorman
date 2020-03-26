@@ -53,7 +53,11 @@ export const Phone = () => {
 }
 
 export const Confirm = () => (
-	<AuthFlow.ConfirmScreen renderHeader={null} containerStyle={styles.page} />
+	<AuthFlow.ConfirmScreen
+		renderHeader={null}
+		containerStyle={styles.page}
+		inputProps={{ keyboardAppearance: 'dark' }}
+	/>
 )
 
 const styles = StyleSheet.create({
