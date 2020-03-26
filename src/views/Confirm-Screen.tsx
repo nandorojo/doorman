@@ -17,8 +17,6 @@ import { empty } from '../utils/empty'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
 import { Header, InputProps } from 'react-native-elements'
-import Animated from 'react-native-reanimated'
-import { useTimingTransition, bInterpolate } from 'react-native-redash'
 
 type Props = CommonScreenProps & {
 	code: string
@@ -336,15 +334,14 @@ function Confirm(props: Props) {
 		[loading, renderLoader, textColor, loaderColor]
 	)
 
-	const errorOpacity = useTimingTransition(!!error)
+	const errorOpacity = error ? 1 : 0
 	// const errorTransform = [{ translateY: bIn}]
 
 	const renderError = useCallback(() => {
 		return (
-			<Animated.View
+			<View
 				style={{
 					opacity: errorOpacity,
-					transform: [{ translateY: bInterpolate(errorOpacity, 5, 0) }],
 				}}
 			>
 				<Text
@@ -358,7 +355,7 @@ function Confirm(props: Props) {
 				>
 					{error}. Please try resending the code.
 				</Text>
-			</Animated.View>
+			</View>
 		)
 	}, [error, errorOpacity, errorStyle, textAlign])
 

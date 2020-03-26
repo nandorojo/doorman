@@ -30,12 +30,15 @@
 		"@react-native-community/bob": "^0.9.7",
 		"@types/react": "^16.9.11",
 		"@types/react-native": "^0.60.22",
+		"@types/react-phone-number-input": "^3.0.3",
 		"@types/uuid": "^3.4.5",
 		"eslint": "^6.8.0",
-		"eslint-config-nando": "^1.0.7",
+		"eslint-config-nando": "^1.0.8",
+		"firebase": "^7.12.0",
 		"prettier": "^1.19.1",
 		"react": "~16.9.0",
 		"react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+		"react-native-reanimated": "1.1.0",
 		"typescript": "^3.7.5"
 	},
 	"bugs": {

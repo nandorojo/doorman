@@ -242,7 +242,7 @@ export const PhoneAuth = (props: Props) => {
 		disclaimer = `By tapping "${buttonText}", an SMS may be sent. Message & data rates may apply.`,
 		invalidNumberAlertText = 'Please enter a valid phone number.',
 		renderButton,
-		hideButtonForInvalidNumber = true,
+		hideButtonForInvalidNumber = false,
 		backgroundColor,
 		renderBackground,
 		renderHeader,
@@ -268,10 +268,7 @@ export const PhoneAuth = (props: Props) => {
 
 	const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
 
-	const buttonOpacity = useTimingTransition(shouldButtonShow, {
-		duration: 200,
-		// easing: Easing.inOut(Easing.linear),
-	})
+	const buttonOpacity = shouldButtonShow ? 1 : 0
 
 	const TextStyle = useTextStyle()
 
@@ -536,15 +533,14 @@ export const PhoneAuth = (props: Props) => {
 				<View style={[styles.inputContainer, inputContainerStyle]}>
 					{input()}
 				</View>
-				<Animated.View
+				<View
 					style={{
 						opacity: buttonOpacity,
-						transform: [{ translateY: bInterpolate(buttonOpacity, 5, 0) }],
 					}}
 				>
 					<View style={styles.buttonWrapper}>{button()}</View>
 					{renderDisclaimer()}
-				</Animated.View>
+				</View>
 			</View>
 		</Page>
 	)
