@@ -23,8 +23,6 @@ import { useTextStyle } from '../hooks/use-style'
 import { PhoneInput, H1, Paragraph } from '../components'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
-import Animated from 'react-native-reanimated'
-import { useTimingTransition, bInterpolate } from 'react-native-redash'
 import { Header } from 'react-native-elements'
 
 type Props = CommonScreenProps & {
