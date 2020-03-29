@@ -16,19 +16,13 @@ export function PhoneInput(props: Props) {
 		disabled,
 		textStyle = empty.object,
 		style = empty.object,
-		inputRef,
 		inputProps,
 	} = props
 
-	const ref = useRef<PhoneInputRef>(null)
-	useEffect(() => {
-		if (inputRef?.current) inputRef.current = ref.current
-	})
 	const onChangeText = useCallback(
 		(phoneNumber: string) => {
 			onChangePhoneNumber({
 				phoneNumber,
-				valid: isPossiblePhoneNumber(phoneNumber),
 			})
 		},
 		[onChangePhoneNumber]
@@ -37,7 +31,14 @@ export function PhoneInput(props: Props) {
 	return (
 		<PhoneInputForm
 			{...inputProps}
-			style={{ ...(style as CSSProperties), ...textStyle }}
+			// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+			// @ts-ignore
+			style={
+				{
+					...(style as CSSProperties),
+					...(textStyle as CSSProperties),
+				} as CSSProperties
+			}
 			value={value}
 			onChange={onChangeText}
 			flags={flags}

@@ -1,8 +1,10 @@
-import React, { useRef, useEffect, useCallback } from 'react'
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/camelcase */
+import React, { useCallback } from 'react'
 // @ts-ignore
-import Input from 'react-native-phone-input'
+import Input from '@nandorojo/react-native-phone-input'
 import { empty } from '../../utils/empty'
-import { PhoneInputRef, PhoneInputProps } from './types'
+import { PhoneInputProps } from './types'
 
 type Props = PhoneInputProps
 
@@ -14,31 +16,28 @@ export function PhoneInput(props: Props) {
 		inputProps = empty.object,
 		textStyle,
 		style,
+		phoneInputProps = empty.object,
 	} = props
-
-	const ref = useRef<PhoneInputRef>(null)
-	useEffect(() => {
-		if (inputRef?.current) inputRef.current = ref.current
-	})
 
 	const onChangeText = useCallback(
 		(phoneNumber: string) => {
 			onChangePhoneNumber({
 				phoneNumber,
-				valid: !!ref.current?.isValidNumber(),
 			})
 		},
 		[onChangePhoneNumber]
 	)
 
 	return (
+		// @ts-ignore
 		<Input
 			textStyle={textStyle}
 			style={style}
-			ref={ref}
+			ref={inputRef}
 			onChangePhoneNumber={onChangeText}
 			value={value}
 			textProps={inputProps}
+			{...phoneInputProps}
 		/>
 	)
 }

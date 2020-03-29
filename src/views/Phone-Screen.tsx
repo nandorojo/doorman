@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React, {
 	useCallback,
 	ComponentPropsWithoutRef,
 	ReactNode,
 	useEffect,
+	MutableRefObject,
 } from 'react'
 import {
 	View,
@@ -26,6 +28,7 @@ import { ScreenBackground } from '../components/Background'
 import Animated from 'react-native-reanimated'
 import { useTimingTransition, bInterpolate } from 'react-native-redash'
 import { Header } from 'react-native-elements'
+import ReactNativePhoneInput from '@nandorojo/react-native-phone-input'
 
 type Props = CommonScreenProps & {
 	/**
@@ -41,11 +44,10 @@ type Props = CommonScreenProps & {
 	 *
 	 * @param info
 	 * @param info.phoneNumber string that is the current phone number
-	 * @param info.valid boolean that tells you if the current phone number is valid or not. If yes, it's ready to send an SMS to.
 	 *
 	 * To have this logic handled for you, see the `AuthFlow component.
 	 */
-	onChangePhoneNumber: (info: { phoneNumber: string; valid: boolean }) => void
+	onChangePhoneNumber: (info: { phoneNumber: string }) => void
 	/**
 	 * Callback function called when a user submits their phone number with the send button. Used with the `usePhoneNumber` hook.
 	 *
@@ -179,7 +181,7 @@ type Props = CommonScreenProps & {
 	/**
 	 * Function to render a custom input component.
 	 *
-	 * By default, uses react-native-phone-input on mobile and react-phone-number-input on web.
+	 * By default, uses @nandorojo/react-native-phone-input on mobile and react-phone-number-input on web.
 	 */
 	renderInput?: (props: {
 		value: string
@@ -220,6 +222,15 @@ type Props = CommonScreenProps & {
 	 * Custom text color for the send button. Defaults to the `white` prop if not set.
 	 */
 	buttonTextColor?: string
+	inputRef?: MutableRefObject<ReactNativePhoneInput>
+	/**
+	 * **Mobile only** Props to customize the phoneInput. **Not** the same as `inputProps`, see that prop if you want to edit normal React Native `TextInput` props.
+	 *
+	 * For a list of all of them, see: https://www.npmjs.com/package/react-native-phone-input#configuration
+	 */
+	phoneInputProps?: ComponentPropsWithoutRef<
+		typeof PhoneInput
+	>['phoneInputProps']
 }
 
 export const PhoneAuth = (props: Props) => {
@@ -264,6 +275,8 @@ export const PhoneAuth = (props: Props) => {
 		buttonTextColor,
 		headerTitleStyle = empty.object,
 		renderHeaderTitle,
+		inputRef,
+		phoneInputProps,
 	} = props
 
 	const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
@@ -408,6 +421,8 @@ export const PhoneAuth = (props: Props) => {
 			<PhoneInput
 				value={phoneNumber}
 				onChangePhoneNumber={onChangePhoneNumber}
+				inputRef={inputRef}
+				phoneInputProps={phoneInputProps}
 				inputProps={{
 					// autoFocus: true,
 					...Platform.select({
@@ -450,6 +465,8 @@ export const PhoneAuth = (props: Props) => {
 		inputBackgroundColor,
 		inputStyle,
 		inputTextColor,
+		inputRef,
+		phoneInputProps,
 		tintColor,
 		inputProps,
 	])
