@@ -47,6 +47,7 @@ function configurationHasKey(config: Configuration): config is Initialized {
 const Constants = {
 	signIn: 'loginWithPhone',
 	verify: 'verifyCode',
+	error: 'error',
 }
 
 // const getEndpoint = (ending?: string) => {
@@ -61,7 +62,7 @@ const getEndpoint = () => {
 	if (configurationHasKey(configuration))
 		return `https://sending-messages-for-doorman.herokuapp.com/phoneLogic`
 	throw new Error(
-		'Tried to call doorman before it was initialized. Make sure to either use the Doorman withPhoneAuth HOC at the root of your app, wrap your app with the <DoormanProvider>, or run doorman.initialize() at the root of your app before any render code.\n\nYou must initialize the app with your Public App ID, found on your Doorman dashboard.'
+		'Tried to call doorman before it was initialized. Make sure to either use the Doorman withPhoneAuth HOC at the root of your app, wrap your app with the <DoormanProvider>, or run doorman.initialize() at the root of your app before any render code.\n\nYou must initialize the app with your Public Project ID, found on your Doorman dashboard.'
 	)
 }
 const post = (body: object) =>
@@ -70,6 +71,14 @@ const post = (body: object) =>
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(body),
 	}).then(r => r.json())
+
+const uploadError = (message: string) => {
+	return post({
+		publicProjectId:
+			configuration.hasInitialized && configuration.publicProjectId,
+		message: `🚨react-native-doorman Error. ${message}`,
+	})
+}
 
 const initialize = ({
 	publicProjectId,
@@ -111,8 +120,14 @@ const signInWithPhoneNumber = async ({
 			publicProjectId: configuration.publicProjectId,
 		})
 
-		if (message) throw new Error(message)
+		if (message) {
+			uploadError(`${Constants.signIn}: ${message}`)
+			throw new Error(message)
+		}
 		if (!success) {
+			uploadError(
+				`${Constants.signIn}: success was false, but there was no message.`
+			)
 			console.warn(
 				'Warning: success was false for sending SMS, but there was no error message. If you are using test numbers and everything still worked, you can disregard this warning.'
 			)
@@ -141,7 +156,10 @@ const verifyCode = async ({
 			action: Constants.verify,
 			publicProjectId: configuration.publicProjectId,
 		})
-		if (!token) throw new Error(message)
+		if (!token) {
+			uploadError(`${Constants.verify}: Missing token. ${message}`)
+			throw new Error(message)
+		}
 		return { success: true, token }
 	} catch (e) {
 		console.error('Error using Doorman function verifyCode: ', e)
