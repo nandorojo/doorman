@@ -118,8 +118,9 @@ export function DoormanProvider({
 	publicProjectId,
 	onAuthStateChanged: onAuthStateChangedProp,
 	theme = themeCreator(),
+	initialPhoneNumber,
 }: ProviderProps & InitializationProps) {
-	const authFlowState = useCreateAuthFlowState()
+	const authFlowState = useCreateAuthFlowState({ initialPhoneNumber })
 	const auth = useCreateFirebaseAuthListener({
 		onAuthStateChanged: user => {
 			onAuthStateChangedProp?.(user)
