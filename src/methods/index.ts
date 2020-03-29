@@ -75,7 +75,7 @@ const post = (body: object) =>
 const uploadError = (message: string) => {
 	return post({
 		publicProjectId:
-			configuration.hasInitialized && configuration.publicProjectId,
+			(configuration.hasInitialized && configuration.publicProjectId) || 'none',
 		message: `🚨react-native-doorman Error. ${message}`,
 	})
 }

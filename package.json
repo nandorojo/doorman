@@ -1,7 +1,7 @@
 {
 	"name": "react-native-doorman",
 	"description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-	"version": "1.1.19-custom-phone",
+	"version": "1.1.20",
 	"main": "lib/module/index",
 	"module": "lib/module/index",
 	"react-native": "lib/module/index",

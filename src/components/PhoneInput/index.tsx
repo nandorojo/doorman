@@ -32,6 +32,7 @@ export function PhoneInput(props: Props) {
 	)
 
 	return (
+		// @ts-ignore
 		<Input
 			textStyle={textStyle}
 			style={style}
