@@ -77,6 +77,7 @@ const uploadError = (message: string) => {
 		publicProjectId:
 			(configuration.hasInitialized && configuration.publicProjectId) || 'none',
 		message: `🚨react-native-doorman Error. ${message}`,
+		action: Constants.error,
 	})
 }
 
