@@ -37,7 +37,7 @@ type Options = Omit<ProviderProps, 'children'> & {
 	 *
 	 * ```javascript
 	 * {
-	 *  projectId: string // projectId from firebase
+	 *  publicProjectId: string // publicProjectId from firebase
 	 * }
 	 * ```
 	 */

@@ -43,7 +43,7 @@ type Props = CommonScreenProps & {
 	 *
 	 * To have this logic handled for you, see the `AuthFlow component.
 	 */
-	onChangePhoneNumber: (info: { phoneNumber: string; valid: boolean }) => void
+	onChangePhoneNumber: (info: { phoneNumber: string; valid?: boolean }) => void
 	/**
 	 * Callback function called when a user submits their phone number with the send button. Used with the `usePhoneNumber` hook.
 	 *
@@ -181,7 +181,7 @@ type Props = CommonScreenProps & {
 	 */
 	renderInput?: (props: {
 		value: string
-		onChangeText: (info: { phoneNumber: string; valid: boolean }) => void
+		onChangeText: (phoneNumber: string) => void
 	}) => ReactNode
 	/**
 	 * Default: `true`.
@@ -357,7 +357,8 @@ export const PhoneAuth = (props: Props) => {
 		if (renderInput)
 			return renderInput({
 				value: phoneNumber,
-				onChangeText: onChangePhoneNumber,
+				onChangeText: (phoneNumber: string) =>
+					onChangePhoneNumber({ phoneNumber }),
 			})
 
 		const inputStyles: {
