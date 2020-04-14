@@ -48,15 +48,12 @@ export default function ControlledConfirmScreen(props: Props) {
 		},
 		phoneNumber,
 	})
-	const onPressResendCode = useCallback(
-		() => async () => {
-			const { success } = await resend()
-			if (success) {
-				Alert.alert('✅', `6-digit code was resent to ${phoneNumber}.`)
-			}
-		},
-		[phoneNumber, resend]
-	)
+	const onPressResendCode = useCallback(async () => {
+		const { success } = await resend()
+		if (success) {
+			alert(`✅ 6-digit code was resent to ${phoneNumber}.`)
+		}
+	}, [phoneNumber, resend])
 
 	return (
 		<ConfirmScreen
