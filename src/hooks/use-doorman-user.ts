@@ -1,5 +1,5 @@
 import { useDoormanContext } from '../context'
-import firebase from 'firebase/app'
+import * as firebase from 'firebase'
 
 const signOut = () => firebase.auth().signOut()
 
