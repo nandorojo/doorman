@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import firebase from 'firebase/app'
+import * as firebase from 'firebase'
 import { empty } from '../utils/empty'
 
 type Props = {

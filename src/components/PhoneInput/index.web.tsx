@@ -4,8 +4,8 @@ import PhoneInputForm, { isPossiblePhoneNumber } from 'react-phone-number-input'
 import flags from 'react-phone-number-input/flags'
 import { empty } from '../../utils/empty'
 
-import './style.css'
-import 'react-phone-number-input/style.css'
+// import './style.css'
+// import 'react-phone-number-input/style.css'
 
 type Props = PhoneInputProps
 
