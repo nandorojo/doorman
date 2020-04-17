@@ -3,6 +3,7 @@ import { PhoneInputProps, PhoneInputRef } from './types'
 import PhoneInputForm, { isPossiblePhoneNumber } from 'react-phone-number-input'
 import flags from 'react-phone-number-input/flags'
 import { empty } from '../../utils/empty'
+import { WebStyles } from './web-styles'
 
 // import './style.css'
 // import 'react-phone-number-input/style.css'
@@ -35,17 +36,20 @@ export function PhoneInput(props: Props) {
 	)
 
 	return (
-		<PhoneInputForm
-			{...inputProps}
-			style={{ ...(style as CSSProperties), ...textStyle }}
-			value={value}
-			onChange={onChangeText}
-			flags={flags}
-			disabled={disabled}
-			defaultCountry="US"
-			international
-			autoFocus
-			// color="white"
-		/>
+		<>
+			<WebStyles />
+			<PhoneInputForm
+				{...inputProps}
+				style={{ ...(style as CSSProperties), ...textStyle }}
+				value={value}
+				onChange={onChangeText}
+				flags={flags}
+				disabled={disabled}
+				defaultCountry="US"
+				international
+				autoFocus
+				// color="white"
+			/>
+		</>
 	)
 }
