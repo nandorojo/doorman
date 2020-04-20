@@ -3,7 +3,7 @@
 	"singleQuote": true,
 	"bracketSpacing": true,
 	"tabWidth": 2,
-	"useTabs": true,
+	"useTabs": false,
 	"proseWrap": "preserve",
 	"trailingComma": "es5"
 }
