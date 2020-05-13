@@ -15,7 +15,7 @@ import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
 import { StyleSheet, Platform } from 'react-native'
-import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
+import { useAuthFlowState } from 'react-doorman'
 
 type Props = {
   phoneScreenProps?: Omit<
