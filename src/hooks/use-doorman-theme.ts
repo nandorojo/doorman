@@ -1,4 +1,4 @@
-import { useDoormanContext } from '../context/'
+import { useDoormanContext } from 'react-doorman'
 import { theme } from '../style/theme'
 
 export const useDoormanTheme = () => {

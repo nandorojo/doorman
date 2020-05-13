@@ -1,74 +1,73 @@
 {
-	"name": "react-native-doorman",
-	"description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-	"version": "1.1.32",
-	"main": "lib/module/index",
-	"module": "lib/module/index",
-	"react-native": "lib/module/index",
-	"types": "lib/typescript/index",
-	"homepage": "https://docs.doorman.cool",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/nandorojo/doorman"
-	},
-	"scripts": {
-		"type-check": "tsc --noEmit",
-		"type-check:watch": "npm run type-check -- --watch",
-		"build": "npm run build:types && npm run build:js",
-		"bundle": "babel src --out-file bundle/index.js --extensions \".ts,.tsx\" --source-maps inline",
-		"build:tsc": "npm run build:types && npm run build:test",
-		"build:redash:types": "tsc --noEmit",
-		"build:types": "tsc --emitDeclarationOnly --skipLibCheck",
-		"build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-		"build:test": "rm -R lib && babel src-og --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-		"build:babel": "rm -R lib && babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-		"build:final": "mkdir -p bundle && npm run bundle && npm run build:types",
-		"prepare": "bob build",
-		"upload": "npm run prepare && npm publish"
-	},
-	"devDependencies": {
-		"@react-native-community/bob": "^0.9.7",
-		"@types/react": "^16.9.11",
-		"@types/react-native": "^0.60.22",
-		"@types/react-native-phone-input": "^0.2.0",
-		"@types/uuid": "^3.4.5",
-		"eslint": "^6.8.0",
-		"eslint-config-nando": "^1.0.7",
-		"prettier": "^1.19.1",
-		"react": "~16.9.0",
-		"react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
-		"typescript": "^3.7.5"
-	},
-	"bugs": {
-		"url": "https://github.com/nandorojo/doorman/issues"
-	},
-	"author": "Fernando Rojo",
-	"license": "MIT",
-	"files": [
-		"lib"
-	],
-	"@react-native-community/bob": {
-		"source": "src",
-		"output": "lib",
-		"targets": [
-			"module",
-			"typescript"
-		]
-	},
-	"dependencies": {
-		"@nandorojo/react-native-phone-input": "^0.2.8",
-		"expo-linear-gradient": "^8.0.0",
-		"react-doorman": "^0.0.2",
-		"react-native-elements": "^1.2.7",
-		"react-native-extended-stylesheet": "^0.12.0",
-		"react-native-paper": "^3.6.0",
-		"react-native-phone-input": "^0.2.4",
-		"react-native-redash": "^10.0.1",
-		"react-native-text-input-mask": "^2.0.0",
-		"react-phone-number-input": "^3.0.22"
-	},
-	"peerDependencies": {
-		"firebase": "*",
-		"react-native-reanimated": "1.4.0"
-	}
+  "name": "react-native-doorman",
+  "description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
+  "version": "1.1.32",
+  "main": "lib/module/index",
+  "module": "lib/module/index",
+  "react-native": "lib/module/index",
+  "types": "lib/typescript/index",
+  "homepage": "https://docs.doorman.cool",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nandorojo/doorman"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "build": "npm run build:types && npm run build:js",
+    "bundle": "babel src --out-file bundle/index.js --extensions \".ts,.tsx\" --source-maps inline",
+    "build:tsc": "npm run build:types && npm run build:test",
+    "build:redash:types": "tsc --noEmit",
+    "build:types": "tsc --emitDeclarationOnly --skipLibCheck",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build:test": "rm -R lib && babel src-og --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build:babel": "rm -R lib && babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build:final": "mkdir -p bundle && npm run bundle && npm run build:types",
+    "prepare": "bob build",
+    "upload": "npm run prepare && npm publish"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.9.7",
+    "@types/react": "^16.9.11",
+    "@types/react-native": "^0.60.22",
+    "@types/react-native-phone-input": "^0.2.0",
+    "@types/uuid": "^3.4.5",
+    "eslint-config-nando": "^1.0.9",
+    "prettier": "^1.19.1",
+    "react": "~16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "typescript": "^3.7.5"
+  },
+  "bugs": {
+    "url": "https://github.com/nandorojo/doorman/issues"
+  },
+  "author": "Fernando Rojo",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "module",
+      "typescript"
+    ]
+  },
+  "dependencies": {
+    "@nandorojo/react-native-phone-input": "^0.2.8",
+    "expo-linear-gradient": "^8.0.0",
+    "react-doorman": "^0.0.2",
+    "react-native-elements": "^1.2.7",
+    "react-native-extended-stylesheet": "^0.12.0",
+    "react-native-paper": "^3.6.0",
+    "react-native-phone-input": "^0.2.4",
+    "react-native-redash": "^10.0.1",
+    "react-native-text-input-mask": "^2.0.0",
+    "react-phone-number-input": "^3.0.22"
+  },
+  "peerDependencies": {
+    "firebase": "*",
+    "react-native-reanimated": "1.4.0"
+  }
 }
