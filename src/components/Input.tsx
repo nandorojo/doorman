@@ -21,7 +21,7 @@ type Props = {
   textAlign?: TextStyle['textAlign']
 } & Omit<ComponentPropsWithoutRef<typeof TextInput>, 'style'>
 
-const Input = (props: Props) => {
+export const Input = (props: Props) => {
   const {
     style,
     backgroundColor = 'white',
@@ -63,5 +63,3 @@ const Input = (props: Props) => {
     />
   )
 }
-
-export default Input

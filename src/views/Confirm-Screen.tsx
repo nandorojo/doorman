@@ -19,7 +19,7 @@ import { ScreenBackground } from '../components/Background'
 import { Header, InputProps } from 'react-native-elements'
 import Animated from 'react-native-reanimated'
 import { useTimingTransition, bInterpolate } from 'react-native-redash'
-import Input from '../components/Input'
+import { Input } from '../components/Input'
 
 type Props = CommonScreenProps & {
   code: string
