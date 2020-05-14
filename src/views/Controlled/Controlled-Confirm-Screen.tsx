@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef, useCallback } from 'react'
 import { ConfirmScreen } from '../Confirm-Screen'
-import { useConfirmPhone } from '../../hooks/use-confirm-phone'
-import { useAuthFlowState } from '../../hooks/use-auth-flow-state'
+import { useConfirmPhone, useAuthFlowState } from 'react-doorman'
+
 import * as firebase from 'firebase'
 
 type Props = Omit<
