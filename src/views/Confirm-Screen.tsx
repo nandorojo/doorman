@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   TextStyle as TextStyleType,
   ViewStyle,
-  TextInput,
   Text,
 } from 'react-native'
 import { ActivityIndicator } from 'react-native-paper'
