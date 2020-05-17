@@ -24,7 +24,10 @@ export function PhoneInput(props: Props) {
   const onChangeText = useCallback(
     (phoneNumber: string) => {
       onChangePhoneNumber({
-        phoneNumber,
+        phoneNumber:
+          phoneNumber && phoneNumber[0] === '+'
+            ? phoneNumber
+            : `+${phoneNumber}`,
         valid: !!ref.current?.isValidNumber(),
       })
     },
