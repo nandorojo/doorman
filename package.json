@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "main": "lib/module/index",
   "module": "lib/module/index",
-  "react-native": "lib/module/index",
+  "react-native": "src/index",
   "types": "lib/typescript/index",
   "homepage": "https://docs.doorman.cool",
   "repository": {
@@ -38,7 +38,7 @@
     "react": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-reanimated": "1.4.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.2"
   },
   "bugs": {
     "url": "https://github.com/nandorojo/doorman/issues"
@@ -46,7 +46,8 @@
   "author": "Fernando Rojo",
   "license": "MIT",
   "files": [
-    "lib"
+    "lib",
+    "src"
   ],
   "@react-native-community/bob": {
     "source": "src",
