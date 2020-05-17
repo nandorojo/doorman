@@ -33,9 +33,11 @@
     "@types/react-native-phone-input": "^0.2.0",
     "@types/uuid": "^3.4.5",
     "eslint-config-nando": "^1.0.9",
+    "firebase": "7.14.4",
     "prettier": "^1.19.1",
     "react": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-reanimated": "1.4.0",
     "typescript": "^3.7.5"
   },
   "bugs": {

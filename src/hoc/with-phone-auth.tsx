@@ -5,6 +5,7 @@ import {
   ProviderProps,
   InitializationProps,
 } from 'react-doorman'
+import * as firebase from 'firebase/app'
 
 import { AuthGate } from '../components/AuthGate'
 import { AuthFlow } from '../views'
