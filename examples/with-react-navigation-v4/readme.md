@@ -1,6 +1,9 @@
-# This repository is deprecated. Please go to our [examples](https://github.com/nandorojo/doorman-examples) repo instead.
+# This example is deprecated. Please go to our [examples](https://github.com/nandorojo/doorman-examples) repo instead.
 
-----
+-----
+
+
+
 
 # 🚪 👾 Doorman + React Navigation v4 example
 
