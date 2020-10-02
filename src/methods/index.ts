@@ -1,1 +1,2 @@
-export { InitializationProps, doorman } from 'react-doorman'
+export { doorman } from 'react-doorman'
+export type { InitializationProps } from 'react-doorman'
