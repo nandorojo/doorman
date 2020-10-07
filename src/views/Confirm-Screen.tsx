@@ -388,7 +388,7 @@ function Confirm(props: Props) {
     if (renderHeader === null) return null
     if (renderHeader)
       return renderHeader({
-        screen: 'phone',
+        screen: 'code',
         goBack:
           onGoBack ??
           (() => {
