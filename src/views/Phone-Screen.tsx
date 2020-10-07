@@ -465,7 +465,15 @@ export const PhoneAuth = (props: Props) => {
 
   const header = useCallback(() => {
     if (renderHeader === null) return null
-    if (renderHeader) return renderHeader({ screen: 'phone' })
+    if (renderHeader)
+      return renderHeader({
+        screen: 'phone',
+        goBack: () => {
+          console.warn(
+            '[react-native-doorman][phoneScreenProps.renderHeader] calling goBack() from the phone screen does nothing. You probably meant to do this from confirmScreen. Make sure to check that screen === "code".'
+          )
+        },
+      })
 
     return (
       <Header
