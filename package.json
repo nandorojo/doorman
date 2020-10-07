@@ -63,7 +63,6 @@
     "react-doorman": "^0.0.6",
     "react-native-elements": "^1.2.7",
     "react-native-extended-stylesheet": "^0.12.0",
-    "react-native-paper": "^3.6.0",
     "react-native-phone-input": "^0.2.4",
     "react-native-redash": "^10.0.1",
     "react-native-text-input-mask": "^2.0.0",
@@ -71,7 +70,8 @@
   },
   "peerDependencies": {
     "firebase": "*",
-    "react-native-reanimated": "1.4.0"
+    "react-native-reanimated": "1.4.0",
+    "react-native-paper": "^3.6.0"
   },
   "sideEffects": false
 }
