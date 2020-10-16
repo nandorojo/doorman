@@ -13,6 +13,7 @@ import {
   TextStyle as TextStyleType,
   Keyboard,
   Platform,
+  TextStyle,
 } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
@@ -78,7 +79,7 @@ type Props = CommonScreenProps & {
   /**
    * Style the text input.
    */
-  inputStyle?: ComponentPropsWithoutRef<typeof TextInput>['style']
+  inputStyle?: TextStyle
   /**
    * The color used for the screens color scheme, such as highlighting the text. This prop is getting phased out, so instead, check out the other style props.
    */
