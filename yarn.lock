@@ -2255,6 +2255,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-phone-number-input@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/react-phone-number-input/-/react-phone-number-input-3.0.6.tgz#fa38246931ddb79629d2ac90565a97edd184f1bc"
+  integrity sha512-72+yblLIzquMluZEipZxHzFMcnLZmeW3/1dkAG/iK63wQLwyMRIYk+5U+AvRahAzLs4YBfZqlhyiwOa3qCGikg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.9.11":
   version "16.9.19"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.19.tgz#c842aa83ea490007d29938146ff2e4d9e4360c40"

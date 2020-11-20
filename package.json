@@ -31,6 +31,7 @@
     "@types/react": "^16.9.11",
     "@types/react-native": "^0.60.22",
     "@types/react-native-phone-input": "^0.2.0",
+    "@types/react-phone-number-input": "^3.0.6",
     "@types/uuid": "^3.4.5",
     "eslint-config-nando": "^1.0.9",
     "firebase": "7.14.4",
