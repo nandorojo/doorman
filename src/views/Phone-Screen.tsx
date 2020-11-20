@@ -13,6 +13,7 @@ import {
   TextStyle as TextStyleType,
   Keyboard,
   Platform,
+  TextStyle,
 } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { empty } from '../utils/empty'
@@ -78,7 +79,7 @@ type Props = CommonScreenProps & {
   /**
    * Style the text input.
    */
-  inputStyle?: ComponentPropsWithoutRef<typeof TextInput>['style']
+  inputStyle?: TextStyle
   /**
    * The color used for the screens color scheme, such as highlighting the text. This prop is getting phased out, so instead, check out the other style props.
    */
@@ -220,6 +221,14 @@ type Props = CommonScreenProps & {
    * Custom text color for the send button. Defaults to the `white` prop if not set.
    */
   buttonTextColor?: string
+  /**
+   * Function to render a custom title. By default, uses the internal `H1` component.
+   */
+  renderTitle?: (props: { children: string; style?: any }) => ReactNode
+  /**
+   * Function to render a custom message. By default, uses the internal `P` component.
+   */
+  renderMessage?: (props: { children: string; style?: any }) => ReactNode
 }
 
 export const PhoneAuth = (props: Props) => {
@@ -264,6 +273,8 @@ export const PhoneAuth = (props: Props) => {
     buttonTextColor,
     headerTitleStyle = empty.object,
     renderHeaderTitle,
+    renderMessage,
+    renderTitle,
   } = props
 
   const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
@@ -465,7 +476,15 @@ export const PhoneAuth = (props: Props) => {
 
   const header = useCallback(() => {
     if (renderHeader === null) return null
-    if (renderHeader) return renderHeader({ screen: 'phone' })
+    if (renderHeader)
+      return renderHeader({
+        screen: 'phone',
+        goBack: () => {
+          console.warn(
+            '[react-native-doorman][phoneScreenProps.renderHeader] calling goBack() from the phone screen does nothing. You probably meant to do this from confirmScreen. Make sure to check that screen === "code".'
+          )
+        },
+      })
 
     return (
       <Header
@@ -525,6 +544,30 @@ export const PhoneAuth = (props: Props) => {
     headerText,
   ])
 
+  const _renderTitle = () => {
+    const titleProps: Parameters<Required<Props>['renderTitle']>[0] = {
+      style: { textAlign, color: textColor },
+      children: title,
+    }
+    if (typeof renderTitle === 'function') {
+      return renderTitle(titleProps)
+    }
+
+    return <H1 {...titleProps} />
+  }
+
+  const _renderMessage = () => {
+    const messageProps: Parameters<Required<Props>['renderMessage']>[0] = {
+      style: { textAlign, color: textColor },
+      children: message,
+    }
+    if (typeof renderMessage === 'function') {
+      return renderMessage(messageProps)
+    }
+
+    return <Paragraph {...messageProps} />
+  }
+
   return (
     <Page
       header={header}
@@ -533,8 +576,10 @@ export const PhoneAuth = (props: Props) => {
       background={background}
     >
       <View>
-        <H1 style={{ textAlign, color: textColor }}>{title}</H1>
-        <Paragraph style={{ textAlign, color: textColor }}>{message}</Paragraph>
+        {/* <H1 style={{ textAlign, color: textColor }}>{title}</H1> */}
+        {_renderTitle()}
+        {/* <Paragraph style={{ textAlign, color: textColor }}>{message}</Paragraph> */}
+        {_renderMessage()}
         <View style={[styles.inputContainer, inputContainerStyle]}>
           {input()}
         </View>

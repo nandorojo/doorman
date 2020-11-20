@@ -386,7 +386,17 @@ function Confirm(props: Props) {
 
   const header = useCallback(() => {
     if (renderHeader === null) return null
-    if (renderHeader) return renderHeader({ screen: 'phone' })
+    if (renderHeader)
+      return renderHeader({
+        screen: 'code',
+        goBack:
+          onGoBack ??
+          (() => {
+            console.warn(
+              '[react-native-doorman.confirm-screen][renderHeader] goBack function was called, but the onGoBack prop was not provided to <AuthFlow.ConfirmScreen />. This means nothing will happen. You should probably use the <AuthFlow /> component if you need this.'
+            )
+          }),
+      })
 
     return (
       <Header
