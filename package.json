@@ -34,7 +34,7 @@
     "@types/react-phone-number-input": "^3.0.6",
     "@types/uuid": "^3.4.5",
     "eslint-config-nando": "^1.0.9",
-    "firebase": "7.14.4",
+    "firebase": "8.2.3",
     "prettier": "^1.19.1",
     "react": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -63,7 +63,7 @@
   "dependencies": {
     "@nandorojo/react-native-phone-input": "^0.2.8",
     "expo-linear-gradient": "^8.2.1",
-    "react-doorman": "^0.0.8",
+    "react-doorman": "^1.0.0",
     "react-native-extended-stylesheet": "^0.12.0",
     "react-native-phone-input": "^0.2.4",
     "react-native-redash": "^10.0.1",
