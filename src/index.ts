@@ -1,9 +1,9 @@
-import { YellowBox } from 'react-native'
+// import { YellowBox } from 'react-native'
 
-YellowBox.ignoreWarnings([
-  `Warning: componentWillMount has been renamed`,
-  'Warning: componentWillReceiveProps has been renamed',
-])
+// YellowBox.ignoreWarnings([
+//   `Warning: componentWillMount has been renamed`,
+//   'Warning: componentWillReceiveProps has been renamed',
+// ])
 
 export * from './methods'
 export * from './views'
