@@ -1,7 +1,7 @@
 {
   "name": "react-native-doorman",
   "description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": "build/index.js",
   "react-native": "src/index.ts",
   "types": "build/index.d.ts",
@@ -63,7 +63,7 @@
     "@nandorojo/react-native-phone-input": "^0.2.8",
     "expo-linear-gradient": "^8.2.1",
     "expo-module-scripts": "^1.2.0",
-    "react-doorman": "^1.0.2",
+    "react-doorman": "^1.3.0-alpha.1",
     "react-native-extended-stylesheet": "^0.12.0",
     "react-native-phone-input": "^0.2.4",
     "react-native-redash": "^10.0.1",
