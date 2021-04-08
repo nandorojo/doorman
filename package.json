@@ -1,11 +1,10 @@
 {
   "name": "react-native-doorman",
   "description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-  "version": "2.0.0",
-  "main": "lib/module/index",
-  "module": "lib/module/index",
-  "react-native": "src/index",
-  "types": "lib/typescript/index",
+  "version": "2.0.1",
+  "main": "build/index.js",
+  "react-native": "src/index.ts",
+  "types": "build/index.d.ts",
   "homepage": "https://docs.doorman.cool",
   "repository": {
     "type": "git",
@@ -23,7 +22,7 @@
     "build:test": "rm -R lib && babel src-og --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
     "build:babel": "rm -R lib && babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
     "build:final": "mkdir -p bundle && npm run bundle && npm run build:types",
-    "prepare": "bob build",
+    "prepare": "expo-module prepare",
     "upload": "npm run prepare && npm publish"
   },
   "devDependencies": {
@@ -49,7 +48,7 @@
   "author": "Fernando Rojo",
   "license": "MIT",
   "files": [
-    "lib",
+    "build",
     "src"
   ],
   "@react-native-community/bob": {
@@ -63,6 +62,7 @@
   "dependencies": {
     "@nandorojo/react-native-phone-input": "^0.2.8",
     "expo-linear-gradient": "^8.2.1",
+    "expo-module-scripts": "^1.2.0",
     "react-doorman": "^1.0.0",
     "react-native-extended-stylesheet": "^0.12.0",
     "react-native-phone-input": "^0.2.4",
