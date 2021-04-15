@@ -1,6 +1,6 @@
 import { ReactNode, ComponentPropsWithoutRef } from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
-import { Header } from 'react-native-elements'
+import type { Header } from 'react-native-elements'
 
 export type CommonScreenProps = {
   /**

@@ -15,7 +15,8 @@ import {
   Platform,
   TextStyle,
 } from 'react-native'
-import { Button, TextInput } from 'react-native-paper'
+import Button from 'react-native-paper/lib/module/components/Button'
+import TextInput from 'react-native-paper/lib/module/components/TextInput/TextInput'
 import { empty } from '../utils/empty'
 import { ScreenStyle } from '../style/screen'
 import { Page } from '../components/Page'
@@ -25,8 +26,9 @@ import { PhoneInput, H1, Paragraph } from '../components'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
 import Animated from 'react-native-reanimated'
-import { useTimingTransition, bInterpolate } from 'react-native-redash'
-import { Header } from 'react-native-elements'
+import { bInterpolate } from 'react-native-redash/lib/module/Animations'
+import { useTimingTransition } from 'react-native-redash/lib/module/Transitions'
+import Header from 'react-native-elements/src/header/Header'
 
 type Props = CommonScreenProps & {
   /**

@@ -7,7 +7,7 @@ import {
   ViewStyle,
   Text,
 } from 'react-native'
-import { ActivityIndicator } from 'react-native-paper'
+import ActivityIndicator from 'react-native-paper/lib/module/components/ActivityIndicator'
 import { ScreenStyle } from '../style/screen'
 import { TextStyle } from '../style/text'
 import { Page } from '../components/Page'
@@ -15,9 +15,11 @@ import { Paragraph, H1 } from '../components'
 import { empty } from '../utils/empty'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
-import { Header, InputProps } from 'react-native-elements'
+import Header from 'react-native-elements/src/header/Header'
+import type { InputProps } from 'react-native-elements'
 import Animated from 'react-native-reanimated'
-import { useTimingTransition, bInterpolate } from 'react-native-redash'
+import { bInterpolate } from 'react-native-redash/lib/module/Animations'
+import { useTimingTransition } from 'react-native-redash/lib/module/Transitions'
 import { Input } from '../components/Input'
 
 type Props = CommonScreenProps & {
