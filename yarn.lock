@@ -9393,10 +9393,10 @@ react-devtools-core@^3.6.3:
     shell-quote "^1.6.1"
     ws "^3.3.1"
 
-react-doorman@^1.3.0-alpha.2:
-  version "1.3.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/react-doorman/-/react-doorman-1.3.0-alpha.2.tgz#b53d8bf980c114aa0ada30afb089decd3525cccc"
-  integrity sha512-6QHdeXS3eUtmp2NmeApJYDH2tz5B0VSrGXPuqFb+Ky+dR6Y7h0/XzLK6nJmiICgLGt4O6Qbs6ZQ613v9+54snw==
+react-doorman@^2.0.0-alpha.0:
+  version "2.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/react-doorman/-/react-doorman-2.0.0-alpha.0.tgz#2b5a79402d09fbc94e149ff00eda9082214b9515"
+  integrity sha512-sj1zmLnVKwnuS1MJr8BF2TdbScvzQYr0o8St+Du8GeQRk7pZCpVoa/rdiSqdjyci83XSNKCZ6/EjLKm9X8hdsw==
   dependencies:
     expo-module-scripts "^1.2.0"
     react-phone-number-input "^3.0.22"

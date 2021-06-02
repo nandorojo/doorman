@@ -1,8 +1,8 @@
 import React, { ComponentPropsWithoutRef, useCallback } from 'react'
 import { ConfirmScreen } from '../Confirm-Screen'
-import { useConfirmPhone, useAuthFlowState } from 'react-doorman'
+import { useConfirmPhone, useAuthFlowState, signInWithCustomTokenHeadless } from 'react-doorman'
 
-import firebase from 'firebase/app'
+import type firebase from 'firebase/app'
 
 type Props = Omit<
   ComponentPropsWithoutRef<typeof ConfirmScreen>,
@@ -55,12 +55,15 @@ export default function ControlledConfirmScreen(props: Props) {
       if (token) {
         // sign the user in
         props.onCodeVerified?.({ token })
-        await firebase
-          .auth()
-          .signInWithCustomToken(token)
-          .then(({ user }) => {
-            props.onUserSuccessfullySignedIn?.({ user })
-          })
+        signInWithCustomTokenHeadless(token).then(({ user }) => {
+          props.onUserSuccessfullySignedIn?.({ user })
+        })
+        // await firebase
+        //   .auth()
+        //   .signInWithCustomToken(token)
+        //   .then(({ user }) => {
+        //     props.onUserSuccessfullySignedIn?.({ user })
+        //   })
       }
     },
     phoneNumber,
