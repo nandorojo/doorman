@@ -208,25 +208,27 @@ function Confirm(props: Props) {
     loaderColor,
     inputStyle = empty.object,
     inputProps = empty.object,
+    titleStyle,
+    messageStyle
   } = props
 
   const renderMessage = useMemo(() => {
     if (message) {
       return (
-        <Paragraph style={[styles.subtitle, { color: textColor, textAlign }]}>
+        <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
           {typeof message === 'function' ? message({ phoneNumber }) : message}
         </Paragraph>
       )
     }
 
     return (
-      <Paragraph style={[styles.subtitle, { color: textColor, textAlign }]}>
+      <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
         We just sent a 6-digit code to{' '}
         <Paragraph style={styles.number}>{phoneNumber}</Paragraph>. Enter it
         below to continue.
       </Paragraph>
     )
-  }, [message, phoneNumber, textAlign, textColor])
+  }, [message, messageStyle, phoneNumber, textAlign, textColor])
   const renderInput = useMemo(() => { 
     return (
       <View style={[styles.inputContainer, inputContainerStyle]}>
@@ -394,8 +396,8 @@ function Confirm(props: Props) {
     headerTitleStyle,
   ])
   const renderTitle = useMemo(() => {
-    return <H1 style={{ textAlign, color: textColor }}>{title}</H1>
-  }, [textAlign, textColor, title])
+    return <H1 style={[{ textAlign, color: textColor }, titleStyle]}>{title}</H1>
+  }, [textAlign, textColor, title, titleStyle])
 
   return (
     <Page
