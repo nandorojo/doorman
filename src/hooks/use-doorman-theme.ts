@@ -1,8 +1,8 @@
-import { useDoormanContext } from 'react-doorman'
+import { useUserContext } from 'react-doorman'
 import { theme } from '../style/theme'
 
 export const useDoormanTheme = () => {
-  const context = useDoormanContext()
+  const context = useUserContext()
 
   if (!context) {
     console.error(

@@ -1,9 +1,10 @@
 import React, { ComponentType, ComponentPropsWithoutRef, useState } from 'react'
 import {
   DoormanProvider,
-  useDoormanContext,
+  useAuthFlowContext,
   ProviderProps,
   InitializationProps,
+  useUserContext,
 } from 'react-doorman'
 import type firebase from 'firebase/app'
 
@@ -85,7 +86,9 @@ export function withPhoneAuth<P>(
      *
      * If it doesn't, we add it ourselves. You can still deny `includeProvider` if you want.
      */
-    const providerExistsAlready = useDoormanContext()
+    const userContext = useUserContext()
+    const authFlowContext = useAuthFlowContext()
+    const providerExistsAlready = userContext && authFlowContext
     const Provider =
       !providerExistsAlready && includeProvider
         ? DoormanProvider
