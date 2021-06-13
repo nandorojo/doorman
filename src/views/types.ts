@@ -44,6 +44,14 @@ export type CommonScreenProps = {
    */
   headerTitleStyle?: TextStyle
   /**
+   * Style for the title of a screen (different from `headerTitleStyle`)
+   */
+  titleStyle?: TextStyle
+  /**
+   * Style for the message of a screen, under the title.
+   */
+  messageStyle?: TextStyle
+  /**
    * Either a string or array of strings.
    *
    * If an array is passed, it will render a gradient.

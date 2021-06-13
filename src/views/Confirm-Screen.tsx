@@ -1,4 +1,4 @@
-import React, { ReactNode, ComponentPropsWithoutRef, useCallback } from 'react'
+import React, { ReactNode, ComponentPropsWithoutRef, useCallback, useMemo } from 'react'
 import {
   View,
   ScrollView,
@@ -208,71 +208,28 @@ function Confirm(props: Props) {
     loaderColor,
     inputStyle = empty.object,
     inputProps = empty.object,
+    titleStyle,
+    messageStyle
   } = props
 
-  const renderMessage = useCallback(() => {
+  const renderMessage = useMemo(() => {
     if (message) {
       return (
-        <Paragraph style={[styles.subtitle, { color: textColor, textAlign }]}>
+        <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
           {typeof message === 'function' ? message({ phoneNumber }) : message}
         </Paragraph>
       )
     }
 
     return (
-      <Paragraph style={[styles.subtitle, { color: textColor, textAlign }]}>
+      <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
         We just sent a 6-digit code to{' '}
         <Paragraph style={styles.number}>{phoneNumber}</Paragraph>. Enter it
         below to continue.
       </Paragraph>
     )
-  }, [message, phoneNumber, textAlign, textColor])
-  const renderInput = useCallback(() => {
-    // const inputStyles: {
-    //   [key in typeof inputType]: TextStyleType
-    // } = {
-    //   elevated: {
-    //     backgroundColor: inputBackgroundColor ?? 'white',
-    //     borderRadius: 5,
-    //     // fontSize: 20,
-    //     fontWeight: 'bold',
-    //     color: inputTextColor ?? 'black',
-    //   },
-    //   flat: {
-    //     borderBottomColor: 'white',
-    //     borderBottomWidth: 1,
-    //     color: inputTextColor ?? 'white',
-    //   },
-    // }
-    // return (
-    //   <View style={[styles.inputContainer, inputContainerStyle]}>
-    //     <TextInput
-    //       value={code}
-    //       onChangeText={onChangeCode}
-    //       editable={!loading}
-    //       maxLength={6}
-    //       clearButtonMode="while-editing"
-    //       placeholder="6-digit code"
-    //       textContentType="oneTimeCode"
-    //       keyboardType="number-pad"
-    //       accessibilityHint="6-digit phone number texted to you"
-    //       returnKeyType="done"
-    //       autoFocus
-    //       style={[
-    //         {
-    //           padding: 16,
-    //           fontSize: 24,
-    //           fontWeight: 'bold',
-    //           color: inputTextColor,
-    //           textAlign,
-    //           ...inputStyles[inputType],
-    //         },
-    //         inputStyle,
-    //       ]}
-    //       {...inputProps}
-    //     />
-    //   </View>
-    // )
+  }, [message, messageStyle, phoneNumber, textAlign, textColor])
+  const renderInput = useMemo(() => { 
     return (
       <View style={[styles.inputContainer, inputContainerStyle]}>
         <Input
@@ -309,7 +266,7 @@ function Confirm(props: Props) {
     textAlign,
   ])
 
-  const renderResend = useCallback(
+  const renderResend = useMemo(
     () =>
       !loading && onPressResendCode ? (
         <>
@@ -340,7 +297,7 @@ function Confirm(props: Props) {
     ]
   )
 
-  const loader = useCallback(
+  const loader = useMemo(
     () =>
       (!!loading && renderLoader?.()) || (
         <View style={{ marginVertical: 8 }}>
@@ -356,7 +313,7 @@ function Confirm(props: Props) {
   const errorOpacity = useTimingTransition(!!error)
   // const errorTransform = [{ translateY: bIn}]
 
-  const renderError = useCallback(() => {
+  const renderError = useMemo(() => {
     return (
       <Animated.View
         style={{
@@ -426,31 +383,6 @@ function Confirm(props: Props) {
         }
       />
     )
-
-    // return (
-    // 	<Appbar.Header
-    // 		{...headerProps}
-    // 		style={{ backgroundColor: headerBackgroundColor, elevation: 0 }}
-    // 	>
-    // 		{(!!renderHeaderTitle && renderHeaderTitle()) || (
-    // 			<View style={{ flex: 1, paddingHorizontal: 16 }}>
-    // 				<Text
-    // 					style={[
-    // 						{
-    // 							textAlign,
-    // 							color: headerTintColor ?? textColor,
-    // 							fontWeight: '500',
-    // 							fontSize: 18,
-    // 						},
-    // 						headerTitleStyle,
-    // 					]}
-    // 				>
-    // 					{headerText}
-    // 				</Text>
-    // 			</View>
-    // 		)}
-    // 	</Appbar.Header>
-    // )
   }, [
     renderHeader,
     headerBackgroundColor,
@@ -463,9 +395,9 @@ function Confirm(props: Props) {
     headerText,
     headerTitleStyle,
   ])
-  const renderTitle = useCallback(() => {
-    return <H1 style={{ textAlign, color: textColor }}>{title}</H1>
-  }, [textAlign, textColor, title])
+  const renderTitle = useMemo(() => {
+    return <H1 style={[{ textAlign, color: textColor }, titleStyle]}>{title}</H1>
+  }, [textAlign, textColor, title, titleStyle])
 
   return (
     <Page
@@ -475,12 +407,12 @@ function Confirm(props: Props) {
       style={containerStyle}
     >
       <View style={styles.wrapper}>
-        {renderTitle()}
-        {renderMessage()}
-        {renderInput()}
-        {renderResend()}
-        {loader()}
-        {renderError()}
+        {renderTitle}
+        {renderMessage}
+        {renderInput}
+        {renderResend}
+        {loader}
+        {renderError}
       </View>
     </Page>
   )

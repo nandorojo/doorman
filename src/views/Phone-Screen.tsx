@@ -277,6 +277,8 @@ export const PhoneAuth = (props: Props) => {
     renderHeaderTitle,
     renderMessage,
     renderTitle,
+    titleStyle,
+    messageStyle,
   } = props
 
   const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
@@ -548,7 +550,7 @@ export const PhoneAuth = (props: Props) => {
 
   const _renderTitle = () => {
     const titleProps: Parameters<Required<Props>['renderTitle']>[0] = {
-      style: { textAlign, color: textColor },
+      style: [{ textAlign, color: textColor }, titleStyle],
       children: title,
     }
     if (typeof renderTitle === 'function') {
@@ -560,7 +562,7 @@ export const PhoneAuth = (props: Props) => {
 
   const _renderMessage = () => {
     const messageProps: Parameters<Required<Props>['renderMessage']>[0] = {
-      style: { textAlign, color: textColor },
+      style: [{ textAlign, color: textColor }, messageStyle],
       children: message,
     }
     if (typeof renderMessage === 'function') {
