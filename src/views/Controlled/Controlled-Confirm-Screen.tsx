@@ -1,8 +1,11 @@
 import React, { ComponentPropsWithoutRef, useCallback } from 'react'
 import { ConfirmScreen } from '../Confirm-Screen'
-import { useConfirmPhone, useAuthFlowState, signInWithCustomTokenHeadless } from 'react-doorman'
-
-import type firebase from 'firebase/app'
+import {
+  useConfirmPhone,
+  useAuthFlowState,
+  signInWithCustomTokenHeadless,
+  HeadlessFirebaseUser,
+} from 'react-doorman'
 
 type Props = Omit<
   ComponentPropsWithoutRef<typeof ConfirmScreen>,
@@ -38,7 +41,9 @@ type Props = Omit<
    * <AuthFlow.PhoneScreen onCodeVerified={({ token }) => analytics.track('Code Success')} />
    * ```
    */
-  onUserSuccessfullySignedIn?: (info: { user: firebase.User | null }) => void
+  onUserSuccessfullySignedIn?: (info: {
+    user: HeadlessFirebaseUser | null
+  }) => void
 }
 
 export default function ControlledConfirmScreen(props: Props) {
