@@ -209,7 +209,8 @@ function Confirm(props: Props) {
     inputStyle = empty.object,
     inputProps = empty.object,
     titleStyle,
-    messageStyle
+    messageStyle,
+    disableKeyboardHandler
   } = props
 
   const renderMessage = useMemo(() => {
@@ -405,6 +406,7 @@ function Confirm(props: Props) {
       background={background}
       containerProps={containerProps}
       style={containerStyle}
+      disableKeyboardHandler={disableKeyboardHandler}
     >
       <View style={styles.wrapper}>
         {renderTitle}

@@ -204,14 +204,6 @@ type Props = CommonScreenProps & {
    */
   buttonType?: 'fixed-bottom' | 'normal'
   /**
-   * If `true`, the default app wrapper will no longer be a KeyboardAvoidingView. Note that this will face bugs if you have `buttonType` set to `fixed-bottom`.
-   *
-   * 🚨**Note:** 🚨 If you are using React Navigation's stack navigator for this screen, you may be facing bugs with the KeyboardAvoidingView.
-   *
-   * You have two options to fix it: 1) set the stactk's [headerTransparent](https://reactnavigation.org/docs/stack-navigator/#headertransparent) option to true, or set this prop to `true`. If you do not have `headerTransparent` set to true, then you will face bugs with a KeyboardAvoidingView.
-   */
-  disableKeyboardHandler?: boolean
-  /**
    * (Optional) custom text that shows up in the header at the top. Default: `Sign In`. For nothing, put an empty string.
    */
   headerText?: string
@@ -578,6 +570,7 @@ export const PhoneAuth = (props: Props) => {
       containerProps={containerProps}
       style={containerStyle}
       background={background}
+      disableKeyboardHandler={disableKeyboardHandler}
     >
       <View>
         {/* <H1 style={{ textAlign, color: textColor }}>{title}</H1> */}
