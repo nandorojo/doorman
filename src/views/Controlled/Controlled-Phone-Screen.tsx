@@ -26,6 +26,7 @@ export default function ControlledPhoneAuth(props: Props) {
     valid,
     submitPhone,
     loading,
+    error,
   } = usePhoneNumber({
     onSmsSuccessfullySent,
     onSmsError,
@@ -34,6 +35,7 @@ export default function ControlledPhoneAuth(props: Props) {
   return (
     <PhoneAuth
       {...otherProps}
+      error={error}
       onChangePhoneNumber={onChangePhoneNumber}
       onSubmitPhone={submitPhone}
       phoneNumber={phoneNumber}

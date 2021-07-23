@@ -3,6 +3,7 @@ import React, {
   ComponentPropsWithoutRef,
   ReactNode,
   useEffect,
+  useMemo,
 } from 'react'
 import {
   View,
@@ -31,6 +32,8 @@ import { useTimingTransition } from 'react-native-redash/lib/module/Transitions'
 import Header from 'react-native-elements/src/header/Header'
 
 type Props = CommonScreenProps & {
+  error?: string | null
+  renderError?: ((error: string) => ReactNode) | null
   /**
    * Phone number's current state. Used with the `usePhoneNumber` hook.
    *
@@ -271,6 +274,8 @@ export const PhoneAuth = (props: Props) => {
     renderTitle,
     titleStyle,
     messageStyle,
+    error,
+    renderError,
   } = props
 
   const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
@@ -564,6 +569,11 @@ export const PhoneAuth = (props: Props) => {
     return <Paragraph {...messageProps} />
   }
 
+  const _renderError = useMemo(() => {
+    if (!error || !renderError) return null
+    return renderError(error)
+  }, [error, renderError])
+
   return (
     <Page
       header={header}
@@ -589,6 +599,7 @@ export const PhoneAuth = (props: Props) => {
           <View style={styles.buttonWrapper}>{button()}</View>
           {renderDisclaimer()}
         </Animated.View>
+        {_renderError}
       </View>
     </Page>
   )
