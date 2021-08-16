@@ -8,6 +8,49 @@
 
 v2 requires Firebase 8
 
+### React 17 Usage
+
+First, be sure to properly configure `patch-package`.
+
+You'll need to patch `react-native-phone-input` to use React 17. Add this to your `patches` folder:
+
+`patches/react-native-phone-input+0.2.4.patch`
+
+```diff
+diff --git a/node_modules/react-native-phone-input/lib/countryPicker.js b/node_modules/react-native-phone-input/lib/countryPicker.js
+index 46659fc..805268d 100644
+--- a/node_modules/react-native-phone-input/lib/countryPicker.js
++++ b/node_modules/react-native-phone-input/lib/countryPicker.js
+@@ -33,7 +33,7 @@ export default class CountryPicker extends Component {
+     this.onValueChange = this.onValueChange.bind(this);
+   }
+ 
+-  componentWillReceiveProps(nextProps) {
++  UNSAFE_componentWillReceiveProps(nextProps) {
+     this.setState({
+       selectedCountry: nextProps.selectedCountry,
+     });
+diff --git a/node_modules/react-native-phone-input/lib/index.js b/node_modules/react-native-phone-input/lib/index.js
+index 75630fd..8f54405 100644
+--- a/node_modules/react-native-phone-input/lib/index.js
++++ b/node_modules/react-native-phone-input/lib/index.js
+@@ -38,13 +38,13 @@ export default class PhoneInput extends Component {
+     };
+   }
+ 
+-  componentWillMount() {
++  UNSAFE_componentWillMount() {
+     if (this.props.value) {
+       this.updateFlagAndFormatNumber(this.props.value);
+     }
+   }
+ 
+-  componentWillReceiveProps(nextProps) {
++  UNSAFE_componentWillReceiveProps(nextProps) {
+     const { value, disabled } = nextProps;
+     this.setState({ disabled });
+```
+
 ## 🧐 What is Doorman?
 
 Doorman lets React Native developers add phone authentication to their apps with ease. It works perfectly with **Firebase Auth and Expo**.
