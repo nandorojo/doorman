@@ -6,7 +6,34 @@
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
-v2 requires Firebase 8
+## v2
+
+If you're using v2, you need to use Firebase 8. Or, you can use the Headless Method.
+
+## Headless Auth
+
+If you want to use `firebase@9`, or React Native Firebase, use the `makeHeadless` function from `react-doorman`.
+
+```ts
+import auth from '@react-native-firebase/auth'
+import { makeHeadless } from 'react-doorman'
+
+export const initFirebase = () => {
+  makeHeadless({
+    signInWithCustomToken: async (token) => {
+      return await auth().signInWithCustomToken(token)
+    },
+    signOut: () => {
+      return auth().signOut()
+    },
+    idTokenListener: (callback) => {
+      return auth().onIdTokenChanged(callback)
+    },
+  })
+}
+
+makeHeadless()
+```
 
 ### React 17 Usage
 
