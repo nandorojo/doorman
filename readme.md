@@ -18,7 +18,7 @@ If you want to use `firebase@9`, or React Native Firebase, use the `makeHeadless
 import auth from '@react-native-firebase/auth'
 import { makeHeadless } from 'react-doorman'
 
-export const initFirebase = () => {
+const initFirebase = () => {
   makeHeadless({
     signInWithCustomToken: async (token) => {
       return await auth().signInWithCustomToken(token)
