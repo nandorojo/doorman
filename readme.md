@@ -32,7 +32,7 @@ const initFirebase = () => {
   })
 }
 
-makeHeadless()
+initFirebase()
 ```
 
 ### React 17 Usage
