@@ -5,8 +5,8 @@ import {
   ProviderProps,
   InitializationProps,
   useUserContext,
+  HeadlessFirebaseUser,
 } from 'react-doorman'
-import type firebase from 'firebase/app'
 
 import { AuthGate } from '../components/AuthGate'
 import { AuthFlow } from '../views'
@@ -58,7 +58,7 @@ type Options = Omit<ProviderProps, 'children'> & {
 } & CommonScreenProps
 
 export function withPhoneAuth<P>(
-  Component: ComponentType<P & { user: firebase.User }>,
+  Component: ComponentType<P & { user: HeadlessFirebaseUser }>,
   options: Options
 ) {
   // return () => null

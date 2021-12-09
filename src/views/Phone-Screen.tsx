@@ -3,6 +3,7 @@ import React, {
   ComponentPropsWithoutRef,
   ReactNode,
   useEffect,
+  useMemo,
 } from 'react'
 import {
   View,
@@ -31,6 +32,8 @@ import { useTimingTransition } from 'react-native-redash/lib/module/Transitions'
 import Header from 'react-native-elements/src/header/Header'
 
 type Props = CommonScreenProps & {
+  error?: string | null
+  renderError?: ((error: string) => ReactNode) | null
   /**
    * Phone number's current state. Used with the `usePhoneNumber` hook.
    *
@@ -204,14 +207,6 @@ type Props = CommonScreenProps & {
    */
   buttonType?: 'fixed-bottom' | 'normal'
   /**
-   * If `true`, the default app wrapper will no longer be a KeyboardAvoidingView. Note that this will face bugs if you have `buttonType` set to `fixed-bottom`.
-   *
-   * 🚨**Note:** 🚨 If you are using React Navigation's stack navigator for this screen, you may be facing bugs with the KeyboardAvoidingView.
-   *
-   * You have two options to fix it: 1) set the stactk's [headerTransparent](https://reactnavigation.org/docs/stack-navigator/#headertransparent) option to true, or set this prop to `true`. If you do not have `headerTransparent` set to true, then you will face bugs with a KeyboardAvoidingView.
-   */
-  disableKeyboardHandler?: boolean
-  /**
    * (Optional) custom text that shows up in the header at the top. Default: `Sign In`. For nothing, put an empty string.
    */
   headerText?: string
@@ -279,6 +274,8 @@ export const PhoneAuth = (props: Props) => {
     renderTitle,
     titleStyle,
     messageStyle,
+    error,
+    renderError,
   } = props
 
   const shouldButtonShow = !(!valid && hideButtonForInvalidNumber)
@@ -572,12 +569,18 @@ export const PhoneAuth = (props: Props) => {
     return <Paragraph {...messageProps} />
   }
 
+  const _renderError = useMemo(() => {
+    if (!error || !renderError) return null
+    return renderError(error)
+  }, [error, renderError])
+
   return (
     <Page
       header={header}
       containerProps={containerProps}
       style={containerStyle}
       background={background}
+      disableKeyboardHandler={disableKeyboardHandler}
     >
       <View>
         {/* <H1 style={{ textAlign, color: textColor }}>{title}</H1> */}
@@ -596,6 +599,7 @@ export const PhoneAuth = (props: Props) => {
           <View style={styles.buttonWrapper}>{button()}</View>
           {renderDisclaimer()}
         </Animated.View>
+        {_renderError}
       </View>
     </Page>
   )

@@ -6,6 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 import { empty } from '../utils/empty'
@@ -46,7 +47,10 @@ export function Page(props: Props) {
   const Container = disableKeyboardHandler ? View : KeyboardAvoidingView
 
   return (
-    <Container behavior="padding" style={styles.container}>
+    <Container
+      behavior={Platform.select({ ios: 'padding' })}
+      style={styles.container}
+    >
       {background?.()}
       {header?.()}
       <ScrollView
