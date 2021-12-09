@@ -1,42 +1,104 @@
 # Doorman 🚪🔥
 
+> this is no longer actively maintained.
+
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2ok9XEmtOjgeUUWgN1%2F-M2ole43XtPbBnxWTahm%2Fcarbon%20(39).png?alt=media&token=94d828b0-5f36-41b6-9f46-8f9ba057c3fe" />
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
-## Compatibility
+## v2
 
-v2 requires Firebase 8.
+If you're using v2, you need to use Firebase 8.
 
-v3 (alpha) comes with headless mode, to allow users to customize usage for Firebase Web v9, and react-native-firebase.
+For Firebase v9, you need v4. This version also works with `react-native-firebase` via the `makeHeadless` function
 
-Firebase v9 example usage with Doorman v2:
+## Headless Auth
 
-```js
-// App.js
+If you want to use `firebase@9`, or React Native Firebase, use the `makeHeadless` function from `react-doorman`.
+
+```ts
+// you should call this in a native-only file
+// doorman.native.ts
+import auth from '@react-native-firebase/auth'
 import { makeHeadless } from 'react-doorman'
-import { withPhoneAuth } from 'react-native-doorman'
-import { getAuth, onIdTokenChanged, initializeApp } from 'firebase/auth'
 
-const firebaseConfig = {
-  //...
+const initFirebase = () => {
+  makeHeadless({
+    signInWithCustomToken: async token => {
+      return await auth().signInWithCustomToken(token)
+    },
+    signOut: () => {
+      return auth().signOut()
+    },
+    idTokenListener: callback => {
+      return auth().onIdTokenChanged(callback)
+    },
+  })
 }
-const firebaseApp = initializeApp(firebaseConfig)
 
-// Call this at the root of your app before using doorman
-makeHeadless({
-  signOut: () => {
-    return getAuth(firebaseApp).signOut()
-  },
-  onIdTokenChanged: callback => {
-    return getAuth(firebaseApp).onIdTokenChanged(callback)
-  },
-  signInWithCustomToken: token => {
-    return getAuth(firebaseApp).signInWithCustomToken(token)
-  },
+initFirebase()
+```
+
+Meanwhile, for Web, your `doorman.ts` file would have Firebase JS v9 initialization in it:
+
+```ts
+// doorman.ts
+import { initializeApp } from 'firebase/app'
+initializeApp({
+  // ...
 })
+```
+
+And then import `doorman.ts` beofre you use `withPhoneAuth` or `DoormanProvider`:
+
+```tsx
+import './doorman'
+import App from './app'
 
 export default withPhoneAuth(App)
+```
+
+### React 17 Usage
+
+First, be sure to properly configure `patch-package`.
+
+You'll need to patch `react-native-phone-input` to use React 17. Add this to your `patches` folder:
+
+`patches/react-native-phone-input+0.2.4.patch`
+
+```diff
+diff --git a/node_modules/react-native-phone-input/lib/countryPicker.js b/node_modules/react-native-phone-input/lib/countryPicker.js
+index 46659fc..805268d 100644
+--- a/node_modules/react-native-phone-input/lib/countryPicker.js
++++ b/node_modules/react-native-phone-input/lib/countryPicker.js
+@@ -33,7 +33,7 @@ export default class CountryPicker extends Component {
+     this.onValueChange = this.onValueChange.bind(this);
+   }
+
+-  componentWillReceiveProps(nextProps) {
++  UNSAFE_componentWillReceiveProps(nextProps) {
+     this.setState({
+       selectedCountry: nextProps.selectedCountry,
+     });
+diff --git a/node_modules/react-native-phone-input/lib/index.js b/node_modules/react-native-phone-input/lib/index.js
+index 75630fd..8f54405 100644
+--- a/node_modules/react-native-phone-input/lib/index.js
++++ b/node_modules/react-native-phone-input/lib/index.js
+@@ -38,13 +38,13 @@ export default class PhoneInput extends Component {
+     };
+   }
+
+-  componentWillMount() {
++  UNSAFE_componentWillMount() {
+     if (this.props.value) {
+       this.updateFlagAndFormatNumber(this.props.value);
+     }
+   }
+
+-  componentWillReceiveProps(nextProps) {
++  UNSAFE_componentWillReceiveProps(nextProps) {
+     const { value, disabled } = nextProps;
+     this.setState({ disabled });
 ```
 
 ## 🧐 What is Doorman?
