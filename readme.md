@@ -8,31 +8,54 @@
 
 ## v2
 
-If you're using v2, you need to use Firebase 8. Or, you can use the Headless Method.
+If you're using v2, you need to use Firebase 8.
+
+For Firebase v9, you need v4. This version also works with `react-native-firebase` via the `makeHeadless` function
 
 ## Headless Auth
 
 If you want to use `firebase@9`, or React Native Firebase, use the `makeHeadless` function from `react-doorman`.
 
 ```ts
+// you should call this in a native-only file
+// doorman.native.ts
 import auth from '@react-native-firebase/auth'
 import { makeHeadless } from 'react-doorman'
 
 const initFirebase = () => {
   makeHeadless({
-    signInWithCustomToken: async (token) => {
+    signInWithCustomToken: async token => {
       return await auth().signInWithCustomToken(token)
     },
     signOut: () => {
       return auth().signOut()
     },
-    idTokenListener: (callback) => {
+    idTokenListener: callback => {
       return auth().onIdTokenChanged(callback)
     },
   })
 }
 
 initFirebase()
+```
+
+Meanwhile, for Web, your `doorman.ts` file would have Firebase JS v9 initialization in it:
+
+```ts
+// doorman.ts
+import { initializeApp } from 'firebase/app'
+initializeApp({
+  // ...
+})
+```
+
+And then import `doorman.ts` beofre you use `withPhoneAuth` or `DoormanProvider`:
+
+```tsx
+import './doorman'
+import App from './app'
+
+export default withPhoneAuth(App)
 ```
 
 ### React 17 Usage
@@ -51,7 +74,7 @@ index 46659fc..805268d 100644
 @@ -33,7 +33,7 @@ export default class CountryPicker extends Component {
      this.onValueChange = this.onValueChange.bind(this);
    }
- 
+
 -  componentWillReceiveProps(nextProps) {
 +  UNSAFE_componentWillReceiveProps(nextProps) {
      this.setState({
@@ -64,14 +87,14 @@ index 75630fd..8f54405 100644
 @@ -38,13 +38,13 @@ export default class PhoneInput extends Component {
      };
    }
- 
+
 -  componentWillMount() {
 +  UNSAFE_componentWillMount() {
      if (this.props.value) {
        this.updateFlagAndFormatNumber(this.props.value);
      }
    }
- 
+
 -  componentWillReceiveProps(nextProps) {
 +  UNSAFE_componentWillReceiveProps(nextProps) {
      const { value, disabled } = nextProps;
