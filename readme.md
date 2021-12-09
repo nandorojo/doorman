@@ -58,6 +58,27 @@ import App from './app'
 export default withPhoneAuth(App)
 ```
 
+## Use your own server
+
+Since Doorman's backend is no longer maintained, if you want to use the front-end, you need to override these functions.
+
+### First, import Doorman
+
+<img width="457" alt="Screen Shot 2021-12-02 at 1 46 50 PM" src="https://user-images.githubusercontent.com/13172299/145464670-845adbf2-84cb-44eb-ba6c-79cff0046fa5.png">
+
+The following steps should make requests to your own server.
+
+<img width="944" alt="Screen Shot 2021-12-02 at 1 41 48 PM" src="https://user-images.githubusercontent.com/13172299/145464723-c1e3de1a-ff53-46a8-80a5-557b6171e1ff.png">
+
+<img width="895" alt="Screen Shot 2021-12-02 at 1 43 10 PM" src="https://user-images.githubusercontent.com/13172299/145464744-52753b37-9ad4-488e-b5b5-0bdde3b1f9fa.png">
+
+Your server should use Twilio OTP and Firebase Admin to verify phone numbers, create an auth user (if it doesn't yet exist on Firebase), and then return the auth token.
+
+<img width="915" alt="IMG_4869" src="https://user-images.githubusercontent.com/13172299/145464889-0f53e94b-f673-4595-9aad-0d2d0836a546.png">
+
+<img width="904" alt="Screen Shot 2021-12-09 at 2 32 38 PM" src="https://user-images.githubusercontent.com/13172299/145464956-ad24bd85-f78b-4c5c-adbb-983f83acc583.png">
+
+
 ### React 17 Usage
 
 First, be sure to properly configure `patch-package`.
