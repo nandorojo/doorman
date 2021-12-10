@@ -49,7 +49,7 @@ initializeApp({
 })
 ```
 
-And then import `doorman.ts` beofre you use `withPhoneAuth` or `DoormanProvider`:
+And then import `doorman.ts` before you use `withPhoneAuth` or `DoormanProvider`:
 
 ```tsx
 import './doorman'
@@ -77,7 +77,6 @@ Your server should use Twilio OTP and Firebase Admin to verify phone numbers, cr
 <img width="915" alt="IMG_4869" src="https://user-images.githubusercontent.com/13172299/145464889-0f53e94b-f673-4595-9aad-0d2d0836a546.png">
 
 <img width="904" alt="Screen Shot 2021-12-09 at 2 32 38 PM" src="https://user-images.githubusercontent.com/13172299/145464956-ad24bd85-f78b-4c5c-adbb-983f83acc583.png">
-
 
 ### React 17 Usage
 
