@@ -16,9 +16,9 @@ For Firebase v9, you need v4. This version also works with `react-native-firebas
 
 If you want to use `firebase@9`, or React Native Firebase, use the `makeHeadless` function from `react-doorman`.
 
+`doorman.native.ts`
+
 ```ts
-// you should call this in a native-only file
-// doorman.native.ts
 import auth from '@react-native-firebase/auth'
 import { makeHeadless } from 'react-doorman'
 
@@ -41,8 +41,9 @@ initFirebase()
 
 Meanwhile, for Web, your `doorman.ts` file would have Firebase JS v9 initialization in it:
 
+`doorman.ts`
+
 ```ts
-// doorman.ts
 import { initializeApp } from 'firebase/app'
 initializeApp({
   // ...
