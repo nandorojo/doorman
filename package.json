@@ -1,7 +1,7 @@
 {
   "name": "react-native-doorman",
   "description": "SMS-based phone authentication for React Native and Expo apps using Firebase Auth.",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "main": "build/index.js",
   "react-native": "src/index.ts",
   "types": "build/index.d.ts",
@@ -33,11 +33,13 @@
     "@types/react-phone-number-input": "^3.0.6",
     "@types/uuid": "^3.4.5",
     "eslint-config-nando": "^1.0.9",
+    "expo-linear-gradient": "^11.0.3",
+    "expo-module-scripts": "^1.2.0",
     "firebase": "^9.6.0",
     "prettier": "^1.19.1",
     "react": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
-    "react-native-reanimated": "1.4.0",
+    "react-native-reanimated": "^1.4.0",
     "typescript": "^4.2.2"
   },
   "bugs": {
@@ -59,8 +61,6 @@
   },
   "dependencies": {
     "@nandorojo/react-native-phone-input": "^0.2.8",
-    "expo-linear-gradient": "^8.2.1",
-    "expo-module-scripts": "^1.2.0",
     "react-doorman": "^3.0.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-extended-stylesheet": "^0.12.0",
@@ -69,10 +69,6 @@
     "react-native-redash": "^10.0.1",
     "react-native-text-input-mask": "^2.0.0",
     "react-phone-number-input": "^3.0.22"
-  },
-  "peerDependencies": {
-    "firebase": "*",
-    "react-native-reanimated": "^1.4.0"
   },
   "sideEffects": false
 }

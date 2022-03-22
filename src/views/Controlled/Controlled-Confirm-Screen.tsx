@@ -63,12 +63,6 @@ export default function ControlledConfirmScreen(props: Props) {
         signInWithCustomTokenHeadless(token).then(({ user }) => {
           props.onUserSuccessfullySignedIn?.({ user })
         })
-        // await firebase
-        //   .auth()
-        //   .signInWithCustomToken(token)
-        //   .then(({ user }) => {
-        //     props.onUserSuccessfullySignedIn?.({ user })
-        //   })
       }
     },
     phoneNumber,
