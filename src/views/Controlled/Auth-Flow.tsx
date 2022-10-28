@@ -4,17 +4,12 @@ import React, {
   useEffect,
   useCallback,
 } from 'react'
-import {
-  Transitioning,
-  Transition,
-  TransitioningView,
-} from 'react-native-reanimated'
 import ControlledPhoneAuth from './Controlled-Phone-Screen'
 import ControlledConfirmPhone from './Controlled-Confirm-Screen'
 import { empty } from '../../utils/empty'
 import { useDoormanTheme } from '../../hooks/use-doorman-theme'
 import { CommonScreenProps } from '../types'
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, View } from 'react-native'
 import { useAuthFlowState } from 'react-doorman'
 
 type Props = {
@@ -54,11 +49,6 @@ export function AuthFlow(props: Props) {
     ...otherProps,
   }
 
-  const transitionRef = useRef<TransitioningView>(null)
-  useEffect(() => {
-    if (Platform.OS !== 'web') transitionRef.current?.animateNextTransition()
-  }, [ready])
-
   const sendCallback = useRef(onSent)
   useEffect(() => {
     sendCallback.current = onSent
@@ -76,17 +66,7 @@ export function AuthFlow(props: Props) {
   ])
 
   return (
-    <Transitioning.View
-      ref={transitionRef}
-      transition={
-        <Transition.Together>
-          {/* <Transition.Out type="fade" durationMs={100} /> */}
-          <Transition.Change interpolation="easeInOut" />
-          <Transition.In type="fade" />
-        </Transition.Together>
-      }
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {!ready ? (
         <>
           <ControlledPhoneAuth
@@ -107,7 +87,7 @@ export function AuthFlow(props: Props) {
           />
         </>
       )}
-    </Transitioning.View>
+    </View>
   )
 }
 

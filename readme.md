@@ -6,6 +6,20 @@
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
+## v6
+
+Makes UI much more headless.
+
+- Removes `react-native-elements`
+- Removes `react-native-reanimated`
+- Removes `react-native-redash`
+
+Animations are gone from the button and input. The header and button need to be rendered custom now.
+
+```sh
+yarn add react-native-doorman@next
+```
+
 ## v5
 
 Made for Expo SDK 44.

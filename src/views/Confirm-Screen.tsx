@@ -1,4 +1,9 @@
-import React, { ReactNode, ComponentPropsWithoutRef, useCallback, useMemo } from 'react'
+import React, {
+  ReactNode,
+  ComponentPropsWithoutRef,
+  useCallback,
+  useMemo,
+} from 'react'
 import {
   View,
   ScrollView,
@@ -6,8 +11,9 @@ import {
   TextStyle as TextStyleType,
   ViewStyle,
   Text,
+  ActivityIndicator,
+  Platform,
 } from 'react-native'
-import ActivityIndicator from 'react-native-paper/lib/module/components/ActivityIndicator'
 import { ScreenStyle } from '../style/screen'
 import { TextStyle } from '../style/text'
 import { Page } from '../components/Page'
@@ -15,11 +21,6 @@ import { Paragraph, H1 } from '../components'
 import { empty } from '../utils/empty'
 import { CommonScreenProps } from './types'
 import { ScreenBackground } from '../components/Background'
-import Header from 'react-native-elements/src/header/Header'
-import type { InputProps } from 'react-native-elements'
-import Animated from 'react-native-reanimated'
-import { bInterpolate } from 'react-native-redash/lib/module/Animations'
-import { useTimingTransition } from 'react-native-redash/lib/module/Transitions'
 import { Input } from '../components/Input'
 
 type Props = CommonScreenProps & {
@@ -169,7 +170,7 @@ import Input from '../components/Input'
   /**
    * Custom TextInput props. Note that there are many other props to customize the input. Do a page find for `input` to find them.
    */
-  inputProps?: InputProps
+  inputProps?: React.ComponentProps<typeof Input>
 }
 
 function Confirm(props: Props) {
@@ -189,13 +190,7 @@ function Confirm(props: Props) {
     renderBackground,
     backgroundColor,
     renderHeader,
-    renderHeaderTitle,
-    headerText = 'Confirm',
-    headerTintColor,
-    headerTitleStyle,
     textAlign = 'center',
-    headerProps,
-    headerBackgroundColor = 'transparent',
     textColor = 'white',
     resendStyle,
     renderLoader,
@@ -210,27 +205,35 @@ function Confirm(props: Props) {
     inputProps = empty.object,
     titleStyle,
     messageStyle,
-    disableKeyboardHandler
+    disableKeyboardHandler,
   } = props
 
   const renderMessage = useMemo(() => {
     if (message) {
       return (
-        <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
+        <Paragraph
+          style={[
+            styles.subtitle,
+            { color: textColor, textAlign },
+            messageStyle,
+          ]}
+        >
           {typeof message === 'function' ? message({ phoneNumber }) : message}
         </Paragraph>
       )
     }
 
     return (
-      <Paragraph style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}>
+      <Paragraph
+        style={[styles.subtitle, { color: textColor, textAlign }, messageStyle]}
+      >
         We just sent a 6-digit code to{' '}
         <Paragraph style={styles.number}>{phoneNumber}</Paragraph>. Enter it
         below to continue.
       </Paragraph>
     )
   }, [message, messageStyle, phoneNumber, textAlign, textColor])
-  const renderInput = useMemo(() => { 
+  const renderInput = useMemo(() => {
     return (
       <View style={[styles.inputContainer, inputContainerStyle]}>
         <Input
@@ -300,26 +303,33 @@ function Confirm(props: Props) {
 
   const loader = useMemo(
     () =>
-      (!!loading && renderLoader?.()) || (
+      !!loading &&
+      (renderLoader?.() || (
         <View style={{ marginVertical: 8 }}>
           <ActivityIndicator
             animating={loading}
             color={loaderColor ?? textColor}
           />
         </View>
-      ),
+      )),
     [loading, renderLoader, textColor, loaderColor]
   )
 
-  const errorOpacity = useTimingTransition(!!error)
-  // const errorTransform = [{ translateY: bIn}]
-
   const renderError = useMemo(() => {
     return (
-      <Animated.View
+      <View
         style={{
-          opacity: errorOpacity,
-          transform: [{ translateY: bInterpolate(errorOpacity, 5, 0) }],
+          opacity: error ? 1 : 0,
+          transform: [
+            {
+              translateY: error ? 5 : 0,
+            },
+          ],
+          ...Platform.select({
+            web: {
+              transition: `opacity 0.2s ease-in-out, transform 0.2s ease-in-out`,
+            },
+          }),
         }}
       >
         <Text
@@ -333,9 +343,9 @@ function Confirm(props: Props) {
         >
           {error}. Please try resending the code.
         </Text>
-      </Animated.View>
+      </View>
     )
-  }, [error, errorOpacity, errorStyle, textAlign])
+  }, [error, errorStyle, textAlign])
 
   const background = useCallback(() => {
     if (renderBackground === null) return null
@@ -358,46 +368,14 @@ function Confirm(props: Props) {
           }),
       })
 
-    return (
-      <Header
-        containerStyle={{
-          backgroundColor: headerBackgroundColor,
-          justifyContent: textAlign === 'left' ? 'space-between' : 'center',
-          borderBottomWidth: 0,
-        }}
-        {...headerProps}
-        leftComponent={{
-          icon: 'arrow-back',
-          color: headerTintColor ?? textColor,
-          onPress: onGoBack,
-        }}
-        centerComponent={
-          renderHeaderTitle?.() ?? {
-            text: headerText,
-            style: {
-              color: headerTintColor ?? textColor,
-              ...headerTitleStyle,
-              fontWeight: '500',
-              fontSize: 18,
-            },
-          }
-        }
-      />
-    )
-  }, [
-    renderHeader,
-    headerBackgroundColor,
-    textAlign,
-    headerProps,
-    headerTintColor,
-    textColor,
-    onGoBack,
-    renderHeaderTitle,
-    headerText,
-    headerTitleStyle,
-  ])
+    console.error('[ConfirmScreen] renderHeader must be a function or null')
+
+    return null
+  }, [renderHeader, onGoBack])
   const renderTitle = useMemo(() => {
-    return <H1 style={[{ textAlign, color: textColor }, titleStyle]}>{title}</H1>
+    return (
+      <H1 style={[{ textAlign, color: textColor }, titleStyle]}>{title}</H1>
+    )
   }, [textAlign, textColor, title, titleStyle])
 
   return (

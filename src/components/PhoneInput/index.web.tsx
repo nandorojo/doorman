@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, CSSProperties } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import { PhoneInputProps, PhoneInputRef } from './types'
 import PhoneInputForm, { isPossiblePhoneNumber } from 'react-phone-number-input'
 import flags from 'react-phone-number-input/flags'
@@ -7,6 +7,8 @@ import { WebStyles } from './web-styles'
 
 // import './style.css'
 // import 'react-phone-number-input/style.css'
+
+const id = 'doorman-phone-input'
 
 type Props = PhoneInputProps
 
@@ -19,6 +21,7 @@ export function PhoneInput(props: Props) {
     style = empty.object,
     inputRef,
     inputProps,
+    onSubmit,
   } = props
 
   const ref = useRef<PhoneInputRef>(null)
@@ -36,14 +39,25 @@ export function PhoneInput(props: Props) {
   )
 
   return (
-    <>
+    <form
+      onSubmit={e => {
+        const value = (document.getElementById(id) as any)?.value as string
+        e.preventDefault()
+        console.log('[phone-input] onSubmit', e)
+        if (value) {
+          onSubmit?.(value)
+        }
+      }}
+    >
       <WebStyles />
       <PhoneInputForm
+        name="phoneInput"
+        id={id}
         international={false}
         defaultCountry="US"
         useNationalFormatForDefaultCountryValue
         {...(inputProps as any)}
-        style={{ ...(style as CSSProperties), ...textStyle }}
+        style={{ ...style, ...textStyle }}
         value={value}
         onChange={onChangeText}
         flags={flags}
@@ -51,6 +65,6 @@ export function PhoneInput(props: Props) {
         autoFocus
         // color="white"
       />
-    </>
+    </form>
   )
 }

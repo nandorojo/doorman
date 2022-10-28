@@ -1,6 +1,5 @@
-import { ReactNode, ComponentPropsWithoutRef } from 'react'
+import { ReactNode } from 'react'
 import { TextStyle, ViewStyle } from 'react-native'
-import type { Header } from 'react-native-elements'
 
 export type CommonScreenProps = {
   /**
@@ -44,7 +43,7 @@ export type CommonScreenProps = {
    *
    * See the `react-native-elements` docs for the `Header` props: https://react-native-elements.github.io/react-native-elements/docs/header.html
    */
-  headerProps?: ComponentPropsWithoutRef<typeof Header>
+  // headerProps?: ComponentPropsWithoutRef<typeof Header>
   /**
    * Custom styles for the title in the header.
    *
