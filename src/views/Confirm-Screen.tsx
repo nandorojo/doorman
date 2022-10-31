@@ -171,6 +171,8 @@ import Input from '../components/Input'
    * Custom TextInput props. Note that there are many other props to customize the input. Do a page find for `input` to find them.
    */
   inputProps?: React.ComponentProps<typeof Input>
+
+  renderError?: (error: string) => ReactNode
 }
 
 function Confirm(props: Props) {
@@ -206,6 +208,7 @@ function Confirm(props: Props) {
     titleStyle,
     messageStyle,
     disableKeyboardHandler,
+    renderError: renderErrorProp,
   } = props
 
   const renderMessage = useMemo(() => {
@@ -332,20 +335,22 @@ function Confirm(props: Props) {
           }),
         }}
       >
-        <Text
-          style={[
-            {
-              textAlign,
-            },
-            styles.error,
-            errorStyle,
-          ]}
-        >
-          {error}. Please try resending the code.
-        </Text>
+        {(!!error && renderErrorProp?.(error)) || (
+          <Text
+            style={[
+              {
+                textAlign,
+              },
+              styles.error,
+              errorStyle,
+            ]}
+          >
+            {error}. Please try resending the code.
+          </Text>
+        )}
       </View>
     )
-  }, [error, errorStyle, textAlign])
+  }, [error, errorStyle, renderErrorProp, textAlign])
 
   const background = useCallback(() => {
     if (renderBackground === null) return null
